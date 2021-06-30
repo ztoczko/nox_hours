@@ -64,4 +64,8 @@ public class User {
     @Column(name = "deleted_date")
     private LocalDateTime deleteDate;
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
 }

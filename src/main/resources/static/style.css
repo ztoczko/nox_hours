@@ -1,0 +1,364 @@
+/* @font-face {
+  font-family: 'MyWebFont';
+  src: url('webfont.eot'); /* IE9 Compat Modes */
+/* src: url('webfont.eot?#iefix') format('embedded-opentype'), IE6-IE8 */
+/* url('webfont.woff2') format('woff2'), Super Modern Browsers */
+/* url('webfont.woff') format('woff'), Pretty Modern Browsers */
+/* url('webfont.ttf')  format('truetype'), Safari, Android, iOS */
+/* url('webfont.svg#svgFontName') format('svg'); Legacy iOS */
+/* } */
+
+@font-face {
+    font-family: 'titleFont';
+    /* src: url('webfont.eot'); IE9 Compat Modes */
+    src: url('MKX-Title.woff') format('woff'),
+    url('MKX-Title.ttf')  format('truetype');
+}
+
+@font-face {
+    font-family: 'arsenal';
+    /* src: url('webfont.eot'); IE9 Compat Modes */
+    src: url('Arsenal-Regular.woff') format('woff'),
+    url('Arsenal-Regular.ttf')  format('truetype');
+}
+
+:root {
+    --mainBackgroundColor: teal;
+    --mainTextColor: black;
+    --mainContentColor: whitesmoke;
+    --mainTableColor: white;
+    --secondaryTableColor:#d3d3d3;
+    --mainTableTextColor: black;
+}
+
+
+.topBar {
+    background-color: var(--mainBackgroundColor);
+    color: var(--mainTextColor);
+    height: 10vh;
+    align-items: safe center;
+}
+
+.pageTitle {
+    font-family: 'titleFont', Times, serif;
+    font-size: 3rem;
+    letter-spacing: 0.5vw;
+}
+
+.pageTitle img {
+    height: 8vh;
+}
+
+.pageTitle span {
+    font-family: 'arsenal', Times, serif;
+    font-size: 1.25rem;
+    letter-spacing: 0.1vw;
+}
+
+.sideMenu {
+    background-color: var(--mainBackgroundColor);
+    color: var(--mainTextColor);
+    height: 87vh;
+    overflow: auto;
+}
+
+.sideMenu ul {
+    width: 100%;
+}
+
+.sideMenu li {
+    width: 100%;
+}
+
+/* .nav-item a {
+  text-decoration: none;
+  color: blueviolet;
+  font-weight: bold;
+} */
+.nav-item {
+    font-family: 'arsenal', Times, serif;
+    font-weight: 600;
+    letter-spacing: 0.08vw;
+    /* transition: all 0.5s; */
+}
+
+.menuSelected {
+    background-color: var(--mainContentColor);
+}
+
+
+:not(.menuSelected).nav-item:hover {
+    text-decoration: none;
+    color: var(--mainContentColor);
+    background-color: #2F4F4F;
+    cursor: pointer;
+}
+
+:not(.menuSelected).nav-item:hover i {
+    position: relative;
+    left: -1rem;
+}
+
+:not(.menuSelected).nav-item:hover span {
+    position: relative;
+    left: -1rem;
+}
+
+:not(.menuSelected).nav-item:hover span::after {
+    font-size: 2rem;
+    content: " »";
+    position: absolute;
+    right: -1.5rem;
+    top: -0.8rem;
+}
+
+@media (max-width: 1000px) {
+    .menuText {
+        display: none !important;
+    }
+    .pageTitle {
+        font-size: 1.5rem;
+        letter-spacing: 0.25vw;
+    }
+    .pageTitle span {
+        font-size: 0.625rem;
+        letter-spacing: 0.05vw;
+    }
+    .summaryDashboard {
+        display: none !important;
+    }
+    .mainContentDiv {
+        justify-content: start !important;
+        align-items: start !important;
+    }
+    .mainContentDiv table {
+        width: 100% !important;
+    }
+}
+
+.mainBody {
+    height: 87vh;
+    /*background-image: url('imageedit_13_4333126151.png');*/
+    /*overflow: auto;*/
+    background-color: var(--mainContentColor);
+    display: flex;
+    flex-direction: column;
+    justify-content: safe start;
+    align-items: safe center;
+}
+
+.mainBody > div {
+    width: 100%;
+    text-align: center;
+}
+
+.summaryDashboard {
+    width: 100%;
+    min-height: 10vh;
+    overflow: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: safe center;
+}
+
+.summaryDashboard > div {
+    display: flex;
+    border-radius: 1.5rem;
+    box-shadow: 0.5rem 0.5rem 1rem black;
+    font-family: 'arsenal', Times, serif;
+    width: 25%;
+    background-color: var(--mainBackgroundColor);
+    color: var(--mainTextColor);
+}
+
+.summaryDashboard > div > div:first-child {
+    width: 75%;
+    height: 100%;
+    text-align: end;
+    font-weight: 1000;
+}
+
+.summaryDashboard > div > div:last-child {
+    width: 25%;
+    height: 100%;
+    display: flex;
+    justify-content: safe center;
+    align-items: safe center;
+}
+
+.summaryDashboard > div > div:last-child > div {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.mainContentDiv {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+    align-items: safe center;
+    min-height: 77vh;
+    max-height: 77vh;    
+}
+
+.mainContentDiv table {
+    box-shadow: 0.5rem 0.5rem 1rem black;
+    width: 80%;
+    border: 0.5rem solid var(--mainBackgroundColor);
+}
+
+.mainContentDiv table thead tr:first-of-type {
+    color: var(--mainTextColor);
+    background-color: var(--mainBackgroundColor);
+}
+
+th {
+    background-color: var(--mainTableColor);
+    color: var(--mainTableTextColor);
+    text-align: center;
+}
+
+.mainContentDiv table tbody tr:hover td {
+    background-color: var(--mainBackgroundColor);
+}
+
+.mainContentDiv table tbody td {
+    color: var(--mainTableTextColor);
+}
+
+.mainContentDiv table tbody tr:nth-of-type(2n) {
+    background-color: var(--mainTableColor);
+}
+
+.mainContentDiv table tbody tr:nth-of-type(2n-1) {
+    background-color: var(--secondaryTableColor);
+}
+
+.pagination {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: safe center;
+    align-items: safe center;
+}
+
+.pagination div {
+    font-size: 1.5rem;
+    color: var(--mainTextColor);
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
+}
+
+.pagination div:not(.currentPage):hover {
+    color: blue;
+    position: relative;    
+    cursor: pointer;
+}
+.pageLeft:hover {
+    left: -0.2rem;
+}
+.pageRight:hover {
+    right: -0.2rem;
+}
+
+footer {
+    height: 3vh;
+    display: flex;
+    justify-content: safe center;
+    align-items: safe center;
+    font-size: 0.8rem;
+    color: var(--mainTextColor);
+}
+
+
+.button::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+
+.button {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    padding: 6px 20px;
+    margin: 0;
+    cursor: pointer;
+    border: 1px solid #bbb;
+    overflow: visible;
+    font: bold 13px arial, helvetica, sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+    color: #555;
+
+    background-color: #ddd;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 1)), to(rgba(255, 255, 255, 0)));
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background-image: -o-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background-image: linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+
+    -webkit-transition: background-color .2s ease-out;
+    -moz-transition: background-color .2s ease-out;
+    -ms-transition: background-color .2s ease-out;
+    -o-transition: background-color .2s ease-out;
+    transition: background-color .2s ease-out;
+    background-clip: padding-box; /* Fix bleeding */
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .9);
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.button:hover {
+    background-color: #eee;
+    color: #555;
+}
+
+.button:active {
+    background: #e9e9e9;
+    position: relative;
+    top: 1px;
+    text-shadow: none;
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
+}
+
+.button-clicked {
+    background: #e9e9e9;
+    position: relative;
+    top: 1px;
+    text-shadow: none;
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .3) inset;
+}
+
+.button-clicked:active {
+    background-color: #ddd;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255, 255, 255, 1)), to(rgba(255, 255, 255, 0)));
+    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background-image: -o-linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    background-image: linear-gradient(top, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+    position: static;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .9);
+    -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+    -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+}
+
