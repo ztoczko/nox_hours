@@ -3,10 +3,12 @@ package pl.noxhours.client;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.noxhours.configuration.GlobalConstants;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = Client.TABLE_NAME)
@@ -31,5 +33,9 @@ public class Client {
 
     @Column(name = "rates_set")
     private Boolean ratesSet;
+
+    public String getCreatedString() {
+        return DateTimeFormatter.ofPattern(GlobalConstants.DATE_TIME_FORMAT).format(created);
+    }
 
 }

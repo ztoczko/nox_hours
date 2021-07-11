@@ -3,6 +3,7 @@ package pl.noxhours.rate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.noxhours.client.Client;
 import pl.noxhours.configuration.GlobalConstants;
 
 import javax.persistence.*;
@@ -44,5 +45,9 @@ public class Rate {
     @Column(name = "student_rate")
     @Pattern(regexp = GlobalConstants.CASH_VALUE_REGEXP)
     private BigDecimal studentRate;
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Client client;
 
 }

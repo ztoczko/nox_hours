@@ -2,7 +2,7 @@
 <header>
     <div class="row">
         <div class="col d-flex justify-content-between topBar">
-            <div class="ms-3 pageTitle"><img class="img-fluid" src="hourglass.png"/>NOX Hours<span
+            <div class="ms-3 pageTitle"><img class="img-fluid" src="/hourglass.png"/>NOX Hours<span
             >ver. 1.0-SNAPSHOT</span>
             </div>
             <div class="me-5 fs-3 d-flex justify-content-center align-items-center menuText">

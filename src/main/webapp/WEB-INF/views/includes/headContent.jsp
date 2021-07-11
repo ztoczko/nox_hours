@@ -8,5 +8,5 @@
       integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <%--<link href="/WEB-INF/views/style/style.css" rel="stylesheet">--%>
-<link href="style.css" rel="stylesheet">
+<link href="/style.css" rel="stylesheet">
 </head>

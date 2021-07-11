@@ -1,6 +1,9 @@
 package pl.noxhours.client;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +30,15 @@ public class ClientService {
         clientRepository.delete(client);
     }
 
-    public List<Client> getAll() {
+    public List<Client> findAll() {
         return clientRepository.findAll();
     }
 
+    public Page<Client> findAll(Pageable pageable, boolean all) {
+        return all ? clientRepository.findAllBy(pageable) : clientRepository.findAllByClosed(pageable, false);
+    }
+
+    public Page<Client> findAllSearch(Pageable pageable, String search, boolean all) {
+        return all ? clientRepository.findAllByNameContains(pageable, search) : clientRepository.findAllByClosedAndNameContains(pageable, false, search);
+    }
 }

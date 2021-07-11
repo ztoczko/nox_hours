@@ -6,4 +6,4 @@
         </footer>
     </div>
 </div>
-<script src="generalScript.js" defer></script>
+<script src="/generalScript.js" defer></script>

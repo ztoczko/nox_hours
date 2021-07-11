@@ -213,10 +213,20 @@
     background-color: var(--mainBackgroundColor);
 }
 
+.searchBox>form:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 th {
     background-color: var(--mainTableColor);
     color: var(--mainTableTextColor);
     text-align: center;
+}
+
+.pointer:hover {
+    cursor: pointer;
 }
 
 .mainContentDiv table tbody tr:hover td {
@@ -225,6 +235,7 @@ th {
 
 .mainContentDiv table tbody td {
     color: var(--mainTableTextColor);
+    text-align: center;
 }
 
 .mainContentDiv table tbody tr:nth-of-type(2n) {
@@ -250,7 +261,8 @@ th {
     margin-right: 0.75rem;
 }
 
-.pagination div:not(.currentPage):hover {
+/*.pagination div:not(.currentPage):hover {*/
+.pagination div:is(.pageLeft, .pageRight):hover {
     color: blue;
     position: relative;    
     cursor: pointer;
