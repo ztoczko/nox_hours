@@ -43,7 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.csrf().disable().authorizeRequests()
                 //TODO - dodać jakąś stronę tytułową?? jeśli nie to wywalić anta na "/"
-                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/admin/**", "/clients/delete/**").hasAuthority("ADMIN")
+                .antMatchers("/clients/*/rate/**").hasAuthority("RATES")
                 .antMatchers("/", "/login").permitAll()
                 .anyRequest().authenticated()
                 .and()

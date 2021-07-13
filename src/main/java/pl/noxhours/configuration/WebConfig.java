@@ -10,7 +10,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 public class WebConfig {
 
-
         @Bean
         public WebMvcConfigurer forwardToLogin() {
             return new WebMvcConfigurer() {
@@ -19,11 +18,9 @@ public class WebConfig {
 
                     registry.addViewController("/login").setViewName(
                             "login");
-//                    registry.addViewController("/user").setViewName(
-//                            "forward:/user/index.html");
+
                 }
             };
         }
-
     }
 

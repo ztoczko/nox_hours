@@ -55,10 +55,17 @@
                         </div>
                     </form>
                 </div>
+                <c:if test="${!empty param.deleteSuccess}">
+                    <div class="text-success mb-2">Klient usunięty</div>
+                </c:if>
+                <c:if test="${!empty param.addSuccess}">
+                    <div class="text-success mb-2">Klient dodany</div>
+                </c:if>
                 <table class="table">
                     <thead>
                     <tr>
-                        <td class="fs-4 p-3" colspan="3">Klienci</td>
+                        <td class="fs-4 p-3" colspan="2">Klienci</td>
+                        <td class="text-center" valign="middle"><button type="button" class="button m-auto" onclick="location.href='/clients/add'">Dodaj nowego</button> </td>
                     </tr>
                     <tr>
                         <th class="pointer">

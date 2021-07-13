@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes("loggedUserName")
+@SessionAttributes({"loggedUserName"})
 public class UserController {
 
     private final UserService userService;

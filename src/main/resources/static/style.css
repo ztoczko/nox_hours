@@ -11,15 +11,15 @@
 @font-face {
     font-family: 'titleFont';
     /* src: url('webfont.eot'); IE9 Compat Modes */
-    src: url('MKX-Title.woff') format('woff'),
-    url('MKX-Title.ttf')  format('truetype');
+    src: url('fonts/MKX-Title.woff') format('woff'),
+    url('fonts/MKX-Title.ttf')  format('truetype');
 }
 
 @font-face {
     font-family: 'arsenal';
     /* src: url('webfont.eot'); IE9 Compat Modes */
-    src: url('Arsenal-Regular.woff') format('woff'),
-    url('Arsenal-Regular.ttf')  format('truetype');
+    src: url('fonts/Arsenal-Regular.woff') format('woff'),
+    url('fonts/Arsenal-Regular.ttf')  format('truetype');
 }
 
 :root {
@@ -86,8 +86,8 @@
     background-color: var(--mainContentColor);
 }
 
-
-:not(.menuSelected).nav-item:hover {
+/*:not(.menuSelected)*/
+.nav-item:hover {
     text-decoration: none;
     color: var(--mainContentColor);
     background-color: #2F4F4F;
@@ -196,7 +196,7 @@
     overflow: auto;
     display: flex;
     flex-direction: column;
-    justify-content: safe center;
+    justify-content: safe start;
     align-items: safe center;
     min-height: 77vh;
     max-height: 77vh;    
@@ -219,10 +219,51 @@
     align-items: center;
 }
 
-th {
+.editForm {
+    min-width: 100%;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.editForm input[disabled][type="text"] {
+    border: 0;
+    background-color: var(--mainContentColor);
+}
+
+.editForm>div {
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.editForm>div>div {
+    min-width: 50%;
+    max-width: 50%;
+    padding: 0.5rem;
+    margin: 0;
+}
+
+.editForm>div>div:first-child  {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.editForm>div>div:last-child  {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.table th {
     background-color: var(--mainTableColor);
     color: var(--mainTableTextColor);
     text-align: center;
+    vertical-align: middle;
 }
 
 .pointer:hover {
@@ -236,6 +277,8 @@ th {
 .mainContentDiv table tbody td {
     color: var(--mainTableTextColor);
     text-align: center;
+    vertical-align: middle;
+    padding: 0.5rem;
 }
 
 .mainContentDiv table tbody tr:nth-of-type(2n) {

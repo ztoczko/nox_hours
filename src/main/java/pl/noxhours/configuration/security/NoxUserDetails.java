@@ -21,14 +21,14 @@ public class NoxUserDetails implements UserDetails {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("USER"));
-        if (user.getPrivileges().contains("A")) {
+        if (user.getPrivileges().contains("A") || user.getPrivileges().contains("S")) {
             authorities.add(new SimpleGrantedAuthority("ADMIN"));
         }
         if (user.getPrivileges().contains("R")) {
             authorities.add(new SimpleGrantedAuthority("RATES"));
         }
-        if (user.getPrivileges().contains("D")) {
-            authorities.add(new SimpleGrantedAuthority("DELETE"));
+        if (user.getPrivileges().contains("S")) {
+            authorities.add(new SimpleGrantedAuthority("SUPERADMIN"));
         }
         return authorities;
     }
