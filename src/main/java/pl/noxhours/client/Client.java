@@ -35,8 +35,8 @@ public class Client {
 
     private Boolean closed;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Rate> rates = new ArrayList<>();
+//    @OneToMany(mappedBy = "client", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+//    private List<Rate> rates = new ArrayList<>();
 
 //    @Column(name = "rates_set")
 //    private Boolean ratesSet;

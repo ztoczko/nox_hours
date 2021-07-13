@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.noxhours.NoxHoursApplication;
+import pl.noxhours.rate.Rate;
 import pl.noxhours.rate.RateService;
 
 import javax.validation.Valid;
@@ -62,22 +63,29 @@ public class ClientController {
     }
 
     @RequestMapping("/show/{client}")
-    public String showClient(Model model, @PathVariable(required = false) Client client) {
+    public String showClient(Model model, @PathVariable(required = false) Client client, @RequestParam(required = false) Integer ratePage, @RequestParam(required = false) Integer timesheetPage) {
 
         if (client == null) {
             log.warn("user " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to access invalid Client entity");
-            return "redirect:/clients/list";
+//            return "redirect:/clients/list";
+            return "/client/clientShow";
         }
         //TODO Przekazać do widoku listę timesheetów
-        //making sure object doesn't contain rate info - as client is not owner of the relation there is no risk in saving it to DB
-        client.setRates(null);
+
         model.addAttribute("client", client);
 //        System.out.println(client.getRates());
         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
-            //displaying only last 10 rates
-            //TODO rozbudować o pełną historię rate?
-//            model.addAttribute("rates", client.getRates());
-            model.addAttribute("rates", rateService.findAllByClient(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dateTo")), client).getContent());
+            if (ratePage == null || ratePage < 1) {
+                ratePage = 1;
+            }
+            Page<Rate> rates = rateService.findAllByClient(PageRequest.of(ratePage - 1, 10, Sort.by(Sort.Direction.DESC, "dateFrom")), client);
+            if (rates.getTotalPages() > ratePage && ratePage != 1) {
+                ratePage = rates.getTotalPages();
+                rates = rateService.findAllByClient(PageRequest.of(ratePage - 1, 10, Sort.by(Sort.Direction.DESC, "dateFrom")), client);
+            }
+            model.addAttribute("ratePage", ratePage);
+            model.addAttribute("totalRatePages", rates.getTotalPages());
+            model.addAttribute("rates", rates.getContent());
         }
         return "/client/clientShow";
     }
@@ -95,9 +103,10 @@ public class ClientController {
             model.addAttribute("bindingResult", bindingResult);
             model.addAttribute("edit", true);
             if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
-                //displaying only last 10 rates
-                //TODO rozbudować o pełną historię rate?
-                model.addAttribute("rates", rateService.findAllByClient(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dateTo")), client).getContent());
+                Page<Rate> rates = rateService.findAllByClient(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dateFrom")), client);
+                model.addAttribute("ratePage", 0);
+                model.addAttribute("totalRatePages", rates.getTotalPages());
+                model.addAttribute("rates", rates.getContent());
             }
             return "/client/clientShow";
         }

@@ -8,6 +8,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.datetime.DateFormatter;
 import pl.noxhours.client.Client;
 import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.customValidation.CashValue;
+import pl.noxhours.customValidation.RateDateOrder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -22,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@RateDateOrder
 public class Rate {
 
     public static final String TABLE_NAME = "rates";
@@ -32,6 +35,7 @@ public class Rate {
 
     @Column(name = "date_from")
     @DateTimeFormat(pattern = GlobalConstants.DATE_FORMAT)
+    @NotNull
     private LocalDate dateFrom;
 
     @Column(name = "date_to")
@@ -39,32 +43,32 @@ public class Rate {
     private LocalDate dateTo;
 
     @Column(name = "partner_rate")
-//    @Pattern(regexp = GlobalConstants.CASH_VALUE_REGEXP)
-//    @NotEmpty
+    @CashValue
     private BigDecimal partnerRate;
 
     @Column(name = "attorney_rate")
-//    @Pattern(regexp = GlobalConstants.CASH_VALUE_REGEXP)
-//    @NotEmpty
+    @CashValue
     private BigDecimal attorneyRate;
 
     @Column(name = "applicant_rate")
-//    @Pattern(regexp = GlobalConstants.CASH_VALUE_REGEXP)
-//    @NotEmpty
+    @CashValue
     private BigDecimal applicantRate;
 
     @Column(name = "student_rate")
-//    @Pattern(regexp = GlobalConstants.CASH_VALUE_REGEXP)
-//    @NotEmpty
+    @CashValue
     private BigDecimal studentRate;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
-    @NotNull
     private Client client;
 
     @Transient
     private Boolean rateNotExpires;
+
+    public Rate(Boolean rateNotExpires, Client client) {
+        this.rateNotExpires = rateNotExpires;
+        this.client = client;
+    }
 
     public String getDateFromString() {
         return DateTimeFormatter.ofPattern(GlobalConstants.DATE_FORMAT).format(dateFrom);

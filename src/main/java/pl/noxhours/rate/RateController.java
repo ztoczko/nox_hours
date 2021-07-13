@@ -12,6 +12,7 @@ import pl.noxhours.client.ClientService;
 import pl.noxhours.configuration.GlobalConstants;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 
 @Log4j2
 @Controller
@@ -32,9 +33,7 @@ public class RateController {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to edit rate for invalid Client entity");
             return "redirect:/clients/list";
         }
-        Rate rate = new Rate();
-        rate.setClient(client);
-        model.addAttribute("rate", rate);
+        model.addAttribute("rate", new Rate(true, client));
         return "rate/rateAdd";
     }
 

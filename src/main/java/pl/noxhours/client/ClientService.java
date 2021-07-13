@@ -3,10 +3,10 @@ package pl.noxhours.client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pl.noxhours.rate.RateService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +17,7 @@ import java.util.List;
 public class ClientService {
 
     private final ClientRepository clientRepository;
+    private final RateService rateService;
 
     public void create(Client client) {
         client.setCreated(LocalDateTime.now());
@@ -32,12 +33,16 @@ public class ClientService {
     }
 
     public void update(Client client) {
+        if (client.getClosed() == null) {
+            client.setClosed(false);
+        }
         log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " updated client with id of " + client.getId());
         clientRepository.save(client);
     }
 
     public void delete(Client client) {
         log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " deleted client with id of " + client.getId());
+        rateService.findAllByClient(client).forEach(rateService::delete);
         clientRepository.delete(client);
     }
 

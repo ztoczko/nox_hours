@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: zbigniew
@@ -28,20 +29,19 @@
         </div>
         <div class="col-10 p-4 mainBody">
 
-
             <div class="mainContentDiv">
 
                 <!--            CLIENT DETAILS START-->
                 <form:form modelAttribute="client" action="/clients/add" method="post" cssClass="editForm">
 
                     <div>
-                        <div>Nazwa klienta:</div>
+                        <div><spring:message code="client.name"/>:</div>
                         <div><form:input path="name" cssClass="form-control"
                                          cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"/>
                             <form:errors path="name" cssClass="text-danger mx-2"/></div>
                     </div>
                     <div class="form-check form-switch p-0 m-0" style="min-height: 2rem">
-                        <div>Deaktywacja klienta:</div>
+                        <div><spring:message code="client.closed"/>:</div>
                         <div><form:checkbox path="closed" cssClass="form-check-input p-0 m-0"/></div>
                     </div>
                     <%--                    <sec:authorize access="hasAuthority('RATES')">--%>
@@ -51,9 +51,9 @@
                     <%--                        </div>--%>
                     <%--                    </sec:authorize>--%>
                     <div>
-                        <button type="button" class="button mx-2" onclick="location.href='/clients/list'">Powrót
+                        <button type="button" class="button mx-2" onclick="location.href='/clients/list'"><spring:message code="app.back"/>
                         </button>
-                        <button type="submit" class="button mx-2">Zapisz</button>
+                        <button type="submit" class="button mx-2"><spring:message code="app.save"/></button>
                     </div>
                 </form:form>
                 <!--            CLIENT DETAILS END-->

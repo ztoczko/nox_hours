@@ -31,7 +31,7 @@ public class RateService {
 
     private void createWithoutCollisionCheck(Rate rate) {
         rateRepository.save(rate);
-        log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " created new rate with od of " + rate.getId() + " for client with id of " + rate.getClient().getId());
+        log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " created new rate with id of " + rate.getId() + " for client with id of " + rate.getClient().getId());
     }
 
     public Rate read(Long id) {
@@ -54,6 +54,9 @@ public class RateService {
 
     public Page<Rate> findAllByClient(Pageable pageable, Client client) {
         return rateRepository.findAllByClient(pageable, client);
+    }
+    public List<Rate> findAllByClient(Client client) {
+        return rateRepository.findAllByClientOrderByDateToDesc(client);
     }
 
     private void solveCollision(Rate rate) {

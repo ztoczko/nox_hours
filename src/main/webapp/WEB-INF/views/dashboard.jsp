@@ -1,3 +1,4 @@
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: zbigniew
@@ -95,19 +96,13 @@
             <div class="summaryDashboard">
 
                 <div>
-                    <div>Liczba Twoich aktywnych spraw: {user case active}</div>
+                    <div><spring:message code="dashboard.last.timesheets.msg"/> </div>
                     <div>
                         <div>X</div>
                     </div>
                 </div>
                 <div>
-                    <div>Liczba Twoich rozliczeń w ostatnich 30 dniach: {user timesheets}</div>
-                    <div>
-                        <div>X</div>
-                    </div>
-                </div>
-                <div>
-                    <div>Ilość Twoich naliczonych godzin w ostatnich 30 dniach: {user billedHours}</div>
+                    <div><spring:message code="dashboard.last.hours.msg"/></div>
                     <div>
                         <div>X</div>
                     </div>

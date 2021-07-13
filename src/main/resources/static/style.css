@@ -12,14 +12,14 @@
     font-family: 'titleFont';
     /* src: url('webfont.eot'); IE9 Compat Modes */
     src: url('fonts/MKX-Title.woff') format('woff'),
-    url('fonts/MKX-Title.ttf')  format('truetype');
+    url('fonts/MKX-Title.ttf') format('truetype');
 }
 
 @font-face {
     font-family: 'arsenal';
     /* src: url('webfont.eot'); IE9 Compat Modes */
     src: url('fonts/Arsenal-Regular.woff') format('woff'),
-    url('fonts/Arsenal-Regular.ttf')  format('truetype');
+    url('fonts/Arsenal-Regular.ttf') format('truetype');
 }
 
 :root {
@@ -27,10 +27,13 @@
     --mainTextColor: black;
     --mainContentColor: whitesmoke;
     --mainTableColor: white;
-    --secondaryTableColor:#d3d3d3;
+    --secondaryTableColor: #d3d3d3;
     --mainTableTextColor: black;
 }
 
+::-webkit-validation-bubble-message {
+    display: none;
+}
 
 .topBar {
     background-color: var(--mainBackgroundColor);
@@ -116,21 +119,26 @@
     .menuText {
         display: none !important;
     }
+
     .pageTitle {
         font-size: 1.5rem;
         letter-spacing: 0.25vw;
     }
+
     .pageTitle span {
         font-size: 0.625rem;
         letter-spacing: 0.05vw;
     }
+
     .summaryDashboard {
         display: none !important;
     }
+
     .mainContentDiv {
         justify-content: start !important;
         align-items: start !important;
     }
+
     .mainContentDiv table {
         width: 100% !important;
     }
@@ -167,7 +175,7 @@
     border-radius: 1.5rem;
     box-shadow: 0.5rem 0.5rem 1rem black;
     font-family: 'arsenal', Times, serif;
-    width: 25%;
+    width: 33%;
     background-color: var(--mainBackgroundColor);
     color: var(--mainTextColor);
 }
@@ -199,7 +207,7 @@
     justify-content: safe start;
     align-items: safe center;
     min-height: 77vh;
-    max-height: 77vh;    
+    max-height: 77vh;
 }
 
 .mainContentDiv table {
@@ -213,7 +221,7 @@
     background-color: var(--mainBackgroundColor);
 }
 
-.searchBox>form:first-child {
+.searchBox > form:first-child {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -233,27 +241,29 @@
     background-color: var(--mainContentColor);
 }
 
-.editForm>div {
+.editForm > div {
     min-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.editForm>div>div {
-    min-width: 50%;
-    max-width: 50%;
+.editForm > div > div {
     padding: 0.5rem;
     margin: 0;
 }
 
-.editForm>div>div:first-child  {
+.editForm > div > div:first-of-type {
+    min-width: 40%;
+    max-width: 40%;
     display: flex;
     justify-content: flex-end;
     align-items: center;
 }
 
-.editForm>div>div:last-child  {
+.editForm > div > div:last-child {
+    min-width: 60%;
+    max-width: 60%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -307,12 +317,14 @@
 /*.pagination div:not(.currentPage):hover {*/
 .pagination div:is(.pageLeft, .pageRight):hover {
     color: blue;
-    position: relative;    
+    position: relative;
     cursor: pointer;
 }
+
 .pageLeft:hover {
     left: -0.2rem;
 }
+
 .pageRight:hover {
     right: -0.2rem;
 }

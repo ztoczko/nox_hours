@@ -15,7 +15,7 @@ public interface RateRepository extends JpaRepository<Rate, Long> {
 
     Page<Rate> findAllByClient(Pageable pageable, Client client);
 
-    Rate findFirstByClientOrderByDateToDesc(Client client);
+//    Rate findFirstByClientOrderByDateToDesc(Client client);
 
     List<Rate> findAllByClientOrderByDateToDesc(Client client);
 }

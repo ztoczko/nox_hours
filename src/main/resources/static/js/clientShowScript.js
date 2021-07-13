@@ -15,14 +15,13 @@ function activateInputs() {
 
 document.querySelectorAll("button[data-rate-delete-button]").forEach(el => el.addEventListener("click", function () {
     const id = this.dataset.id;
-    let deleteMsg = "Czy na pewno chcesz usunąć stawkę dla okresu od " + document.querySelector("td[data-" + id + "-date-from]").innerText;
+    let deleteMsg = document.getElementById("rateDeleteMsgPart1").innerText + " " + document.querySelector("td[data-" + id + "-date-from]").innerText;
     if (document.querySelector("td[data-" + id + "-date-to]").innerText.length > 0) {
-        deleteMsg += " do " + document.querySelector("td[data-" + id + "-date-to]").innerText;
+        deleteMsg += " " + document.getElementById("rateDeleteMsgPart2").innerText + " " + document.querySelector("td[data-" + id + "-date-to]").innerText;
     }
     deleteMsg += "?";
     document.getElementById("rateDeleteMsg").innerText = deleteMsg;
-    const deleteLink = document.getElementById("confirmRateDelete").onclick + id;
+
     document.getElementById("confirmRateDelete").onclick = () => location.href = "/clients/" + this.dataset.clientId + "/rate/delete/" + id + "";
     $("#deleteRateModal").modal("show");
-}))
-;
+}));

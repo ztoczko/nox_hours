@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: zbigniew
@@ -35,67 +36,79 @@
                 <form:form modelAttribute="rate" action="/clients/${rate.client.id}/rate/add" method="post"
                            cssClass="editForm">
 
+                    <form:hidden path="client" value="${rate.client.id}"/>
                     <div>
-                        <div>Nazwa klienta:</div>
+                        <div><spring:message code="rates.client.name"/>:</div>
                         <div>${rate.client.name}</div>
-                        <form:hidden path="client" value="${rate.client.id}"/>
                     </div>
 
                     <div>
-                        <div>Data od</div>
+                        <div><spring:message code="rate.date.from"/></div>
                         <div class="input-group date datepicker" data-date-format="${dateFormat}">
                             <form:input path="dateFrom" cssClass="form-control"
-                                        cssErrorClass="form-control text-danger border-danger" cssStyle="max-width: 50%"
+                                        cssErrorClass="form-control text-danger border-danger" cssStyle="min-width:20%; max-width: 50%"
                                         readonly="true"/>
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             <form:errors path="dateFrom" cssClass="text-danger mx-2"/></div>
                     </div>
 
                     <div class="form-check form-switch p-0 m-0" style="min-height: 2rem">
-                        <div>Stawka jest na czas nieokreślony:</div>
-                        <div><form:checkbox path="rateNotExpires" value="true" cssClass="form-check-input p-0 m-0" checked="true"/></div>
+                        <div><spring:message code="rates.is.rate.indefinite"/>:</div>
+                        <div>
+                            <form:checkbox path="rateNotExpires" value="true" cssClass="form-check-input p-0 m-0"
+                                           />
+                        </div>
                     </div>
 
-                    <div id="dateToGroup" class="d-none">
-                        <div>Data do</div>
+                    <div id="dateToGroup" class="${rate.rateNotExpires == true ? "d-none" : ""}">
+                        <div><spring:message code="rate.date.to"/></div>
                         <div class="input-group date datepicker" data-date-format="${dateFormat}">
                             <form:input path="dateTo" cssClass="form-control"
-                                        cssErrorClass="form-control text-danger border-danger" cssStyle="max-width: 50%"
+                                        cssErrorClass="form-control text-danger border-danger" cssStyle="min-width:20%; max-width: 50%"
                                         readonly="true"/>
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             <form:errors path="dateTo" cssClass="text-danger mx-2"/></div>
                     </div>
-<%--                    TODO - walidacja przez js stawek?--%>
+
                     <div>
-                        <div>Stawka studenta</div>
-                        <div class="input-group"><form:input path="studentRate" cssClass="form-control"
-                                                             cssErrorClass="form-control text-danger border-danger"
-                                                             cssStyle="max-width: 50%"/>
-                            <form:errors path="studentRate" cssClass="text-danger mx-2"/></div>
+                        <div><spring:message code="rate.student.rate"/></div>
+                        <div class="input-group">
+                            <form:input path="studentRate" cssClass="form-control"
+                                        cssErrorClass="form-control text-danger border-danger"
+                                        cssStyle="max-width: 50%" data-cash="true"/>
+                            <form:errors path="studentRate" cssClass="text-danger mx-2"/>
+                        </div>
                     </div>
 
                     <div>
-                        <div>Stawka aplikanta</div>
-                        <div class="input-group"><form:input path="applicantRate" cssClass="form-control"
-                                                             cssErrorClass="form-control text-danger border-danger"
-                                                             cssStyle="max-width: 50%"/>
-                            <form:errors path="applicantRate" cssClass="text-danger mx-2"/></div>
+                        <div><spring:message code="rate.applicant.rate"/></div>
+                        <div class="input-group">
+                            <form:input path="applicantRate" cssClass="form-control"
+                                        cssErrorClass="form-control text-danger border-danger"
+                                        cssStyle="max-width: 50%" data-cash="true"/>
+                            <form:errors path="applicantRate" cssClass="text-danger mx-2"/>
+
+                        </div>
                     </div>
 
                     <div>
-                        <div>Stawka adwokata</div>
-                        <div class="input-group"><form:input path="attorneyRate" cssClass="form-control"
-                                                             cssErrorClass="form-control text-danger border-danger"
-                                                             cssStyle="max-width: 50%"/>
-                            <form:errors path="attorneyRate" cssClass="text-danger mx-2"/></div>
+                        <div><spring:message code="rate.attorney.rate"/></div>
+                        <div class="input-group">
+                            <form:input path="attorneyRate" cssClass="form-control"
+                                        cssErrorClass="form-control text-danger border-danger"
+                                        cssStyle="max-width: 50%" data-cash="true"/>
+                            <form:errors path="attorneyRate" cssClass="text-danger mx-2"/>
+                        </div>
                     </div>
 
                     <div>
-                        <div>Stawka partnera</div>
-                        <div class="input-group"><form:input path="partnerRate" cssClass="form-control"
-                                                             cssErrorClass="form-control text-danger border-danger"
-                                                             cssStyle="max-width: 50%"/>
-                            <form:errors path="partnerRate" cssClass="text-danger mx-2"/></div>
+                        <div><spring:message code="rate.partner.rate"/></div>
+                        <div class="input-group">
+                            <form:input path="partnerRate" cssClass="form-control"
+                                        cssErrorClass="form-control text-danger border-danger"
+                                        cssStyle="max-width: 50%" data-cash="true"/>
+                            <form:errors path="partnerRate" cssClass="text-danger mx-2"/>
+                        </div>
                     </div>
 
                     <%--                    DATEPICKER TEMPLATE:--%>
@@ -130,9 +143,9 @@
                     <%--                        </div>--%>
                     <%--                    </sec:authorize>--%>
                     <div>
-                        <button type="button" class="button mx-2" onclick="location.href='/clients/list'">Powrót
+                        <button type="button" class="button mx-2" onclick="location.href='/clients/list'"><spring:message code="app.back"/>
                         </button>
-                        <button type="submit" class="button mx-2">Zapisz</button>
+                        <button type="submit" class="button mx-2"><spring:message code="app.save"/></button>
                     </div>
                 </form:form>
                 <!--            RATE DETAILS END-->

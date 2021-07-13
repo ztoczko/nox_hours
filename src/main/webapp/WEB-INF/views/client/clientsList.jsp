@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: zbigniew
@@ -40,8 +41,8 @@
                         <input type="hidden" name="all" value="${all}"/>
                         <input type="hidden" name="sortName" value="${sortName}"/>
                         <input type="hidden" name="sortType" value="${sortType}"/>
-                        <input type="text" name="search" placeholder="wpisz szukany tekst..."/>
-                        <button type="submit" class="button"><i class="fa fa-search"></i> Szukaj</button>
+                        <input type="text" name="search" placeholder="<spring:message code="search.placeholder"/>"/>
+                        <button type="submit" class="button"><i class="fa fa-search"></i> <spring:message code="search.msg"/></button>
                     </form>
                     <form method="get">
                         <input type="hidden" name="search" value="${search}"/>
@@ -51,25 +52,25 @@
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="showAllToggle" name="all"
                                    value="true" ${all ? "checked" : ""}>
-                            <label class="form-check-label">Pokaż również nieaktywnych klientów</label>
+                            <label class="form-check-label"><spring:message code="clients.list.show.inactive.msg"/></label>
                         </div>
                     </form>
                 </div>
                 <c:if test="${!empty param.deleteSuccess}">
-                    <div class="text-success mb-2">Klient usunięty</div>
+                    <div class="text-success mb-2"><spring:message code="clients.list.client.deleted.msg"/></div>
                 </c:if>
                 <c:if test="${!empty param.addSuccess}">
-                    <div class="text-success mb-2">Klient dodany</div>
+                    <div class="text-success mb-2"><spring:message code="clients.list.client.added.msg"/></div>
                 </c:if>
                 <table class="table">
                     <thead>
                     <tr>
-                        <td class="fs-4 p-3" colspan="2">Klienci</td>
-                        <td class="text-center" valign="middle"><button type="button" class="button m-auto" onclick="location.href='/clients/add'">Dodaj nowego</button> </td>
+                        <td class="fs-4 p-3" colspan="2"><spring:message code="clients.list.clients"/></td>
+                        <td class="text-center" valign="middle"><button type="button" class="button m-auto" onclick="location.href='/clients/add'"><spring:message code="clients.list.add.new"/></button> </td>
                     </tr>
                     <tr>
                         <th class="pointer">
-                            Data utworzenia
+                            <spring:message code="client.created"/>
                             <c:choose>
                                 <c:when test="${sortName.equals('created')}">
                                     <c:if test="${sortType.equals('asc')}">
@@ -88,7 +89,7 @@
                             </c:choose>
                         </th>
                         <th class="pointer">
-                            Nazwa
+                            <spring:message code="client.name"/>
                             <c:choose>
                                 <c:when test="${sortName.equals('name')}">
                                     <c:if test="${sortType.equals('asc')}">
@@ -106,7 +107,7 @@
                                 </c:otherwise>
                             </c:choose>
                         </th>
-                        <th>Akcje</th>
+                        <th><spring:message code="app.actions"/></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -114,7 +115,7 @@
                     <c:if test="${clients.size() == 0}">
                         <tr>
                             <td colspan="3">
-                                Brak wyników wyszukiwania
+                                <spring:message code="clients.list.no.clients.message"/>
                             </td>
                         </tr>
                         <span class="d-none">${totalPages = 1}</span>
@@ -125,7 +126,7 @@
                             <td>${client.name}</td>
                             <td>
                                 <button type="button" class="button"
-                                        onclick="location.href = '/clients/show/${client.id}'">Przejdź
+                                        onclick="location.href = '/clients/show/${client.id}'"><spring:message code="app.go.to.details"/>
                                 </button>
                             </td>
                         </tr>
@@ -146,7 +147,7 @@
                     <div ${page > 1 ? "class=\"pageLeft\"" : ""}><i
                             class="fa fa-angle-left" ${page > 1 ? "onclick=\"location.href='".concat(urlPaging).concat("&page=").concat(page - 1).concat("'\"") : ""}></i>
                     </div>
-                    <div class="currentPage">${page} z ${totalPages}</div>
+                    <div class="currentPage">${page} <spring:message code="app.pagination"/> ${totalPages}</div>
                     <div ${page < totalPages ? "class=\"pageRight\"" : ""}><i
                             class="fa fa-angle-right" ${page < totalPages ? "onclick=\"location.href='".concat(urlPaging).concat("&page=").concat(page + 1).concat("'\"") : ""}></i>
                     </div>
