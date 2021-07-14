@@ -2,6 +2,7 @@ package pl.noxhours.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.noxhours.user.DTO.UserNameDTO;
 
 import java.util.List;
 
@@ -33,6 +34,18 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public List<User> findAllActive() {
+        return userRepository.findAllByIsDeleted(false);
+    }
+
+    public UserNameDTO UserToUserNameDto(User user) {
+        return new UserNameDTO(user.getId(), user.getFullName());
+    }
+
+    public User UserNameDtoToUser(UserNameDTO userNameDTO) {
+        return read(userNameDTO.getId());
     }
 
 }

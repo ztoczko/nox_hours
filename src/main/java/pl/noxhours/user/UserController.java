@@ -1,6 +1,7 @@
 package pl.noxhours.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes({"loggedUserName"})
+@SessionAttributes({"loggedUserName", "loggedUserId", "loggedUserAdminStatus"})
 public class UserController {
 
     private final UserService userService;
@@ -40,13 +41,16 @@ public class UserController {
         return "redirect:/login";
     }
 
+    @RequestMapping("/logging")
+    public String logging(Model model) {
+        model.addAttribute("loggedUserName", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getFullName());
+        model.addAttribute("loggedUserId", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getId());
+        model.addAttribute("loggedUserAdminStatus", SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")));
+        return "redirect:/dashboard";
+    }
+
     @RequestMapping("/dashboard")
-    public String dashboard(Model model) {
-
-        if (model.getAttribute("loggedUserName") == null) {
-            model.addAttribute("loggedUserName", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getFullName());
-        }
-
+    public String dashboard() {
         return "dashboard";
     }
 

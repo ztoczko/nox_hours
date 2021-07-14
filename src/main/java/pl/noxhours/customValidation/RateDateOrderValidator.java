@@ -10,7 +10,7 @@ public class RateDateOrderValidator implements ConstraintValidator<RateDateOrder
 
     public boolean isValid(Rate rate, ConstraintValidatorContext context) {
 
-        boolean isValid = rate.getRateNotExpires() || (rate.getDateTo() != null && !rate.getDateFrom().isAfter(rate.getDateTo()));
+        boolean isValid = (rate.getRateNotExpires() != null && rate.getRateNotExpires()) || (rate.getDateTo() != null && !rate.getDateFrom().isAfter(rate.getDateTo()));
 
         if (!isValid) {
             context.buildConstraintViolationWithTemplate("{pl.noxhours.customValidation.RateDateOrder.message}").addPropertyNode("dateTo").addConstraintViolation();

@@ -64,6 +64,10 @@ public class User {
     @Column(name = "deleted_date")
     private LocalDateTime deleteDate;
 
+    public User(Long id) {
+        this.id = id;
+    }
+
     public String getFullName() {
         return firstName + " " + lastName;
     }

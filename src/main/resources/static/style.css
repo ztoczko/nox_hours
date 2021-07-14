@@ -207,7 +207,7 @@
     justify-content: safe start;
     align-items: safe center;
     min-height: 77vh;
-    max-height: 77vh;
+    max-height: 87vh;
 }
 
 .mainContentDiv table {
@@ -236,12 +236,12 @@
     flex-direction: column;
 }
 
-.editForm input[disabled][type="text"] {
+.editForm input[disabled][type="text"], .editForm textarea[disabled], .editForm select[disabled] {
     border: 0;
     background-color: var(--mainContentColor);
 }
 
-.editForm > div {
+.editForm > div:not(.toggleTableButtonGroup) {
     min-width: 100%;
     display: flex;
     justify-content: center;
@@ -253,7 +253,7 @@
     margin: 0;
 }
 
-.editForm > div > div:first-of-type {
+.editForm > div:not(.toggleTableButtonGroup) > div:first-of-type {
     min-width: 40%;
     max-width: 40%;
     display: flex;
@@ -261,12 +261,43 @@
     align-items: center;
 }
 
-.editForm > div > div:last-child {
+.editForm > div:not(.toggleTableButtonGroup) > div:last-child {
     min-width: 60%;
     max-width: 60%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.toggleTableButtonGroup {
+    min-width: 40%;
+    max-width: 40%;
+    display: flex;
+    justify-content: safe center;
+    align-items: safe center;
+}
+
+.toggleTableButtonGroup:hover {
+    cursor: pointer;
+}
+
+.toggleTableButtonGroup > div {
+    border-color: var(--mainBackgroundColor);
+    border-style: solid;
+    border-width: 0.2rem;
+    text-align: center;
+    min-width: 50%;
+}
+.toggleTableButtonLeft {
+    border-radius: 1rem 0 0 1rem;
+}
+
+.toggleTableButtonRight {
+    border-radius: 0 1rem 1rem 0;
+}
+
+.toggleTableButtonGroup > div.buttonSelected {
+    background-color: var(--mainBackgroundColor);
 }
 
 .table th {
@@ -429,3 +460,39 @@ footer {
     box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
 }
 
+
+/*input[type=radio] {*/
+/*    position: absolute;*/
+/*    visibility: hidden;*/
+/*    display: none;*/
+/*}*/
+/*label {*/
+/*    !*color: #9a929e;*!*/
+/*    color: var(--mainTextColor);*/
+/*    display: inline-block;*/
+/*    cursor: pointer;*/
+/*    font-weight: bold;*/
+/*    padding: 5px 20px;*/
+/*    min-width: 50%;*/
+/*    margin: 0;*/
+/*}*/
+/*input[type=radio]:checked + label {*/
+/*    !*color: #ccc8ce;*!*/
+/*    color: var(--mainTextColor);*/
+/*    !*background: #675f6b;*!*/
+/*    background: var(--mainBackgroundColor);*/
+/*}*/
+/*label + input[type=radio] + label {*/
+/*    border-left: solid 3px var(--mainBackgroundColor);*/
+/*    !*border-left: solid 3px #675f6b;*!*/
+/*}*/
+/*.radio-group {*/
+/*    border: solid 3px var(--mainBackgroundColor);*/
+/*    !*border: solid 3px #675f6b;*!*/
+/*    display: inline-block;*/
+/*    margin: 0.5rem;*/
+/*    padding: 0;*/
+/*    border-radius: 10px;*/
+/*    overflow: hidden;*/
+/*    min-width: 40%;*/
+/*}*/

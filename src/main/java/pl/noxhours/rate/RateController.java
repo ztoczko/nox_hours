@@ -55,7 +55,7 @@ public class RateController {
             return "redirect:/clients/list";
         }
         rateService.delete(rate);
-        return "redirect:/clients/show/" + rate.getClient().getId() + "?rateDeleteSuccess=true";
+        return "redirect:/clients/show/" + rate.getClient().getId() + "?rateDeleteSuccess=true&showRates=true";
     }
 
 

@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import pl.noxhours.NoxHoursApplication;
 import pl.noxhours.rate.Rate;
 import pl.noxhours.rate.RateService;
+import pl.noxhours.timesheet.Timesheet;
+import pl.noxhours.timesheet.TimesheetService;
 
 import javax.validation.Valid;
 import java.util.Locale;
@@ -29,6 +31,7 @@ public class ClientController {
 
     private final ClientService clientService;
     private final RateService rateService;
+    private final TimesheetService timesheetService;
 
     @RequestMapping("/list")
     public String listClients(Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) Boolean all, @RequestParam(required = false) String sortName, @RequestParam(required = false) String sortType, String search) {
@@ -70,7 +73,6 @@ public class ClientController {
 //            return "redirect:/clients/list";
             return "/client/clientShow";
         }
-        //TODO Przekazać do widoku listę timesheetów
 
         model.addAttribute("client", client);
 //        System.out.println(client.getRates());
@@ -87,6 +89,18 @@ public class ClientController {
             model.addAttribute("totalRatePages", rates.getTotalPages());
             model.addAttribute("rates", rates.getContent());
         }
+        if (timesheetPage == null || timesheetPage < 1) {
+            timesheetPage = 1;
+        }
+        Page<Timesheet> timesheets = timesheetService.findAll(PageRequest.of(timesheetPage - 1, 10, Sort.by(Sort.Direction.DESC, "dateExecuted")), client);
+        if (timesheets.getTotalPages() < timesheetPage && timesheetPage != 1) {
+            timesheetPage = timesheets.getTotalPages();
+            timesheets = timesheetService.findAll(PageRequest.of(timesheetPage - 1, 10, Sort.by(Sort.Direction.DESC, "dateExecuted")), client);
+        }
+        timesheets.getContent().forEach(timesheetService::replaceUserWithDto);
+        model.addAttribute("timesheetPage", timesheetPage);
+        model.addAttribute("totalTimesheetPages", timesheets.getTotalPages());
+        model.addAttribute("timesheets", timesheets.getContent());
         return "/client/clientShow";
     }
 
@@ -104,10 +118,16 @@ public class ClientController {
             model.addAttribute("edit", true);
             if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
                 Page<Rate> rates = rateService.findAllByClient(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dateFrom")), client);
-                model.addAttribute("ratePage", 0);
+                model.addAttribute("ratePage", 1);
                 model.addAttribute("totalRatePages", rates.getTotalPages());
                 model.addAttribute("rates", rates.getContent());
             }
+
+            Page<Timesheet> timesheets = timesheetService.findAll(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "dateExecuted")), client);
+            timesheets.getContent().forEach(timesheetService::replaceUserWithDto);
+            model.addAttribute("timesheetPage", 1);
+            model.addAttribute("totalTimesheetPages", timesheets.getTotalPages());
+            model.addAttribute("timesheets", timesheets.getContent());
             return "/client/clientShow";
         }
         clientService.update(client);

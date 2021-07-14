@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.noxhours.rate.RateService;
+import pl.noxhours.timesheet.TimesheetService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,7 @@ public class ClientService {
 
     private final ClientRepository clientRepository;
     private final RateService rateService;
+    private final TimesheetService timesheetService;
 
     public void create(Client client) {
         client.setCreated(LocalDateTime.now());
@@ -43,11 +45,16 @@ public class ClientService {
     public void delete(Client client) {
         log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " deleted client with id of " + client.getId());
         rateService.findAllByClient(client).forEach(rateService::delete);
+        timesheetService.findAll(client).forEach(timesheetService::delete);
         clientRepository.delete(client);
     }
 
     public List<Client> findAll() {
         return clientRepository.findAll();
+    }
+
+    public List<Client> findAllActive() {
+        return clientRepository.findAllByClosedOrderByCreatedDesc(false);
     }
 
     public Page<Client> findAll(Pageable pageable, boolean all) {

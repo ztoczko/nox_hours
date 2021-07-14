@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import pl.noxhours.client.Client;
 import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.user.DTO.UserNameDTO;
 import pl.noxhours.user.User;
 
 import javax.persistence.*;
@@ -49,7 +50,7 @@ public class Timesheet {
 
     @Column(name = "rank_when_created")
     @Range(min = 1, max = 4)
-    private Integer rankWhenCreated;
+    private Byte rankWhenCreated;
 
     @NotNull
     @ManyToOne
@@ -61,6 +62,9 @@ public class Timesheet {
     @JoinColumn(name = "client_id")
     private Client client;
 
+    @Transient
+    private UserNameDTO userNameDTO;
+
     public String getCreatedString() {
         return DateTimeFormatter.ofPattern(GlobalConstants.DATE_TIME_FORMAT).format(created);
     }
@@ -68,4 +72,9 @@ public class Timesheet {
     public String getDateExecutedString() {
         return DateTimeFormatter.ofPattern(GlobalConstants.DATE_FORMAT).format(dateExecuted);
     }
+
+    public String getShortDescription() {
+        return description == null || description.length() < 18 ? description : description.substring(0, 15).concat("...");
+    }
+
 }
