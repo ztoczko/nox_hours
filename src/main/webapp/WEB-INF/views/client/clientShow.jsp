@@ -292,6 +292,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <p><spring:message code="clients.show.client.delete.confirmation.msg"/> ${client.name}?</p>
+                        <p><spring:message code="clients.show.client.delete.confirmation.msg2"/></p>
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
                         <button type="button" class="button" style="min-width: 25%"

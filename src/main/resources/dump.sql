@@ -3,10 +3,10 @@
 USE nox_hours;
 
 
-INSERT INTO users VALUES(null, "2020-01-01 12:00:00", "zzzz@wp.pl", "sample", false, false, "superAdmin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "ARS", 1);
-INSERT INTO users VALUES(null, "2020-01-01 12:00:00", "user@wp.pl", "sample", false, false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
-INSERT INTO users VALUES(null, "2020-01-01 12:00:00", "admin@wp.pl", "sample", false, false, "admin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "A", 1);
-INSERT INTO users VALUES(null, "2020-01-01 12:00:00", "rates@wp.pl", "sample", false, false, "rateRole", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "R", 1);
+INSERT INTO users VALUES(null, null, "zzzz@wp.pl", "sample", false, false, "superAdmin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "ARS", 1);
+INSERT INTO users VALUES(null, null, "user@wp.pl", "sample", false, false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, null, "admin@wp.pl", "sample", false, false, "admin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "A", 1);
+INSERT INTO users VALUES(null, null, "rates@wp.pl", "sample", false, false, "rateRole", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "R", 1);
 
 
 INSERT INTO clients VALUES(null, false, "2020-01-01 12:00:00", "aaa");

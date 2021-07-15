@@ -1,11 +1,19 @@
 package pl.noxhours.user;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Validator;
 import pl.noxhours.user.DTO.UserNameDTO;
+import pl.noxhours.user.DTO.UserPasswordChangeDTO;
+import pl.noxhours.user.DTO.UserPasswordResetDTO;
+import pl.noxhours.user.DTO.UserSettingsDTO;
 
 import java.util.List;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -26,6 +34,7 @@ public class UserService {
 
     public void update(User user) {
         userRepository.save(user);
+        log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " updated data of with id of " + user.getId());
     }
 
     public void delete(User user) {
@@ -46,6 +55,32 @@ public class UserService {
 
     public User UserNameDtoToUser(UserNameDTO userNameDTO) {
         return read(userNameDTO.getId());
+    }
+
+    public UserSettingsDTO UserToUserSettingsDto(User user) {
+        return new UserSettingsDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail());
+    }
+
+    public User UserSettingsDtoToUser(UserSettingsDTO userSettingsDTO) {
+        User user = read(userSettingsDTO.getId());
+        user.setFirstName(userSettingsDTO.getFirstName());
+        user.setLastName(userSettingsDTO.getLastName());
+        user.setEmail(userSettingsDTO.getEmail());
+        return user;
+    }
+
+    public UserPasswordResetDTO UserToUserPasswordResetDto(User user) {
+        return new UserPasswordResetDTO(user.getId());
+    }
+
+    public UserPasswordChangeDTO UserToUserPasswordChangeDto(User user) {
+        return new UserPasswordChangeDTO(user.getId());
+    }
+
+    public User UserPasswordDtoToUser(UserPasswordResetDTO userPasswordResetDTO) {
+        User user = read(userPasswordResetDTO.getId());
+        user.setPassword(new BCryptPasswordEncoder(10).encode(userPasswordResetDTO.getNewPassword()));
+        return user;
     }
 
 }

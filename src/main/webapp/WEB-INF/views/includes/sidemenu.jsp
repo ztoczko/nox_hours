@@ -19,7 +19,7 @@
                 class="fa fa-users"></i><span class="menuText"> <spring:message code="sidemenu.users"/></span>
         </li>
     </sec:authorize>
-    <li id="menu-settings" class="nav-item fs-5 px-4 py-2 my-1 text-center" onclick="location.href='/settings'"><i
+    <li id="menu-settings" class="nav-item fs-5 px-4 py-2 my-1 text-center" onclick="location.href='/settings/show'"><i
             class="fa fa-gear"></i><span class="menuText"> <spring:message code="sidemenu.settings"/></span>
     </li>
     <li id="menu-logout" class="nav-item fs-5 px-4 py-2 my-1 text-center" onclick="location.href='/logout'"><i

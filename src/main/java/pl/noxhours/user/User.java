@@ -3,6 +3,10 @@ package pl.noxhours.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.UniqueElements;
+import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.customValidation.UniqueEmail;
+import pl.noxhours.user.DTO.AbstractUserEmail;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,7 +19,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+
+public class User extends AbstractUserEmail {
 
     public static final String TABLE_NAME = "users";
 
@@ -24,11 +29,12 @@ public class User {
     private Long id;
 
     @Column(name = "first_name", nullable = false)
-    @Pattern(regexp = "[a-zA-ZĄ-ćęĘŁ-ńÓóŚśŹ-ż]{2,255}")
+    @Pattern(regexp = GlobalConstants.FIRST_NAME_REGEXP, message = "{javax.validation.constraints.Pattern.firstName.message}")
+//    @Size(min = 10)
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
-    @Pattern(regexp = "[a-zA-ZĄ-ćęĘŁ-ńÓóŚśŹ-ż]{2,}(( ?- ?)[a-zA-ZĄ-ćęĘŁ-ńÓóŚśŹ-ż]{2,})*")
+    @Pattern(regexp = GlobalConstants.LAST_NAME_REGEXP, message = "{javax.validation.constraints.Pattern.lastName.message}")
     @Size(max = 255)
     private String lastName;
 
