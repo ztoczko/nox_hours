@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -34,18 +35,21 @@ public class ClientController {
     private final TimesheetService timesheetService;
 
     @RequestMapping("/list")
-    public String listClients(Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) Boolean all, @RequestParam(required = false) String sortName, @RequestParam(required = false) String sortType, String search) {
+    public String listClients(Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) Boolean all, @RequestParam(required = false) String sortName, @RequestParam(required = false) String sortType, @RequestParam(required = false) String search) {
         if (page == null || page < 1) {
             page = 1;
         }
         if (all == null) {
            all = false;
         }
-        if (sortName == null || !(sortName.toLowerCase().equals("created") || sortName.toLowerCase().equals("name"))) {
+        if (sortName == null || !(sortName.equalsIgnoreCase("created") || sortName.equalsIgnoreCase("name"))) {
             sortName = "created";
         }
-        if (sortType == null || !(sortType.toLowerCase().equals("asc") || sortType.toLowerCase().equals("desc"))) {
+        if (sortType == null || !(sortType.equalsIgnoreCase("asc") || sortType.equalsIgnoreCase("desc"))) {
             sortType = "desc";
+        }
+        if (search != null) {
+            search = search.replaceAll("\\s", "");
         }
         model.addAttribute("search", search);
         model.addAttribute("all", all);
@@ -53,11 +57,13 @@ public class ClientController {
         model.addAttribute("sortType", sortType.toLowerCase());
 
         Sort sort = Sort.by(Sort.Direction.fromString(sortType), sortName);
-        Page<Client> clientPage = search == null || search.isEmpty() ? clientService.findAll(PageRequest.of(page - 1, 10, sort), all) : clientService.findAllSearch(PageRequest.of(page - 1, 10, sort), search, all);
+        Pageable pageable = PageRequest.of(page - 1, 10, sort);
+        Page<Client> clientPage = search == null || search.isEmpty() ? clientService.findAll(pageable, all) : clientService.findAllSearch(pageable, search, all);
 
         if (page != 1 && page > clientPage.getTotalPages()) {
             page = clientPage.getTotalPages();
-            clientPage = search == null || search.isEmpty() ? clientService.findAll(PageRequest.of(page - 1, 10, sort), all) : clientService.findAllSearch(PageRequest.of(page - 1, 10, sort), search, all);
+            pageable = PageRequest.of(page - 1, 10, sort);
+            clientPage = search == null || search.isEmpty() ? clientService.findAll(pageable, all) : clientService.findAllSearch(pageable, search, all);
         }
         model.addAttribute("page", page);
         model.addAttribute("totalPages", clientPage.getTotalPages());
@@ -70,8 +76,8 @@ public class ClientController {
 
         if (client == null) {
             log.warn("user " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to access invalid Client entity");
-//            return "redirect:/clients/list";
-            return "/client/clientShow";
+            return "redirect:/clients/list";
+//            return "/client/clientShow";
         }
 
         model.addAttribute("client", client);

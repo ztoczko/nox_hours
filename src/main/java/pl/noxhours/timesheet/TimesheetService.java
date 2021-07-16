@@ -57,6 +57,10 @@ public class TimesheetService {
         return timesheetRepository.findAllByClient(pageable, client);
     }
 
+    public List<Timesheet> findAll(User user) {
+        return timesheetRepository.findAllByUser(user);
+    }
+
     public void replaceUserWithDto(Timesheet timesheet) {
         timesheet.setUserNameDTO(userService.UserToUserNameDto(timesheet.getUser()));
         timesheet.setUser(new User(timesheet.getUserNameDTO().getId()));

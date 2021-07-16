@@ -3,11 +3,32 @@
 USE nox_hours;
 
 
-INSERT INTO users VALUES(null, null, "zzzz@wp.pl", "sample", false, false, "superAdmin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "ARS", 1);
-INSERT INTO users VALUES(null, null, "user@wp.pl", "sample", false, false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
-INSERT INTO users VALUES(null, null, "admin@wp.pl", "sample", false, false, "admin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "A", 1);
-INSERT INTO users VALUES(null, null, "rates@wp.pl", "sample", false, false, "rateRole", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "R", 1);
-
+INSERT INTO users VALUES(null, "zzzz@wp.pl", "sample", false, "superAdmin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "ARS", 1);
+INSERT INTO users VALUES(null, "user@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "admin@wp.pl", "sample", false, "admin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "A", 1);
+INSERT INTO users VALUES(null, "rates@wp.pl", "sample", false, "rateRole", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "R", 1);
+INSERT INTO users VALUES(null, "user@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user1@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 3);
+INSERT INTO users VALUES(null, "user2@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user3@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 2);
+INSERT INTO users VALUES(null, "user4@wp.pl", "test", true, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user5@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user6@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 1);
+INSERT INTO users VALUES(null, "user7@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 2);
+INSERT INTO users VALUES(null, "user8@wp.pl", "sample", true, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 3);
+INSERT INTO users VALUES(null, "user9@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user10@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 2);
+INSERT INTO users VALUES(null, "user11@wp.pl", "test", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 1);
+INSERT INTO users VALUES(null, "user12@wp.pl", "sample", true, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user13@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 2);
+INSERT INTO users VALUES(null, "user14@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 2);
+INSERT INTO users VALUES(null, "user15@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user16@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 3);
+INSERT INTO users VALUES(null, "user17@wp.pl", "sample", true, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user18@wp.pl", "test", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 3);
+INSERT INTO users VALUES(null, "user19@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "admin1@wp.pl", "sample", true, "admin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "A", 1);
+INSERT INTO users VALUES(null, "rates1@wp.pl", "test", false, "rateRole", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "R", 1);
 
 INSERT INTO clients VALUES(null, false, "2020-01-01 12:00:00", "aaa");
 INSERT INTO clients VALUES(null, false, "2019-01-01 12:00:00", "bbb");

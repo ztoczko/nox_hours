@@ -2,30 +2,37 @@ package pl.noxhours.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.user.DTO.UserAdminListDTO;
 import pl.noxhours.user.DTO.UserPasswordChangeDTO;
 import pl.noxhours.user.DTO.UserSettingsDTO;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes({"loggedUserName", "loggedUserId", "loggedUserAdminStatus", "forceLogout"})
+@SessionAttributes({"loggedUserName", "loggedUserId", "loggedUserAdminStatus", "loggedUserSuperAdminStatus", "forceLogout"})
 public class UserController {
 
     private final UserService userService;
 
     //TODO Wprowadzić opcję checkboxa z zapamiętaniem użytkownika - pola logged_key i persistence_logging (ciacho z key czyszczone przy wylogowaniu) w bazie - czy trzeba wtedy POSTa Spring Security nadpisać?
+    //TODO Wprowadzić reset hasła przez użytkownika
 //    @GetMapping("/login")
 //    public String login() {
 //        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("USER")) {
@@ -56,6 +63,7 @@ public class UserController {
         model.addAttribute("loggedUserName", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getFullName());
         model.addAttribute("loggedUserId", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getId());
         model.addAttribute("loggedUserAdminStatus", SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")));
+        model.addAttribute("loggedUserSuperAdminStatus", SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN")));
         return "redirect:/dashboard";
     }
 
@@ -80,7 +88,6 @@ public class UserController {
 //            model.addAttribute("org.springframework.validation.BindingResult.user", result);
             model.addAttribute("edit", true);
             model.addAttribute("user", user);
-            System.out.println(model.asMap());
             return "user/settings";
         }
         if (user.getId() != model.getAttribute("loggedUserId")) {
@@ -91,12 +98,11 @@ public class UserController {
         userService.update(userService.UserSettingsDtoToUser(user));
         if (!user.getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
 
-//            TODO zrobić filtr dla force logout
+//            TODO zrobić filtr dla force logout i zrobić forcelogout jeśli admin zmieni email
             model.addAttribute("forceLogout", true);
         }
         return "redirect:/settings/show?editSuccess=true" + (!user.getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()) ? "&logout=true" : "");
     }
-//TODO dodać passwordDTO
 
     @GetMapping("/settings/changePassword")
     public String changePasswordSendToForm(Model model) {
@@ -115,6 +121,124 @@ public class UserController {
         }
         userService.update(userService.UserPasswordDtoToUser(user));
         return "redirect:/settings/show";
+    }
+
+    @RequestMapping("/admin/list")
+    public String adminListUsers(Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) Boolean all, @RequestParam(required = false) String sortName, @RequestParam(required = false) String sortType, @RequestParam(required = false) String search) {
+        if (page == null || page < 1) {
+            page = 1;
+        }
+        if (all == null) {
+            all = false;
+        }
+        if (sortName == null || !(sortName.equalsIgnoreCase("firstName") || sortName.equalsIgnoreCase("lastName") || sortName.equalsIgnoreCase("email") || sortName.equalsIgnoreCase("rank") || sortName.equalsIgnoreCase("isLocked"))) {
+            sortName = "id";
+        }
+        if (sortType == null || !(sortType.equalsIgnoreCase("asc") || sortType.equalsIgnoreCase("desc"))) {
+            sortType = "desc";
+        }
+        if (search != null) {
+            search = search.replaceAll("\\s", "");
+        }
+        model.addAttribute("search", search);
+        model.addAttribute("all", all);
+        model.addAttribute("sortName", sortName.toLowerCase());
+        model.addAttribute("sortType", sortType.toLowerCase());
+
+        if (sortName.equalsIgnoreCase("firstname")) {
+            sortName = "firstName";
+        }
+        if (sortName.equalsIgnoreCase("lastname")) {
+            sortName = "lastName";
+        }
+        Sort sort = Sort.by(Sort.Direction.fromString(sortType), sortName);
+        Pageable pageable = PageRequest.of(page - 1, 10, sort);
+        Page<User> users = search == null || search.isEmpty() ? userService.findAll(pageable, all) : userService.findAll(pageable, all, search);
+        if (page > users.getTotalPages()) {
+            page = users.getTotalPages();
+            pageable = PageRequest.of(page - 1, 10, sort);
+            users = search == null || search.isEmpty() ? userService.findAll(pageable, all) : userService.findAll(pageable, all, search);
+        }
+        model.addAttribute("page", page);
+        model.addAttribute("totalPages", users.getTotalPages());
+        model.addAttribute("users", users.getContent().stream().map(userService::UserToUserAdminListDto).collect(Collectors.toList()));
+
+        return "admin/userList";
+    }
+
+    @RequestMapping("admin/show/{user}")
+    public String showUser(@PathVariable(required = false) User user, Model model) {
+        if (user == null) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to display invalid user");
+            return "redirect:/dashboard";
+        }
+        model.addAttribute("userPermission", userService.checkEditPermissionForAdmin(user));
+        model.addAttribute("user", userService.UserToUserAdminListDto(user));
+        return "admin/userShow";
+
+    }
+
+    @GetMapping("admin/edit")
+    public String redirectToList() {
+        return "redirect:/admin/list";
+    }
+
+    @PostMapping("admin/edit")
+    public String userEdit(@ModelAttribute("user") @Valid UserAdminListDTO user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("edit", true);
+            model.addAttribute("userPermission", userService.checkEditPermissionForAdmin(userService.UserAdminListDtoToUser(user)));
+            return "admin/userShow";
+        }
+        if (!userService.checkEditPermissionForAdmin(userService.UserAdminListDtoToUser(user))) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to modify user with id of " + user.getId() + " without proper privilages");
+            return "redirect:/dashboard";
+        }
+        if (Arrays.stream(user.getPrivileges()).collect(Collectors.toList()).contains("S") && !SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN"))) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to give to user with id " + user.getId() + " with Superadmin privileges without proper privileges");
+        }
+        userService.update(userService.UserAdminListDtoToUser(user));
+
+        if (model.getAttribute("loggedUserId") == user.getId() && !user.getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+            model.addAttribute("forceLogout", true);
+        }
+        return "redirect:/admin/show/" + user.getId() + "?editSuccess=true";
+    }
+
+    @RequestMapping("admin/delete/{user}")
+    public String deleteUser(@PathVariable(required = false) User user) {
+        if (user == null) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to delete invalid user");
+            return "redirect:/dashboard";
+        }
+        if (!userService.checkEditPermissionForAdmin(user)) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to delete user with id of " + user.getId() + " without proper privileges");
+            return "redirect:/dashboard";
+        }
+        userService.delete(user);
+        return "redirect:/admin/list?deleteSuccess=true";
+    }
+
+    @GetMapping("/admin/add")
+    public String addUserSendToForm(Model model) {
+        model.addAttribute("user", new UserAdminListDTO());
+        return "admin/userAdd";
+    }
+
+    @PostMapping("/admin/add")
+    public String addUser(@ModelAttribute("user") @Valid UserAdminListDTO user, BindingResult bindingResult, Model model) {
+
+        if (bindingResult.hasErrors()) {
+            return "admin/userAdd";
+        }
+        if (Arrays.stream(user.getPrivileges()).collect(Collectors.toList()).contains("S") && !SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN"))) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to add user with SuperAdmin privileges without proper privileges");
+        }
+        User completeUser = userService.UserAdminListDtoToUser(user);
+        completeUser.setPassword(new BCryptPasswordEncoder(10).encode(GlobalConstants.DEFAULT_PASSWORD));
+        completeUser.setPasswordReset(false);
+        userService.create(completeUser);
+        return "redirect:/admin/list?addSuccess=true";
     }
 
 }

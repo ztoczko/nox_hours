@@ -45,7 +45,7 @@ public class RateController {
         }
 
         rateService.create(rate);
-        return "redirect:/clients/show/" + rate.getClient().getId() + "?rateAddSuccess=true";
+        return "redirect:/clients/show/" + rate.getClient().getId() + "?rateAddSuccess=true&showRates=true";
     }
 
     @RequestMapping("/delete/{rate}")

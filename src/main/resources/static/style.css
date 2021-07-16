@@ -269,6 +269,15 @@
     align-items: center;
 }
 
+.checkBoxGroup {
+    flex-direction: column;
+    align-items: flex-start !important;
+}
+
+.checkBoxGroup > div {
+    padding: 0 .75rem;
+}
+
 .toggleTableButtonGroup {
     min-width: 40%;
     max-width: 40%;

@@ -11,6 +11,9 @@ public class GlobalConstants {
     public static final String FIRST_NAME_REGEXP = "[a-zA-ZĄ-ćęĘŁ-ńÓóŚśŹ-ż]{2,255}";
     public static final String LAST_NAME_REGEXP = "[a-zA-ZĄ-ćęĘŁ-ńÓóŚśŹ-ż]{2,}(( ?- ?)[a-zA-ZĄ-ćęĘŁ-ńÓóŚśŹ-ż]{2,})*";
 
+//    TODO ustawić losowe hasło wysyłane na maila przy tworzeniu usera
+    public static final String DEFAULT_PASSWORD = "Nox7Hours";
+
     public static final Level LOG_LEVEL = Level.ALL;
 
 }

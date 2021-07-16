@@ -68,16 +68,16 @@
                         <div>
                             <div class="${timesheet.rankWhenCreated == 1 ? "" : "d-none"}"
                                  style="padding: .375rem .75rem;" data-rank-id-1><spring:message
-                                    code="timesheet.rank.student"/></div>
+                                    code="user.rank.student"/></div>
                             <div class="${timesheet.rankWhenCreated == 2 ? "" : "d-none"}"
                                  style="padding: .375rem .75rem;" data-rank-id-2><spring:message
-                                    code="timesheet.rank.applicant"/></div>
+                                    code="user.rank.applicant"/></div>
                             <div class="${timesheet.rankWhenCreated == 3 ? "" : "d-none"}"
                                  style="padding: .375rem .75rem;" data-rank-id-3><spring:message
-                                    code="timesheet.rank.attorney"/></div>
+                                    code="user.rank.attorney"/></div>
                             <div class="${timesheet.rankWhenCreated == 4 ? "" : "d-none"}"
                                  style="padding: .375rem .75rem;" data-rank-id-4><spring:message
-                                    code="timesheet.rank.partner"/></div>
+                                    code="user.rank.partner"/></div>
                         </div>
                     </div>
 

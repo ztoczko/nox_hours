@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+//TODO obczaić csrf
         http.csrf().disable().authorizeRequests()
                 //TODO - dodać jakąś stronę tytułową?? jeśli nie to wywalić anta na "/"
                 .antMatchers("/admin/**", "/clients/delete/**").hasAuthority("ADMIN")

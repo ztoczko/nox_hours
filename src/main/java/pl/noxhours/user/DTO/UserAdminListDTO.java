@@ -3,25 +3,23 @@ package pl.noxhours.user.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
+import org.hibernate.validator.constraints.Range;
 import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.customValidation.Privileges;
 import pl.noxhours.customValidation.UniqueEmail;
 
-import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @UniqueEmail
-public class UserSettingsDTO extends AbstractUserEmail {
+public class UserAdminListDTO extends AbstractUserEmail {
 
-    private Long id;
+    private Long Id;
 
     @Pattern(regexp = GlobalConstants.FIRST_NAME_REGEXP, message = "{javax.validation.constraints.Pattern.firstName.message}")
     private String firstName;
@@ -34,6 +32,14 @@ public class UserSettingsDTO extends AbstractUserEmail {
     @Size(max = 255)
     @NotBlank
     private String email;
+
+    @Range(min = 1, max = 4)
+    private Byte rank;
+
+    @Privileges
+    private String[] privileges;
+
+    private Boolean isLocked;
 
 
 }

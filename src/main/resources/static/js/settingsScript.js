@@ -15,6 +15,7 @@ function activateInputs() {
     document.getElementById("email").removeAttribute("disabled");
 }
 
+//force logout modal if applicable
 if (document.getElementById("logoutModal") !== null) {
     window.addEventListener("DOMContentLoaded", () => {
         const elTimer = document.getElementById("timer");
@@ -30,6 +31,5 @@ if (document.getElementById("logoutModal") !== null) {
             }
         }, 1000);
     });
-
 }
 

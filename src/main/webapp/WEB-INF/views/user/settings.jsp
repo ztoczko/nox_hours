@@ -106,7 +106,7 @@
 
     </div>
 
-    <c:if test="${!empty param.logout}">
+    <c:if test="${forceLogout}">
         <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
