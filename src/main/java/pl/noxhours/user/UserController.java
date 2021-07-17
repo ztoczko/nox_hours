@@ -2,6 +2,7 @@ package pl.noxhours.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.noxhours.activity.ActivityService;
 import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.UserAdminListDTO;
 import pl.noxhours.user.DTO.UserPasswordChangeDTO;
 import pl.noxhours.user.DTO.UserSettingsDTO;
@@ -30,6 +33,13 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final UserService userService;
+    private final ActivityService activityService;
+    private TimesheetService timesheetService;
+
+    @Autowired
+    public void setTimesheetService(TimesheetService timesheetService) {
+        this.timesheetService = timesheetService;
+    }
 
     //TODO Wprowadzić opcję checkboxa z zapamiętaniem użytkownika - pola logged_key i persistence_logging (ciacho z key czyszczone przy wylogowaniu) w bazie - czy trzeba wtedy POSTa Spring Security nadpisać?
     //TODO Wprowadzić reset hasła przez użytkownika
@@ -58,6 +68,7 @@ public class UserController {
         return "redirect:/login";
     }
 
+    //    TODO - Dodać to do success handlera w configu?
     @RequestMapping("/logging")
     public String logging(Model model) {
         model.addAttribute("loggedUserName", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getFullName());
@@ -68,7 +79,10 @@ public class UserController {
     }
 
     @RequestMapping("/dashboard")
-    public String dashboard() {
+    public String dashboard(Model model) {
+        model.addAttribute("activities", activityService.findRecent());
+        model.addAttribute("recentCount", timesheetService.getRecentTimesheetCount());
+        model.addAttribute("recentSum", timesheetService.getRecentTimesheetSum());
         return "dashboard";
     }
 

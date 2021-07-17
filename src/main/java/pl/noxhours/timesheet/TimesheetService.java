@@ -7,7 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import pl.noxhours.activity.Activity;
+import pl.noxhours.activity.ActivityService;
 import pl.noxhours.client.Client;
+import pl.noxhours.configuration.GlobalConstants;
 import pl.noxhours.user.User;
 import pl.noxhours.user.UserService;
 
@@ -22,11 +25,13 @@ public class TimesheetService {
 
     private final TimesheetRepository timesheetRepository;
     private final UserService userService;
+    private final ActivityService activityService;
 
     public void create(Timesheet timesheet) {
         timesheet.setCreated(LocalDateTime.now());
         timesheet.setRankWhenCreated(timesheet.getUser().getRank());
         timesheetRepository.save(timesheet);
+        activityService.create(new Activity(null, LocalDateTime.now(), timesheet.getUser().getFullName(), GlobalConstants.ADDED_TIMESHEET_MSG, timesheet.getClient()));
         log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " created new timesheet with id of " + timesheet.getId() + " for client with id of " + timesheet.getClient().getId());
     }
 
@@ -40,12 +45,14 @@ public class TimesheetService {
             return;
         }
         timesheetRepository.save(timesheet);
+        activityService.create(new Activity(null, LocalDateTime.now(), timesheet.getUser().getFullName(), GlobalConstants.EDITED_TIMESHEET_MSG, timesheet.getClient()));
         log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " updated timesheet with id of " + timesheet.getId() + " for client with id of " + timesheet.getClient().getId());
 
     }
 
     public void delete(Timesheet timesheet) {
         timesheetRepository.delete(timesheet);
+        activityService.create(new Activity(null, LocalDateTime.now(), timesheet.getUser().getFullName(), GlobalConstants.DELETED_TIMESHEET_MSG, timesheet.getClient()));
         log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " created deleted timesheet with id of " + timesheet.getId() + " for client with id of " + timesheet.getClient().getId());
     }
 
@@ -59,6 +66,14 @@ public class TimesheetService {
 
     public List<Timesheet> findAll(User user) {
         return timesheetRepository.findAllByUser(user);
+    }
+
+    public Integer getRecentTimesheetSum() {
+        return timesheetRepository.getSumOfRecent(userService.read(SecurityContextHolder.getContext().getAuthentication().getName()), LocalDateTime.now().minusDays(30));
+    }
+
+    public Integer getRecentTimesheetCount() {
+        return timesheetRepository.countByUserAndCreatedAfter(userService.read(SecurityContextHolder.getContext().getAuthentication().getName()), LocalDateTime.now().minusDays(30));
     }
 
     public void replaceUserWithDto(Timesheet timesheet) {
