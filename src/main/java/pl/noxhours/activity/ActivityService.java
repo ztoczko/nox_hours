@@ -30,4 +30,6 @@ public class ActivityService {
     public List<Activity> findRecent() {
         return activityRepository.findFirst10ByOrderByCreatedDesc();
     }
+
+//    TODO fix - usuwanie activity przy usunięciu klienta lub usera
 }

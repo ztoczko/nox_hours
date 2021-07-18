@@ -4,9 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.noxhours.client.Client;
+import pl.noxhours.timesheet.Timesheet;
 import pl.noxhours.user.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -31,5 +34,14 @@ public class Report {
 
     private Boolean showRates;
 
+    private List<Timesheet> timesheets;
+
+    private List<Integer> hoursByRank;
+
+    private Integer totalHours;
+
+    private List<BigDecimal> valueByRank;
+
+    private BigDecimal totalValue;
 
 }

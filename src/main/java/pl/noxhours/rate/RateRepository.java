@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import pl.noxhours.client.Client;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -18,4 +19,6 @@ public interface RateRepository extends JpaRepository<Rate, Long> {
 //    Rate findFirstByClientOrderByDateToDesc(Client client);
 
     List<Rate> findAllByClientOrderByDateToDesc(Client client);
+
+    Rate findFirstByClientAndDateFromLessThanEqualAndDateToGreaterThanEqual(Client client, LocalDate date, LocalDate date1);
 }

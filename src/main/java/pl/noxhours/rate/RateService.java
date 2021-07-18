@@ -7,8 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.noxhours.client.Client;
+import pl.noxhours.report.Report;
+import pl.noxhours.timesheet.Timesheet;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
@@ -57,6 +61,38 @@ public class RateService {
     }
     public List<Rate> findAllByClient(Client client) {
         return rateRepository.findAllByClientOrderByDateToDesc(client);
+    }
+
+    public void getTimesheetValueForRank(Report report) {
+
+        List<BigDecimal> result = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            result.add(new BigDecimal(0));
+        }
+        Rate tempRate;
+        for (Timesheet timesheet : report.getTimesheets()) {
+            tempRate = getRateForDate(timesheet.getClient(), timesheet.getDateExecuted());
+            switch (timesheet.getRankWhenCreated()) {
+                case 1:
+                    result.set(0, result.get(0).add(tempRate.getStudentRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
+                    break;
+                case 2:
+                    result.set(1, result.get(1).add(tempRate.getApplicantRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
+                    break;
+                case 3:
+                    result.set(2, result.get(2).add(tempRate.getAttorneyRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
+                    break;
+                case 4:
+                    result.set(3, result.get(3).add(tempRate.getPartnerRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
+                    break;
+            }
+            report.setValueByRank(result);
+        }
+
+    }
+
+    private Rate getRateForDate(Client client, LocalDate date) {
+        return rateRepository.findFirstByClientAndDateFromLessThanEqualAndDateToGreaterThanEqual(client, date, date);
     }
 
     private void solveCollision(Rate rate) {

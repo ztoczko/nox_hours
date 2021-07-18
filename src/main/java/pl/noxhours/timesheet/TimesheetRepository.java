@@ -17,6 +17,8 @@ import java.util.List;
 @Transactional
 public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
 
+    List<Timesheet> findAllByDateExecutedBetween(LocalDate dateFrom, LocalDate dateTo);
+
     Page<Timesheet> findAllByClient(Pageable pageable, Client client);
 
     List<Timesheet> findAllByClient(Client client);

@@ -172,6 +172,9 @@
                         <p><spring:message code="admin.show.delete.confirmation.msg"
                                            arguments="${user.firstName}, ${user.lastName}"/></p>
                         <p><spring:message code="admin.show.delete.confirmation.msg2"/></p>
+                        <c:if test="${user.id == loggedUserId}">
+                            <p><spring:message code="admin.show.delete.confirmation.msg3"/></p>
+                        </c:if>
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
                         <button type="button" class="button" style="min-width: 25%"

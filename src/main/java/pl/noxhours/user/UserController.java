@@ -220,7 +220,7 @@ public class UserController {
     }
 
     @RequestMapping("admin/delete/{user}")
-    public String deleteUser(@PathVariable(required = false) User user) {
+    public String deleteUser(@PathVariable(required = false) User user, Model model) {
         if (user == null) {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to delete invalid user");
             return "redirect:/dashboard";
@@ -230,6 +230,9 @@ public class UserController {
             return "redirect:/dashboard";
         }
         userService.delete(user);
+        if (user.getId() == model.getAttribute("loggedUserId")) {
+            model.addAttribute("forceLogout", true);
+        }
         return "redirect:/admin/list?deleteSuccess=true";
     }
 

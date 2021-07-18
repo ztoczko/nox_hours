@@ -372,6 +372,11 @@
     right: -0.2rem;
 }
 
+.modal-body p {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
 footer {
     height: 3vh;
     display: flex;

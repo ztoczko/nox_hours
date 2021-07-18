@@ -15,6 +15,7 @@ import pl.noxhours.user.User;
 import pl.noxhours.user.UserService;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -66,6 +67,22 @@ public class TimesheetService {
 
     public List<Timesheet> findAll(User user) {
         return timesheetRepository.findAllByUser(user);
+    }
+
+    public List<Timesheet> findAll(LocalDate dateFrom, LocalDate dateTo) {
+        return timesheetRepository.findAllByDateExecutedBetween(dateFrom, dateTo);
+    }
+
+    public List<Timesheet> findAll(User user, LocalDate dateFrom, LocalDate dateTo) {
+        return timesheetRepository.findAllByUserAndDateExecutedBetween(user, dateFrom, dateTo);
+    }
+
+    public List<Timesheet> findAll(Client client, LocalDate dateFrom, LocalDate dateTo) {
+        return timesheetRepository.findAllByClientAndDateExecutedBetween(client, dateFrom, dateTo);
+    }
+
+    public List<Timesheet> findAll(User user, Client client, LocalDate dateFrom, LocalDate dateTo) {
+        return timesheetRepository.findAllByUserAndClientAndDateExecutedBetween(user, client, dateFrom, dateTo);
     }
 
     public Integer getRecentTimesheetSum() {
