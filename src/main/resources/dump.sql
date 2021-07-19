@@ -82,3 +82,7 @@ INSERT INTO timesheets VALUES(null, "2021-07-14 13:30", "2020-01-01", "", 2, 1, 
 INSERT INTO timesheets VALUES(null, "2021-07-14 13:30", "2019-12-01", "", 3, 1, 1, 1);
 INSERT INTO timesheets VALUES(null, "2021-07-14 13:30", "2019-11-01", "description", 1, 1, 1, 1);
 INSERT INTO timesheets VALUES(null, "2021-07-14 13:30", "2019-10-01", "description", 2, 1, 1, 1);
+
+INSERT INTO reports VALUES(null, true, true, "2021-07-14 13:30", "2020-01-01", "2020-12-31", true, true, true, 1, 1, 1);
+INSERT INTO reports VALUES(null, true, true, "2021-07-14 10:30", "2020-01-01", "2020-12-31", true, true, true, 2, 2, 1);
+INSERT INTO reports VALUES(null, false, false, "2021-07-14 11:30", "2020-01-01", "2020-12-31", true, true, true, null, null, 1);

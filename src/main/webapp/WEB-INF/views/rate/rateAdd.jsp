@@ -29,7 +29,6 @@
         </div>
         <div class="col-10 p-4 mainBody">
 
-
             <div class="mainContentDiv">
 
                 <!--            RATE DETAILS START-->
@@ -46,7 +45,8 @@
                         <div><spring:message code="rate.date.from"/></div>
                         <div class="input-group date datepicker" data-date-format="${dateFormat}">
                             <form:input path="dateFrom" cssClass="form-control"
-                                        cssErrorClass="form-control text-danger border-danger" cssStyle="min-width:20%; max-width: 50%"
+                                        cssErrorClass="form-control text-danger border-danger"
+                                        cssStyle="min-width:20%; max-width: 50%"
                                         readonly="true"/>
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             <form:errors path="dateFrom" cssClass="text-danger mx-2"/></div>
@@ -56,7 +56,7 @@
                         <div><spring:message code="rates.is.rate.indefinite"/>:</div>
                         <div>
                             <form:checkbox path="rateNotExpires" value="true" cssClass="form-check-input p-0 m-0"
-                                           />
+                            />
                         </div>
                     </div>
 
@@ -64,7 +64,8 @@
                         <div><spring:message code="rate.date.to"/></div>
                         <div class="input-group date datepicker" data-date-format="${dateFormat}">
                             <form:input path="dateTo" cssClass="form-control"
-                                        cssErrorClass="form-control text-danger border-danger" cssStyle="min-width:20%; max-width: 50%"
+                                        cssErrorClass="form-control text-danger border-danger"
+                                        cssStyle="min-width:20%; max-width: 50%"
                                         readonly="true"/>
                             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             <form:errors path="dateTo" cssClass="text-danger mx-2"/></div>
@@ -111,39 +112,9 @@
                         </div>
                     </div>
 
-                    <%--                    DATEPICKER TEMPLATE:--%>
-                    <%--                    <div>--%>
-                    <%--                        <div class="input-group date datepicker" data-date-format="mm-dd-yyyy">--%>
-                    <%--                            <input class="form-control" type="text" readonly />--%>
-                    <%--                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span></div>--%>
-                    <%--                    </div>--%>
-
-                    <%--                    <div>--%>
-                    <%--                        <div>Data od</div>--%>
-                    <%--                        <div><form:input path="name" cssClass="form-control"--%>
-                    <%--                                         cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"/>--%>
-                    <%--                            <form:errors path="name" cssClass="text-danger mx-2"/></div>--%>
-                    <%--                    </div>--%>
-                    <%--                    <div>--%>
-                    <%--                        <div>Data od</div>--%>
-                    <%--                        <div><form:input path="name" cssClass="form-control"--%>
-                    <%--                                         cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"/>--%>
-                    <%--                            <form:errors path="name" cssClass="text-danger mx-2"/></div>--%>
-                    <%--                    </div>--%>
-
-
-                    <%--                    <div class="form-check form-switch p-0 m-0" style="min-height: 2rem">--%>
-                    <%--                        <div>Deaktywacja klienta:</div>--%>
-                    <%--                        <div><form:checkbox path="closed" cssClass="form-check-input p-0 m-0"/></div>--%>
-                    <%--                    </div>--%>
-                    <%--                    <sec:authorize access="hasAuthority('RATES')">--%>
-                    <%--                        <div class="form-check form-switch p-0 m-0" style="min-height: 2rem">--%>
-                    <%--                            <div>Klient ma ustawione stawki:</div>--%>
-                    <%--                            <div><form:checkbox path="ratesSet" cssClass="form-check-input p-0 m-0" disabled="true"/></div>--%>
-                    <%--                        </div>--%>
-                    <%--                    </sec:authorize>--%>
                     <div>
-                        <button type="button" class="button mx-2" onclick="location.href='/clients/list'"><spring:message code="app.back"/>
+                        <button type="button" class="button mx-2" onclick="location.href='/clients/list'">
+                            <spring:message code="app.back"/>
                         </button>
                         <button type="submit" class="button mx-2"><spring:message code="app.save"/></button>
                     </div>
@@ -161,7 +132,6 @@
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
         crossorigin="anonymous"></script>
 
-
 <%--<script src="/popper.min.js+bootstrap.min.js.pagespeed.jc.7FgZl6cJhb.js"></script>--%>
 <%--<script>eval(mod_pagespeed_Lp4SucdGsq);</script>--%>
 <%--<script>eval(mod_pagespeed_f_sjjbg9NQ);</script>--%>
@@ -176,7 +146,6 @@
 <script src="/js/bootstrap-datepicker.js"></script>
 
 <script src="/js/rateAddScript.js"></script>
-
 
 </body>
 </html>

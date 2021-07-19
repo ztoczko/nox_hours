@@ -312,7 +312,7 @@
     background-color: var(--mainBackgroundColor);
 }
 
-.table th {
+.table thead th {
     background-color: var(--mainTableColor);
     color: var(--mainTableTextColor);
     text-align: center;
@@ -323,15 +323,22 @@
     cursor: pointer;
 }
 
-.mainContentDiv table tbody tr:hover td {
+.mainContentDiv table tbody tr:hover :is(td, th) {
     background-color: var(--mainBackgroundColor);
 }
 
-.mainContentDiv table tbody td {
+.mainContentDiv table tbody :is(td, th) {
     color: var(--mainTableTextColor);
-    text-align: center;
     vertical-align: middle;
     padding: 0.5rem;
+}
+
+.mainContentDiv table tbody td {
+    text-align: center;
+}
+
+.mainContentDiv table tbody th {
+    text-align: end;
 }
 
 .mainContentDiv table tbody tr:nth-of-type(2n) {

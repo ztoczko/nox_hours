@@ -113,7 +113,7 @@
                             </div>
                             <div>
                                 <form:checkbox path="privileges" value="S" cssClass="form-check-input"
-                                label="${roleSuperadmin}"/>
+                                               label="${roleSuperadmin}"/>
                             </div>
                             <form:errors path="privileges" cssClass="text-danger mx-2"/>
                         </div>
@@ -123,7 +123,6 @@
                         <div><spring:message code="user.locked"/>:</div>
                         <div><form:checkbox path="isLocked" cssClass="form-check-input p-0 m-0"/></div>
                     </div>
-
 
                     <div class="mb-2">
                         <button type="button" class="button mx-2" onclick="location.href='/admin/list/'">

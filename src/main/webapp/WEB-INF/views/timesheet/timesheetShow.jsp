@@ -29,7 +29,6 @@
         </div>
         <div class="col-10 p-4 mainBody">
 
-
             <div class="mainContentDiv">
 
                 <!--            TIMESHEET DETAILS START-->
@@ -136,7 +135,8 @@
                     </div>
 
                     <div class="mb-2">
-                        <button type="button" class="button mx-2" onclick="${"location.href='/clients/show/".concat(timesheet.client.id).concat("'")}">
+                        <button type="button" class="button mx-2"
+                                onclick="${"location.href='/clients/show/".concat(timesheet.client.id).concat("'")}">
                             <spring:message code="app.back"/>
                         </button>
                         <c:if test="${timesheetPermission}">
@@ -164,7 +164,6 @@
 
             </div>
 
-
         </div>
 
     </div>
@@ -191,7 +190,6 @@
         </div>
     </c:if>
     <%--    TIMESHEET DELETE MODAL END--%>
-
 
     <!--    FOOTER START-->
     <jsp:include page="/WEB-INF/views/includes/footer.jsp"/>

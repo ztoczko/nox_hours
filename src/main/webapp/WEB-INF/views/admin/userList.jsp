@@ -44,7 +44,8 @@
                         <input type="hidden" name="sortName" value="${sortName}"/>
                         <input type="hidden" name="sortType" value="${sortType}"/>
                         <input type="text" name="search" placeholder="<spring:message code="search.placeholder"/>"/>
-                        <button type="submit" class="button"><i class="fa fa-search"></i> <spring:message code="search.msg"/></button>
+                        <button type="submit" class="button"><i class="fa fa-search"></i> <spring:message
+                                code="search.msg"/></button>
                     </form>
                     <form method="get">
                         <input type="hidden" name="search" value="${search}"/>
@@ -59,20 +60,23 @@
                     </form>
                 </div>
 
-<%--                MESSAGES START--%>
+                <%--                MESSAGES START--%>
                 <c:if test="${!empty param.deleteSuccess}">
                     <div class="text-success mb-2"><spring:message code="admin.list.user.deleted.msg"/></div>
                 </c:if>
                 <c:if test="${!empty param.addSuccess}">
                     <div class="text-success mb-2"><spring:message code="admin.list.user.added.msg"/></div>
                 </c:if>
-<%--                MESSAGES END--%>
+                <%--                MESSAGES END--%>
 
                 <table class="table">
                     <thead>
                     <tr>
                         <td class="fs-4 p-3" colspan="4"><spring:message code="admin.list.users"/></td>
-                        <td class="text-center" valign="middle"><button type="button" class="button m-auto" onclick="location.href='/admin/add'"><spring:message code="admin.list.add.new"/></button> </td>
+                        <td class="text-center" valign="middle">
+                            <button type="button" class="button m-auto" onclick="location.href='/admin/add'">
+                                <spring:message code="admin.list.add.new"/></button>
+                        </td>
                     </tr>
                     <tr>
                         <th class="pointer">
@@ -188,7 +192,8 @@
                             </td>
                             <td>
                                 <button type="button" class="button"
-                                        onclick="location.href = '/admin/show/${user.id}'"><spring:message code="app.go.to.details"/>
+                                        onclick="location.href = '/admin/show/${user.id}'"><spring:message
+                                        code="app.go.to.details"/>
                                 </button>
                             </td>
                         </tr>

@@ -29,7 +29,6 @@
         </div>
         <div class="col-10 p-4 mainBody">
 
-
             <div class="mainContentDiv">
 
                 <!--            TIMESHEET DETAILS START-->
@@ -119,7 +118,6 @@
                 </form:form>
 
             </div>
-
 
             <!--            TIMESHEET DETAILS END-->
         </div>

@@ -29,7 +29,6 @@
         </div>
         <div class="col-10 p-4 mainBody">
 
-
             <div class="mainContentDiv">
 
                 <!--            USER DETAILS START-->
@@ -54,8 +53,8 @@
                         </div>
                         <div>
                             <form:input path="lastName" cssClass="form-control"
-                                           cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"
-                                           disabled="true"/>
+                                        cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"
+                                        disabled="true"/>
                             <form:errors path="lastName" cssClass="text-danger mx-2"/>
                         </div>
                     </div>
@@ -87,7 +86,6 @@
                             <spring:message code="app.change.password"/>
                         </button>
 
-
                     </div>
 
                 </form:form>
@@ -101,18 +99,18 @@
 
             </div>
 
-
         </div>
 
     </div>
 
     <c:if test="${forceLogout}">
-        <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+             data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
                         <p><spring:message code="settings.force.logout.msg"/>
-                            <span id="timer"></span><spring:message code="settings.second"/> </p>
+                            <span id="timer"></span><spring:message code="settings.second"/></p>
                     </div>
                     <div class="modal-footer d-flex justify-content-around">
                         <button type="button" class="button" style="min-width: 25%"

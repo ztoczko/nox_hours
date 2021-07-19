@@ -2,6 +2,7 @@ package pl.noxhours.activity;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.noxhours.client.Client;
 
 import java.util.List;
 
@@ -27,9 +28,12 @@ public class ActivityService {
         activityRepository.delete(activity);
     }
 
+    public List<Activity> findAll(Client client) {
+        return activityRepository.findAllByClient(client);
+    }
+
     public List<Activity> findRecent() {
         return activityRepository.findFirst10ByOrderByCreatedDesc();
     }
 
-//    TODO fix - usuwanie activity przy usunięciu klienta lub usera
 }

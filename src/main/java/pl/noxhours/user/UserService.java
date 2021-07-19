@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Validator;
+import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.*;
 
@@ -23,14 +24,21 @@ public class UserService {
     private final UserRepository userRepository;
 
     private TimesheetService timesheetService;
+    private ReportService reportService;
 
     @Autowired
     public void setTimesheetService(TimesheetService timesheetService) {
         this.timesheetService = timesheetService;
     }
 
+    @Autowired
+    public void setReportService(ReportService reportService) {
+        this.reportService = reportService;
+    }
+
     public void create(User user) {
         userRepository.save(user);
+        log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " created user with id of " + user.getId());
     }
 
     public User read(Long id) {
@@ -43,12 +51,14 @@ public class UserService {
 
     public void update(User user) {
         userRepository.save(user);
-        log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " updated data of with id of " + user.getId());
+        log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " updated user with id of " + user.getId());
     }
 
     public void delete(User user) {
         timesheetService.findAll(user).forEach(timesheetService::delete);
+        reportService.findAll(user).forEach(reportService::delete);
         userRepository.delete(user);
+        log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " deleted user with id of " + user.getId());
     }
 
     public List<User> findAll() {
@@ -76,19 +86,19 @@ public class UserService {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN")) || (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")) && !user.getPrivileges().contains("S"));
     }
 
-    public UserNameDTO UserToUserNameDto(User user) {
+    public UserNameDTO userToUserNameDto(User user) {
         return new UserNameDTO(user.getId(), user.getFullName());
     }
 
-    public User UserNameDtoToUser(UserNameDTO userNameDTO) {
+    public User userNameDtoToUser(UserNameDTO userNameDTO) {
         return read(userNameDTO.getId());
     }
 
-    public UserSettingsDTO UserToUserSettingsDto(User user) {
+    public UserSettingsDTO userToUserSettingsDto(User user) {
         return new UserSettingsDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail());
     }
 
-    public User UserSettingsDtoToUser(UserSettingsDTO userSettingsDTO) {
+    public User userSettingsDtoToUser(UserSettingsDTO userSettingsDTO) {
         User user = read(userSettingsDTO.getId());
         user.setFirstName(userSettingsDTO.getFirstName());
         user.setLastName(userSettingsDTO.getLastName());
@@ -96,25 +106,25 @@ public class UserService {
         return user;
     }
 
-    public UserPasswordResetDTO UserToUserPasswordResetDto(User user) {
+    public UserPasswordResetDTO userToUserPasswordResetDto(User user) {
         return new UserPasswordResetDTO(user.getId());
     }
 
-    public UserPasswordChangeDTO UserToUserPasswordChangeDto(User user) {
+    public UserPasswordChangeDTO userToUserPasswordChangeDto(User user) {
         return new UserPasswordChangeDTO(user.getId());
     }
 
-    public User UserPasswordDtoToUser(UserPasswordResetDTO userPasswordResetDTO) {
+    public User userPasswordDtoToUser(UserPasswordResetDTO userPasswordResetDTO) {
         User user = read(userPasswordResetDTO.getId());
         user.setPassword(new BCryptPasswordEncoder(10).encode(userPasswordResetDTO.getNewPassword()));
         return user;
     }
 
-    public UserAdminListDTO UserToUserAdminListDto(User user) {
+    public UserAdminListDTO userToUserAdminListDto(User user) {
         return new UserAdminListDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getRank(), privilegesStringToArray(user.getPrivileges()), user.getIsLocked());
     }
 
-    public User UserAdminListDtoToUser(UserAdminListDTO userAdminListDTO) {
+    public User userAdminListDtoToUser(UserAdminListDTO userAdminListDTO) {
         User user = userAdminListDTO.getId() == null ? new User() : read(userAdminListDTO.getId());
         user.setFirstName(userAdminListDTO.getFirstName());
         user.setLastName(userAdminListDTO.getLastName());

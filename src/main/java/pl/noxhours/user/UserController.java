@@ -23,7 +23,6 @@ import pl.noxhours.user.DTO.UserSettingsDTO;
 
 import javax.validation.Valid;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -88,7 +87,7 @@ public class UserController {
 
     @GetMapping("/settings/show")
     public String showSettings(Model model) {
-        model.addAttribute("user", userService.UserToUserSettingsDto(userService.read((Long) model.getAttribute("loggedUserId"))));
+        model.addAttribute("user", userService.userToUserSettingsDto(userService.read((Long) model.getAttribute("loggedUserId"))));
         return "user/settings";
     }
 
@@ -109,10 +108,9 @@ public class UserController {
             return "redirect:/dashboard";
         }
         model.addAttribute("loggedUserName", user.getFirstName() + " " + user.getLastName());
-        userService.update(userService.UserSettingsDtoToUser(user));
-        if (!user.getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+        userService.update(userService.userSettingsDtoToUser(user));
 
-//            TODO zrobić filtr dla force logout i zrobić forcelogout jeśli admin zmieni email
+        if (!user.getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
             model.addAttribute("forceLogout", true);
         }
         return "redirect:/settings/show?editSuccess=true" + (!user.getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()) ? "&logout=true" : "");
@@ -120,7 +118,7 @@ public class UserController {
 
     @GetMapping("/settings/changePassword")
     public String changePasswordSendToForm(Model model) {
-        model.addAttribute("user", userService.UserToUserPasswordChangeDto(userService.read(SecurityContextHolder.getContext().getAuthentication().getName())));
+        model.addAttribute("user", userService.userToUserPasswordChangeDto(userService.read(SecurityContextHolder.getContext().getAuthentication().getName())));
         return "user/changePassword";
     }
 
@@ -133,7 +131,7 @@ public class UserController {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to modify password of user with id of " + user.getId());
             return "redirect:/dashboard";
         }
-        userService.update(userService.UserPasswordDtoToUser(user));
+        userService.update(userService.userPasswordDtoToUser(user));
         return "redirect:/settings/show";
     }
 
@@ -175,7 +173,7 @@ public class UserController {
         }
         model.addAttribute("page", page);
         model.addAttribute("totalPages", users.getTotalPages());
-        model.addAttribute("users", users.getContent().stream().map(userService::UserToUserAdminListDto).collect(Collectors.toList()));
+        model.addAttribute("users", users.getContent().stream().map(userService::userToUserAdminListDto).collect(Collectors.toList()));
 
         return "admin/userList";
     }
@@ -187,7 +185,7 @@ public class UserController {
             return "redirect:/dashboard";
         }
         model.addAttribute("userPermission", userService.checkEditPermissionForAdmin(user));
-        model.addAttribute("user", userService.UserToUserAdminListDto(user));
+        model.addAttribute("user", userService.userToUserAdminListDto(user));
         return "admin/userShow";
 
     }
@@ -201,17 +199,17 @@ public class UserController {
     public String userEdit(@ModelAttribute("user") @Valid UserAdminListDTO user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("edit", true);
-            model.addAttribute("userPermission", userService.checkEditPermissionForAdmin(userService.UserAdminListDtoToUser(user)));
+            model.addAttribute("userPermission", userService.checkEditPermissionForAdmin(userService.userAdminListDtoToUser(user)));
             return "admin/userShow";
         }
-        if (!userService.checkEditPermissionForAdmin(userService.UserAdminListDtoToUser(user))) {
+        if (!userService.checkEditPermissionForAdmin(userService.userAdminListDtoToUser(user))) {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to modify user with id of " + user.getId() + " without proper privilages");
             return "redirect:/dashboard";
         }
         if (Arrays.stream(user.getPrivileges()).collect(Collectors.toList()).contains("S") && !SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN"))) {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to give to user with id " + user.getId() + " with Superadmin privileges without proper privileges");
         }
-        userService.update(userService.UserAdminListDtoToUser(user));
+        userService.update(userService.userAdminListDtoToUser(user));
 
         if (model.getAttribute("loggedUserId") == user.getId() && !user.getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
             model.addAttribute("forceLogout", true);
@@ -251,7 +249,7 @@ public class UserController {
         if (Arrays.stream(user.getPrivileges()).collect(Collectors.toList()).contains("S") && !SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN"))) {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to add user with SuperAdmin privileges without proper privileges");
         }
-        User completeUser = userService.UserAdminListDtoToUser(user);
+        User completeUser = userService.userAdminListDtoToUser(user);
         completeUser.setPassword(new BCryptPasswordEncoder(10).encode(GlobalConstants.DEFAULT_PASSWORD));
         completeUser.setPasswordReset(false);
         userService.create(completeUser);

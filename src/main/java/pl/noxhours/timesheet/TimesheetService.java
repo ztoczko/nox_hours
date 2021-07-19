@@ -14,7 +14,6 @@ import pl.noxhours.configuration.GlobalConstants;
 import pl.noxhours.user.User;
 import pl.noxhours.user.UserService;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -94,7 +93,7 @@ public class TimesheetService {
     }
 
     public void replaceUserWithDto(Timesheet timesheet) {
-        timesheet.setUserNameDTO(userService.UserToUserNameDto(timesheet.getUser()));
+        timesheet.setUserNameDTO(userService.userToUserNameDto(timesheet.getUser()));
         timesheet.setUser(new User(timesheet.getUserNameDTO().getId()));
     }
 

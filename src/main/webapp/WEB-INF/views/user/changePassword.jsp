@@ -29,11 +29,11 @@
         </div>
         <div class="col-10 p-4 mainBody">
 
-
             <div class="mainContentDiv">
 
                 <!--            USER DETAILS START-->
-                <form:form modelAttribute="user" action="/settings/changePassword" method="post" cssClass="editForm mb-0">
+                <form:form modelAttribute="user" action="/settings/changePassword" method="post"
+                           cssClass="editForm mb-0">
                     <form:hidden path="id" value="${user.id}"/>
 
                     <div>
@@ -42,7 +42,8 @@
                         </div>
                         <div>
                             <form:password path="oldPassword" cssClass="form-control"
-                                        cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"/>
+                                           cssErrorClass="form-control text-danger border-danger"
+                                           cssStyle="width: 50%"/>
                             <form:errors path="oldPassword" cssClass="text-danger mx-2"/>
                         </div>
                     </div>
@@ -53,7 +54,8 @@
                         </div>
                         <div>
                             <form:password path="newPassword" cssClass="form-control"
-                                           cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"/>
+                                           cssErrorClass="form-control text-danger border-danger"
+                                           cssStyle="width: 50%"/>
                             <form:errors path="newPassword" cssClass="text-danger mx-2"/>
                         </div>
                     </div>
@@ -64,7 +66,8 @@
                         </div>
                         <div>
                             <form:password path="newPasswordRepeated" cssClass="form-control"
-                                        cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"/>
+                                           cssErrorClass="form-control text-danger border-danger"
+                                           cssStyle="width: 50%"/>
                             <form:errors path="newPasswordRepeated" cssClass="text-danger mx-2"/>
                         </div>
                     </div>
@@ -85,11 +88,9 @@
 
             </div>
 
-
         </div>
 
     </div>
-
 
     <!--    FOOTER START-->
     <jsp:include page="/WEB-INF/views/includes/footer.jsp"/>

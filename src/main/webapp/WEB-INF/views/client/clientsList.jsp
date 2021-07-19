@@ -42,7 +42,8 @@
                         <input type="hidden" name="sortName" value="${sortName}"/>
                         <input type="hidden" name="sortType" value="${sortType}"/>
                         <input type="text" name="search" placeholder="<spring:message code="search.placeholder"/>"/>
-                        <button type="submit" class="button"><i class="fa fa-search"></i> <spring:message code="search.msg"/></button>
+                        <button type="submit" class="button"><i class="fa fa-search"></i> <spring:message
+                                code="search.msg"/></button>
                     </form>
                     <form method="get">
                         <input type="hidden" name="search" value="${search}"/>
@@ -52,7 +53,8 @@
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="showAllToggle" name="all"
                                    value="true" ${all ? "checked" : ""}>
-                            <label class="form-check-label"><spring:message code="clients.list.show.inactive.msg"/></label>
+                            <label class="form-check-label"><spring:message
+                                    code="clients.list.show.inactive.msg"/></label>
                         </div>
                     </form>
                 </div>
@@ -66,7 +68,10 @@
                     <thead>
                     <tr>
                         <td class="fs-4 p-3" colspan="2"><spring:message code="clients.list.clients"/></td>
-                        <td class="text-center" valign="middle"><button type="button" class="button m-auto" onclick="location.href='/clients/add'"><spring:message code="clients.list.add.new"/></button> </td>
+                        <td class="text-center" valign="middle">
+                            <button type="button" class="button m-auto" onclick="location.href='/clients/add'">
+                                <spring:message code="clients.list.add.new"/></button>
+                        </td>
                     </tr>
                     <tr>
                         <th class="pointer">
@@ -126,7 +131,8 @@
                             <td>${client.name}</td>
                             <td>
                                 <button type="button" class="button"
-                                        onclick="location.href = '/clients/show/${client.id}'"><spring:message code="app.go.to.details"/>
+                                        onclick="location.href = '/clients/show/${client.id}'"><spring:message
+                                        code="app.go.to.details"/>
                                 </button>
                             </td>
                         </tr>

@@ -44,14 +44,10 @@
                         <div><spring:message code="client.closed"/>:</div>
                         <div><form:checkbox path="closed" cssClass="form-check-input p-0 m-0"/></div>
                     </div>
-                    <%--                    <sec:authorize access="hasAuthority('RATES')">--%>
-                    <%--                        <div class="form-check form-switch p-0 m-0" style="min-height: 2rem">--%>
-                    <%--                            <div>Klient ma ustawione stawki:</div>--%>
-                    <%--                            <div><form:checkbox path="ratesSet" cssClass="form-check-input p-0 m-0" disabled="true"/></div>--%>
-                    <%--                        </div>--%>
-                    <%--                    </sec:authorize>--%>
+
                     <div>
-                        <button type="button" class="button mx-2" onclick="location.href='/clients/list'"><spring:message code="app.back"/>
+                        <button type="button" class="button mx-2" onclick="location.href='/clients/list'">
+                            <spring:message code="app.back"/>
                         </button>
                         <button type="submit" class="button mx-2"><spring:message code="app.save"/></button>
                     </div>

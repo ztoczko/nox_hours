@@ -50,12 +50,7 @@
                         <div><spring:message code="client.closed"/>:</div>
                         <div><form:checkbox path="closed" cssClass="form-check-input p-0 m-0" disabled="true"/></div>
                     </div>
-                    <%--                    <sec:authorize access="hasAuthority('RATES')">--%>
-                    <%--                        <div class="form-check form-switch p-0 m-0" style="min-height: 2rem">--%>
-                    <%--                            <div>Klient ma ustawione stawki:</div>--%>
-                    <%--                            <div><form:checkbox path="ratesSet" cssClass="form-check-input p-0 m-0" disabled="true"/></div>--%>
-                    <%--                        </div>--%>
-                    <%--                    </sec:authorize>--%>
+
                     <div class="mb-2">
                         <button type="button" class="button mx-2" onclick="location.href='/clients/list'">
                             <spring:message code="app.back"/>
@@ -105,7 +100,6 @@
                     <div class="text-success"><spring:message code="clients.show.timesheet.deleted.msg"/></div>
                 </c:if>
                 <%--                    MESSAGES END--%>
-
 
                 <%--                LAST RATES START--%>
                 <sec:authorize access="hasAuthority('RATES')">
@@ -186,7 +180,6 @@
                 </sec:authorize>
                 <%--                LAST RATES END--%>
 
-
                 <%--                TIMESHEETS START--%>
                 <table class="table ${!empty param.showRates ? "d-none" : ""}" id="timesheetsTable">
                     <thead>
@@ -246,12 +239,12 @@
                                         <spring:message code="app.go.to.details"/>
                                     </button>
 
-<%--                                    <c:if test="${timesheet.userNameDTO.id == loggedUserId}">--%>
-<%--                                        <button type="button" class="button" data-timesheet-delete-button--%>
-<%--                                                data-id="${timesheet.id}" data-client-id="${client.id}">--%>
-<%--                                            <spring:message code="app.delete"/>--%>
-<%--                                        </button>--%>
-<%--                                    </c:if>--%>
+                                    <%--                                    <c:if test="${timesheet.userNameDTO.id == loggedUserId}">--%>
+                                    <%--                                        <button type="button" class="button" data-timesheet-delete-button--%>
+                                    <%--                                                data-id="${timesheet.id}" data-client-id="${client.id}">--%>
+                                    <%--                                            <spring:message code="app.delete"/>--%>
+                                    <%--                                        </button>--%>
+                                    <%--                                    </c:if>--%>
 
                                 </c:if>
                             </td>
@@ -279,7 +272,6 @@
                 <%--                TIMESHEETS END--%>
 
             </div>
-
 
         </div>
 
@@ -331,7 +323,6 @@
         </div>
     </sec:authorize>
     <%--    RATE DELETE MODAL END--%>
-
 
     <!--    FOOTER START-->
     <jsp:include page="/WEB-INF/views/includes/footer.jsp"/>

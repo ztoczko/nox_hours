@@ -86,9 +86,21 @@ public class RateService {
                     result.set(3, result.get(3).add(tempRate.getPartnerRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
                     break;
             }
-            report.setValueByRank(result);
         }
+        report.setValueByRank(result);
 
+    }
+
+    public boolean validateRateAvailablity(List<Timesheet> timesheets) {
+
+        boolean isValid = true;
+        for (Timesheet timesheet : timesheets) {
+            if (getRateForDate(timesheet.getClient(), timesheet.getDateExecuted()) == null) {
+                isValid = false;
+                break;
+            }
+        }
+        return isValid;
     }
 
     private Rate getRateForDate(Client client, LocalDate date) {

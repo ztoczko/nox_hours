@@ -7,12 +7,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.noxhours.client.Client;
 import pl.noxhours.client.ClientService;
 import pl.noxhours.configuration.GlobalConstants;
-import pl.noxhours.user.DTO.UserNameDTO;
 import pl.noxhours.user.User;
 import pl.noxhours.user.UserService;
 
@@ -46,7 +44,7 @@ public class TimesheetController {
             client = null;
         }
         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
-            model.addAttribute("users", userService.findAllActive().stream().map(userService::UserToUserNameDto).collect(Collectors.toList()));
+            model.addAttribute("users", userService.findAllActive().stream().map(userService::userToUserNameDto).collect(Collectors.toList()));
         }
         model.addAttribute("client", client);
         model.addAttribute("userId", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getId());
@@ -67,7 +65,7 @@ public class TimesheetController {
             }
             //avoiding sending sensitive user data - user will be binded by id after next form submission
             if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
-                model.addAttribute("users", userService.findAllActive().stream().map(userService::UserToUserNameDto).collect(Collectors.toList()));
+                model.addAttribute("users", userService.findAllActive().stream().map(userService::userToUserNameDto).collect(Collectors.toList()));
             }
             if (timesheet.getUser() != null) {
                 timesheetService.replaceUserWithDto(timesheet);

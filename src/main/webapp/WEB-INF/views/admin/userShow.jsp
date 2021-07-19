@@ -29,7 +29,6 @@
         </div>
         <div class="col-10 p-4 mainBody">
 
-
             <div class="mainContentDiv">
 
                 <!--            USER DETAILS START-->
@@ -125,7 +124,6 @@
                         <div><form:checkbox path="isLocked" cssClass="form-check-input p-0 m-0" disabled="true"/></div>
                     </div>
 
-
                     <div class="mb-2">
                         <button type="button" class="button mx-2" onclick="location.href='/admin/list/'">
                             <spring:message code="app.back"/>
@@ -211,7 +209,6 @@
         </div>
     </c:if>
     <%--FORCE LOGOUT MODAL END--%>
-
 
     <!--    FOOTER START-->
     <jsp:include page="/WEB-INF/views/includes/footer.jsp"/>

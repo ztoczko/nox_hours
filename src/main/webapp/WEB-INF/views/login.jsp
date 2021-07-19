@@ -22,16 +22,19 @@
 
         <div class="col-4 d-flex justify-content-center align-item-center" style="min-height: 50vh">
 
-            <form class="form-signin d-flex flex-column justify-content-center align-item-center" method="post" action="/login" novalidate>
+            <form class="form-signin d-flex flex-column justify-content-center align-item-center" method="post"
+                  action="/login" novalidate>
                 <h2 class="form-signin-heading"><spring:message code="login.hello.msg"/></h2>
                 <p>
                     <label for="username" class="sr-only"><spring:message code="login.login"/></label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="<spring:message code="login.login"/>"
+                    <input type="text" id="username" name="username" class="form-control"
+                           placeholder="<spring:message code="login.login"/>"
                            required autofocus>
                 </p>
                 <p>
                     <label for="password" class="sr-only"><spring:message code="login.password"/></label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="<spring:message code="login.password"/>"
+                    <input type="password" id="password" name="password" class="form-control"
+                           placeholder="<spring:message code="login.password"/>"
                            required>
                 </p>
                 <c:if test="${!empty param.error}">
@@ -40,8 +43,9 @@
                 <c:if test="${!empty param.logout}">
                     <p><spring:message code="login.logout.msg"/></p>
                 </c:if>
-<%--                <input name="_csrf" type="hidden" value="8bcd1181-ad6f-4d11-b3fb-058ab4ceb2f8"/>--%>
-                <button class="btn btn-lg btn-primary btn-block" type="submit"><spring:message code="login.login.msg"/></button>
+                <%--                <input name="_csrf" type="hidden" value="8bcd1181-ad6f-4d11-b3fb-058ab4ceb2f8"/>--%>
+                <button class="btn btn-lg btn-primary btn-block" type="submit"><spring:message
+                        code="login.login.msg"/></button>
             </form>
 
         </div>
