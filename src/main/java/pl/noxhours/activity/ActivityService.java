@@ -17,7 +17,7 @@ public class ActivityService {
     }
 
     public Activity read(Long id) {
-        return activityRepository.getById(id);
+        return activityRepository.findById(id).orElse(null);
     }
 
     public void update(Activity activity) {

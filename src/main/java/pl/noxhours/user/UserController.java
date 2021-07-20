@@ -15,7 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.noxhours.activity.ActivityService;
+import pl.noxhours.configuration.EmailService;
 import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.UserAdminListDTO;
 import pl.noxhours.user.DTO.UserPasswordChangeDTO;
@@ -23,6 +25,7 @@ import pl.noxhours.user.DTO.UserSettingsDTO;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -33,7 +36,11 @@ public class UserController {
 
     private final UserService userService;
     private final ActivityService activityService;
+    private final EmailService emailService;
     private TimesheetService timesheetService;
+
+    @Autowired
+    private ReportService reportService;
 
     @Autowired
     public void setTimesheetService(TimesheetService timesheetService) {
@@ -82,6 +89,7 @@ public class UserController {
         model.addAttribute("activities", activityService.findRecent());
         model.addAttribute("recentCount", timesheetService.getRecentTimesheetCount());
         model.addAttribute("recentSum", timesheetService.getRecentTimesheetSum());
+//        emailService.sendMessage("zbigniew.toczko@gmail.com", "test", reportService.generateHtmlMessage(reportService.read(1L), new Locale("pl", "PL")));
         return "dashboard";
     }
 

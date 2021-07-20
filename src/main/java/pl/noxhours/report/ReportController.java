@@ -16,6 +16,7 @@ import pl.noxhours.configuration.GlobalConstants;
 import pl.noxhours.configuration.security.NoxUserDetails;
 import pl.noxhours.user.UserService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.stream.Collectors;
 
@@ -117,6 +118,22 @@ public class ReportController {
         }
         model.addAttribute("report", report);
         return "report/reportShow";
+    }
+
+    @RequestMapping("mail/{report}")
+    @ResponseBody
+    public String sendMail(@PathVariable(required = false) Report report, HttpServletResponse response) {
+        if (report == null) {
+            response.setStatus(404);
+            return null;
+        }
+        if (!report.getCreator().getId().equals(((NoxUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
+            response.setStatus(403);
+            return null;
+        }
+
+        response.setStatus(reportService.sendMail(report) ? 200 : 500);
+        return null;
     }
 
 }

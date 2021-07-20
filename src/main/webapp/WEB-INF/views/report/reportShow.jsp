@@ -43,7 +43,7 @@
                 <%--                <spring:message code="app.no" var="noMsg"/>--%>
 
                 <!--            REPORT AGGREGATE START-->
-                <table class="table">
+                <table id="reportInfo" class="table" data-id="${report.id}">
                     <thead>
                     <tr>
                         <td class="fs-4 p-3" colspan="4">
@@ -126,6 +126,14 @@
                 </table>
                 <!--            REPORT AGGREGATE END-->
 
+                    <div>
+                        <span id="emailSent" class="d-none text-success"><spring:message code="report.show.email.sent.msg"/></span>
+                    </div>
+
+                    <div class="m-3">
+                        <button type="button" class="button" onclick="location.href='/reports/list'"><spring:message code="app.back"/></button>
+                        <button id="sendMail" type="button" class="button"><spring:message code="report.show.send.email"/></button>
+                    </div>
 
                 <!--            REPORT DETAILS START-->
                 <table class="table">
@@ -206,5 +214,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
         crossorigin="anonymous"></script>
+<script src="/js/reportShow.js" defer></script>
 </body>
 </html>

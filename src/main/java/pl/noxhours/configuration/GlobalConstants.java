@@ -14,9 +14,15 @@ public class GlobalConstants {
     public static final String ADDED_TIMESHEET_MSG = "użytkownik dodał nowe rozliczenie";
     public static final String EDITED_TIMESHEET_MSG = "użytkownik zmodyfikował rozliczenie";
     public static final String DELETED_TIMESHEET_MSG = "użytkownik usunął rozliczenie";
-    public static final String ADDED_CLIENT_MSG = "użytkownik dodał nowego klienta";
-    public static final String EDITED_CLIENT_MSG = "użytkownik zmodyfikował klienta";
-    public static final String DELETED_CLIENT_MSG = "użytkownik usunął klienta";
+
+    public static final String EMAIL_HEAD = "<head>\n" +
+            "    <meta charset=\"UTF-8\">\n" +
+            "    <meta content=\"width=device-width, initial-scale=1.0\" name=\"viewport\">\n" +
+            "    <meta content=\"ie=edge\" http-equiv=\"X-UA-Compatible\">\n" +
+            "    <title>NOX - Hours</title>\n" +
+            "    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css\" rel=\"stylesheet\"\n" +
+            "          integrity=\"sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x\" crossorigin=\"anonymous\">\n" +
+            "</head>";
 
 //    TODO ustawić losowe hasło wysyłane na maila przy tworzeniu usera
     public static final String DEFAULT_PASSWORD = "Nox7Hours";

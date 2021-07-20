@@ -36,7 +36,7 @@ public class TimesheetService {
     }
 
     public Timesheet read(Long id) {
-        return timesheetRepository.getById(id);
+        return timesheetRepository.findById(id).orElse(null);
     }
 
     public void update(Timesheet timesheet) {
