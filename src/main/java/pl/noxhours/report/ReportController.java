@@ -164,18 +164,48 @@ public class ReportController {
 
     @RequestMapping("mail/pdf/{report}")
     @ResponseBody
-    public String sendPdfMail(@PathVariable(required = false) Report report, HttpServletResponse response) {
+    public void sendPdfMail(@PathVariable(required = false) Report report, HttpServletResponse response) {
         if (report == null) {
             response.setStatus(404);
-            return null;
+            return;
         }
         if (!report.getCreator().getId().equals(((NoxUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
             response.setStatus(403);
-            return null;
+            return;
         }
         reportService.getPdf(report, LocaleContextHolder.getLocale());
         response.setStatus(reportService.sendMail(report, "NoxHoursReport" + report.getId() + ".pdf") ? 200 : 500);
-        return null;
+    }
+
+    @RequestMapping("xls/{report}")
+    @ResponseBody
+    public ResponseEntity<byte[]> getXls(@PathVariable(required = false) Report report) throws IOException {
+
+        reportService.getXls(report, LocaleContextHolder.getLocale());
+        byte[] bytes = Files.readAllBytes(Paths.get("NoxHoursReport" + report.getId() + ".xlsx"));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("NoxHoursReport" + report.getId() + ".xlsx", "NoxHoursReport" + report.getId() + ".xlsx");
+
+//        TODO sprawdzić jak dokładnie działa cache control i czy tego potrzebuje
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping("mail/xls/{report}")
+    @ResponseBody
+    public void sendXlsMail(@PathVariable(required = false) Report report, HttpServletResponse response) {
+        if (report == null) {
+            response.setStatus(404);
+            return;
+        }
+        if (!report.getCreator().getId().equals(((NoxUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
+            response.setStatus(403);
+            return;
+        }
+        reportService.getXls(report, LocaleContextHolder.getLocale());
+        response.setStatus(reportService.sendMail(report, "NoxHoursReport" + report.getId() + ".xlsx") ? 200 : 500);
     }
 
 }

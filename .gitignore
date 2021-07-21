@@ -7,6 +7,7 @@ target/
 templates/
 application-dev.properties
 *.pdf
+*.xlsx
 
 ### STS ###
 .apt_generated

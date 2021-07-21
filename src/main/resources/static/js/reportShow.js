@@ -17,4 +17,16 @@ document.getElementById("getPdf").addEventListener("click", () => {
             }
         }).catch(error => console.log(error));
     }
-})
+});
+
+document.getElementById("getXls").addEventListener("click", () => {
+    if (document.getElementById("xlsDownload").selected) {
+        window.location.href = "/reports/xls/".concat(document.getElementById("reportInfo").dataset.id);
+    } else {
+        fetch("/reports/mail/xls/".concat(document.getElementById("reportInfo").dataset.id)).then(response => {
+            if (response.status === 200) {
+                document.getElementById("emailSent").classList.remove("d-none");
+            }
+        }).catch(error => console.log(error));
+    }
+});

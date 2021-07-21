@@ -46,8 +46,6 @@ public class EmailService{
         } catch (MessagingException e) {
             log.error(e.getMessage());
             successFlag = false;
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         javaMailSender.send(message);
         return successFlag;

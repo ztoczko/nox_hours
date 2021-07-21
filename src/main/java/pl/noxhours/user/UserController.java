@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.noxhours.activity.ActivityService;
 import pl.noxhours.configuration.EmailService;
 import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.report.Report;
 import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.UserAdminListDTO;
@@ -86,6 +87,8 @@ public class UserController {
 
     @RequestMapping("/dashboard")
     public String dashboard(Model model) {
+//        Report report = reportService.read(1L);
+//        reportService.getXls(report, new Locale("pl", "PL"));
         model.addAttribute("activities", activityService.findRecent());
         model.addAttribute("recentCount", timesheetService.getRecentTimesheetCount());
         model.addAttribute("recentSum", timesheetService.getRecentTimesheetSum());

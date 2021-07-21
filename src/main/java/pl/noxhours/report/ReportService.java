@@ -14,11 +14,20 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContext;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -38,7 +47,9 @@ import pl.noxhours.user.User;
 import pl.noxhours.user.UserService;
 
 import java.awt.*;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -360,6 +371,335 @@ public class ReportService {
 
     }
 
+    public void getXls(Report report, Locale locale) {
+
+        generate(report);
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(messageSource.getMessage("report.show.aggregate", null, locale));
+        sheet.setColumnWidth(1, 20000);
+        sheet.setColumnWidth(2, 5000);
+
+        CellStyle title = workbook.createCellStyle();
+        title.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.LEFT);
+        title.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
+        title.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        title.setFillForegroundColor(IndexedColors.TEAL.getIndex());
+        title.setBorderTop(BorderStyle.THIN);
+        title.setBorderBottom(BorderStyle.THIN);
+        title.setBorderLeft(BorderStyle.THIN);
+        title.setBorderRight(BorderStyle.THIN);
+        XSSFFont fontTitle = ((XSSFWorkbook) workbook).createFont();
+        fontTitle.setFontName("Arial");
+        fontTitle.setBold(true);
+        fontTitle.setFontHeight(16);
+        title.setFont(fontTitle);
+
+        CellStyle headerSummary = workbook.createCellStyle();
+        headerSummary.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
+        headerSummary.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
+        headerSummary.setBorderTop(BorderStyle.THIN);
+        headerSummary.setBorderBottom(BorderStyle.THIN);
+        headerSummary.setBorderLeft(BorderStyle.THIN);
+        headerSummary.setBorderRight(BorderStyle.THIN);
+        XSSFFont fontHeaderSummary = ((XSSFWorkbook) workbook).createFont();
+        fontHeaderSummary.setFontName("Arial");
+        fontHeaderSummary.setFontHeight(12);
+        headerSummary.setFont(fontHeaderSummary);
+
+        CellStyle headerSummaryBolded = workbook.createCellStyle();
+        headerSummaryBolded.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.RIGHT);
+        headerSummaryBolded.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
+        headerSummaryBolded.setBorderTop(BorderStyle.THIN);
+        headerSummaryBolded.setBorderBottom(BorderStyle.THIN);
+        headerSummaryBolded.setBorderLeft(BorderStyle.THIN);
+        headerSummaryBolded.setBorderRight(BorderStyle.THIN);
+        XSSFFont fontHeaderSummaryBolded = ((XSSFWorkbook) workbook).createFont();
+        fontHeaderSummaryBolded.setFontName("Arial");
+        fontHeaderSummaryBolded.setBold(true);
+        fontHeaderSummaryBolded.setFontHeight(12);
+        headerSummaryBolded.setFont(fontHeaderSummaryBolded);
+
+        CellStyle headerDetails = workbook.createCellStyle();
+        headerDetails.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+        headerDetails.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
+        headerDetails.setBorderTop(BorderStyle.THIN);
+        headerDetails.setBorderBottom(BorderStyle.THIN);
+        headerDetails.setBorderLeft(BorderStyle.THIN);
+        headerDetails.setBorderRight(BorderStyle.THIN);
+        XSSFFont fontHeaderDetails = ((XSSFWorkbook) workbook).createFont();
+        fontHeaderDetails.setFontName("Arial");
+        fontHeaderDetails.setBold(true);
+        fontHeaderDetails.setFontHeight(12);
+        headerDetails.setFont(fontHeaderDetails);
+
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setAlignment(org.apache.poi.ss.usermodel.HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(org.apache.poi.ss.usermodel.VerticalAlignment.CENTER);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        XSSFFont fontCell = ((XSSFWorkbook) workbook).createFont();
+        fontCell.setFontName("Arial");
+        fontCell.setFontHeight(12);
+        cellStyle.setFont(fontCell);
+
+        Row row = sheet.createRow(2);
+        row.setHeight((short) 1200);
+        org.apache.poi.ss.usermodel.Cell cell = row.createCell(1);
+        cell.setCellValue("    " + messageSource.getMessage("report.show.aggregate", null, locale) + "\n    " + messageSource.getMessage("report.show.aggregate.msg", new String[]{report.getDateFromString(), report.getDateToString()}, locale));
+        cell.setCellStyle(title);
+        cell = row.createCell(2);
+        cell.setCellStyle(title);
+        sheet.addMergedRegion(new CellRangeAddress(2, 2, 1, 2));
+
+        row = sheet.createRow(3);
+        row.setHeight((short) 500);
+        cell = row.createCell(1);
+        cell.setCellValue(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.student", null, locale) + "   ");
+        cell.setCellStyle(headerSummary);
+
+        cell = row.createCell(2);
+        cell.setCellValue(report.getHoursByRank().get(0) + "h");
+        cell.setCellStyle(cellStyle);
+
+        row = sheet.createRow(4);
+        row.setHeight((short) 500);
+        cell = row.createCell(1);
+        cell.setCellValue(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.applicant", null, locale) + "   ");
+        cell.setCellStyle(headerSummary);
+
+        cell = row.createCell(2);
+        cell.setCellValue(report.getHoursByRank().get(1) + "h");
+        cell.setCellStyle(cellStyle);
+
+        row = sheet.createRow(5);
+        row.setHeight((short) 500);
+        cell = row.createCell(1);
+        cell.setCellValue(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.attorney", null, locale) + "   ");
+        cell.setCellStyle(headerSummary);
+
+        cell = row.createCell(2);
+        cell.setCellValue(report.getHoursByRank().get(2) + "h");
+        cell.setCellStyle(cellStyle);
+
+        row = sheet.createRow(6);
+        row.setHeight((short) 500);
+        cell = row.createCell(1);
+        cell.setCellValue(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.partner", null, locale) + "   ");
+        cell.setCellStyle(headerSummary);
+
+        cell = row.createCell(2);
+        cell.setCellValue(report.getHoursByRank().get(3) + "h");
+        cell.setCellStyle(cellStyle);
+
+        row = sheet.createRow(7);
+        row.setHeight((short) 500);
+        cell = row.createCell(1);
+        cell.setCellValue(messageSource.getMessage("report.show.total.hours", null, locale) + "   ");
+        cell.setCellStyle(headerSummaryBolded);
+
+        cell = row.createCell(2);
+        cell.setCellValue(report.getTotalHours() + "h");
+        cell.setCellStyle(headerDetails);
+
+        if (report.getShowRates() && SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
+            if (report.getTotalValue() == null) {
+                row = sheet.createRow(8);
+                row.setHeight((short) 500);
+                cell = row.createCell(1);
+                cell.setCellValue(messageSource.getMessage("report.show.rates.error", null, locale));
+                cell.setCellStyle(cellStyle);
+                cell = row.createCell(2);
+                cell.setCellStyle(cellStyle);
+                sheet.addMergedRegion(new CellRangeAddress(8, 8, 1, 2));
+
+            } else {
+
+                row = sheet.createRow(8);
+                row.setHeight((short) 500);
+                cell = row.createCell(1);
+                cell.setCellValue(messageSource.getMessage("report.show.values.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.student", null, locale) + "   ");
+                cell.setCellStyle(headerSummary);
+
+                cell = row.createCell(2);
+                cell.setCellValue(report.getValueByRank().get(0) + " " + messageSource.getMessage("app.currency", null, locale));
+                cell.setCellStyle(cellStyle);
+
+                row = sheet.createRow(9);
+                row.setHeight((short) 500);
+                cell = row.createCell(1);
+                cell.setCellValue(messageSource.getMessage("report.show.values.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.applicant", null, locale) + "   ");
+                cell.setCellStyle(headerSummary);
+
+                cell = row.createCell(2);
+                cell.setCellValue(report.getValueByRank().get(1) + " " + messageSource.getMessage("app.currency", null, locale));
+                cell.setCellStyle(cellStyle);
+
+                row = sheet.createRow(10);
+                row.setHeight((short) 500);
+                cell = row.createCell(1);
+                cell.setCellValue(messageSource.getMessage("report.show.values.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.attorney", null, locale) + "   ");
+                cell.setCellStyle(headerSummary);
+
+                cell = row.createCell(2);
+                cell.setCellValue(report.getValueByRank().get(2) + " " + messageSource.getMessage("app.currency", null, locale));
+                cell.setCellStyle(cellStyle);
+
+                row = sheet.createRow(11);
+                row.setHeight((short) 500);
+                cell = row.createCell(1);
+                cell.setCellValue(messageSource.getMessage("report.show.values.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.partner", null, locale) + "   ");
+                cell.setCellStyle(headerSummary);
+
+                cell = row.createCell(2);
+                cell.setCellValue(report.getValueByRank().get(3) + " " + messageSource.getMessage("app.currency", null, locale));
+                cell.setCellStyle(cellStyle);
+
+                row = sheet.createRow(12);
+                row.setHeight((short) 500);
+                cell = row.createCell(1);
+                cell.setCellValue(messageSource.getMessage("report.show.total.value", null, locale) + "   ");
+                cell.setCellStyle(headerSummaryBolded);
+
+                cell = row.createCell(2);
+                cell.setCellValue(report.getTotalValue() + " " + messageSource.getMessage("app.currency", null, locale));
+                cell.setCellStyle(headerDetails);
+            }
+        }
+
+        if (report.getShowDetails()) {
+
+            sheet = workbook.createSheet(messageSource.getMessage("report.show.details", null, locale));
+            sheet.setColumnWidth(1, 5000);
+            int columnCount = 2;
+            if (report.getShowNames()) {
+                sheet.setColumnWidth(2, 10000);
+                columnCount = 3;
+            }
+            sheet.setColumnWidth(columnCount, 7000);
+            sheet.setColumnWidth(columnCount + 1, 10000);
+            sheet.setColumnWidth(columnCount + 2, 5000);
+            sheet.setColumnWidth(columnCount + 3, 10000);
+
+
+            row = sheet.createRow(2);
+            row.setHeight((short) 1200);
+            cell = row.createCell(1);
+            cell.setCellValue("    " + messageSource.getMessage("report.show.details", null, locale));
+            cell.setCellStyle(title);
+
+            for (int i = 2; i < columnCount + 4; i++) {
+                cell = row.createCell(i);
+                cell.setCellStyle(title);
+            }
+            sheet.addMergedRegion(new CellRangeAddress(2, 2, 1, columnCount + 3));
+
+            row = sheet.createRow(3);
+            row.setHeight((short) 500);
+
+            cell = row.createCell(1);
+            cell.setCellValue(messageSource.getMessage("timesheet.date.executed", null, locale));
+            cell.setCellStyle(headerDetails);
+
+            if (report.getShowNames()) {
+                cell = row.createCell(2);
+                cell.setCellValue(messageSource.getMessage("timesheet.user", null, locale));
+                cell.setCellStyle(headerDetails);
+            }
+
+            cell = row.createCell(columnCount);
+            cell.setCellValue(messageSource.getMessage("timesheet.rank.when.created", null, locale));
+            cell.setCellStyle(headerDetails);
+
+            cell = row.createCell(columnCount + 1);
+            cell.setCellValue(messageSource.getMessage("timesheet.client", null, locale));
+            cell.setCellStyle(headerDetails);
+
+            cell = row.createCell(columnCount + 2);
+            cell.setCellValue(messageSource.getMessage("timesheet.hours", null, locale));
+            cell.setCellStyle(headerDetails);
+
+            cell = row.createCell(columnCount + 3);
+            cell.setCellValue(messageSource.getMessage("timesheet.description", null, locale));
+            cell.setCellStyle(headerDetails);
+
+            if (report.getTimesheets().size() == 0) {
+                row = sheet.createRow(4);
+                row.setHeight((short) 500);
+                cell = row.createCell(1);
+                cell.setCellValue(messageSource.getMessage("report.show.no.timesheets.message", null, locale));
+                cell.setCellStyle(cellStyle);
+                for (int i = 2; i < columnCount + 4; i++) {
+                    cell = row.createCell(i);
+                    cell.setCellStyle(cellStyle);
+                }
+                sheet.addMergedRegion(new CellRangeAddress(4, 4, 1, columnCount + 3));
+            }
+            int rowCount = 3;
+
+            for (Timesheet timesheet : report.getTimesheets()) {
+
+                row = sheet.createRow(++rowCount);
+                row.setHeight((short) 500);
+
+                cell = row.createCell(1);
+                cell.setCellValue(timesheet.getDateExecutedString());
+                cell.setCellStyle(cellStyle);
+
+                if (report.getShowNames()) {
+                    cell = row.createCell(2);
+                    cell.setCellValue(timesheet.getUserNameDTO().getFullName());
+                    cell.setCellStyle(cellStyle);
+                }
+
+                cell = row.createCell(columnCount);
+
+                switch (timesheet.getRankWhenCreated()) {
+                    case 1:
+                        cell.setCellValue(messageSource.getMessage("user.rank.student", null, locale));
+                        break;
+                    case 2:
+                        cell.setCellValue(messageSource.getMessage("user.rank.applicant", null, locale));
+                        break;
+                    case 3:
+                        cell.setCellValue(messageSource.getMessage("user.rank.attorney", null, locale));
+                        break;
+                    case 4:
+                        cell.setCellValue(messageSource.getMessage("user.rank.partner", null, locale));
+                        break;
+                }
+                cell.setCellStyle(cellStyle);
+
+                cell = row.createCell(columnCount + 1);
+                cell.setCellValue(timesheet.getClient().getName());
+                cell.setCellStyle(cellStyle);
+
+                cell = row.createCell(columnCount + 2);
+                cell.setCellValue(timesheet.getHours());
+                cell.setCellStyle(cellStyle);
+
+                cell = row.createCell(columnCount + 3);
+                cell.setCellValue(timesheet.getDescription());
+                cell.setCellStyle(cellStyle);
+            }
+        }
+
+        File currDir = new File(".");
+        String path = currDir.getAbsolutePath();
+        String fileLocation = path.substring(0, path.length() - 1) + "NoxHoursReport" + report.getId() + ".xlsx";
+        try {
+            FileOutputStream outputStream = new FileOutputStream(fileLocation);
+            workbook.write(outputStream);
+            workbook.close();
+
+            outputStream.flush();
+            outputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public String generateHtmlMessage(Report report, Locale locale) {
         generate(report);
