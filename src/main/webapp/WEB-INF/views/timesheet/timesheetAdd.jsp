@@ -44,8 +44,8 @@
                                 </div>
                                 <div>
                                     <form:select path="user" items="${users}" itemValue="id" itemLabel="fullName"
-                                                 cssClass="form-control"
-                                                 cssErrorClass="form-control text-danger border-danger"
+                                                 cssClass="form-select"
+                                                 cssErrorClass="form-select text-danger border-danger"
                                                  cssStyle="max-width: 50%" data-user-id="${timesheet.user.id}"/>
                                     <form:errors path="user" cssClass="text-danger mx-2"/>
                                 </div>
@@ -62,8 +62,8 @@
                         </div>
 
                         <div id="clientDiv" data-client-id="${!empty client ? client.id : "0"}">
-                            <form:select path="client" cssClass="form-control"
-                                         cssErrorClass="form-control text-danger border-danger"
+                            <form:select path="client" cssClass="form-select"
+                                         cssErrorClass="form-select text-danger border-danger"
                                          cssStyle="min-width:50%; max-width: 50%">
                                 <c:if test="${empty client}">
                                     <form:option value="-1">...</form:option>

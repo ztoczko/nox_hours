@@ -2,9 +2,14 @@ package pl.noxhours.report;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,6 +23,11 @@ import pl.noxhours.user.UserService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -133,6 +143,38 @@ public class ReportController {
         }
 
         response.setStatus(reportService.sendMail(report) ? 200 : 500);
+        return null;
+    }
+
+    @RequestMapping("pdf/{report}")
+    @ResponseBody
+    public ResponseEntity<byte[]> getPdf(@PathVariable(required = false) Report report) throws IOException {
+
+        reportService.getPdf(report, LocaleContextHolder.getLocale());
+        byte[] bytes = Files.readAllBytes(Paths.get("NoxHoursReport" + report.getId() + ".pdf"));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("NoxHoursReport" + report.getId() + ".pdf", "NoxHoursReport" + report.getId() + ".pdf");
+
+//        TODO sprawdzić jak dokładnie działa cache control i czy tego potrzebuje
+        headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
+
+        return new ResponseEntity<byte[]>(bytes, headers, HttpStatus.OK);
+    }
+
+    @RequestMapping("mail/pdf/{report}")
+    @ResponseBody
+    public String sendPdfMail(@PathVariable(required = false) Report report, HttpServletResponse response) {
+        if (report == null) {
+            response.setStatus(404);
+            return null;
+        }
+        if (!report.getCreator().getId().equals(((NoxUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId())) {
+            response.setStatus(403);
+            return null;
+        }
+        reportService.getPdf(report, LocaleContextHolder.getLocale());
+        response.setStatus(reportService.sendMail(report, "NoxHoursReport" + report.getId() + ".pdf") ? 200 : 500);
         return null;
     }
 

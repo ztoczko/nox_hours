@@ -38,5 +38,6 @@ public class NoxHoursApplication {
 //        messageSource.setBasename("");
 //    }
 
+//    TODO - searchable inputs, docker, dodanie cases i minut
 
 }

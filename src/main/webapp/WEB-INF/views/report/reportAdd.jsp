@@ -80,7 +80,7 @@
                             <spring:message code="report.baseUser"/>
                         </div>
                         <div>
-                            <form:select path="baseUser" cssClass="form-control"
+                            <form:select path="baseUser" cssClass="form-select"
                                          cssErrorClass="form-control text-danger border-danger"
                                          cssStyle="max-width: 50%">
                                 <form:option value="-1">...</form:option>
@@ -105,7 +105,7 @@
                             <spring:message code="report.baseClient"/>
                         </div>
                         <div>
-                            <form:select path="baseClient" cssClass="form-control"
+                            <form:select path="baseClient" cssClass="form-select"
                                          cssErrorClass="form-control text-danger border-danger"
                                          cssStyle="max-width: 50%">
                                 <form:option value="-1">...</form:option>

@@ -1,12 +1,33 @@
 package pl.noxhours.report;
 
+import com.itextpdf.io.font.FontNames;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.element.*;
+import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.VerticalAlignment;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContext;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import com.itextpdf.layout.Document;
 import pl.noxhours.client.Client;
 import pl.noxhours.configuration.EmailService;
 import pl.noxhours.configuration.GlobalConstants;
@@ -16,6 +37,9 @@ import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.User;
 import pl.noxhours.user.UserService;
 
+import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -23,6 +47,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class ReportService {
@@ -138,8 +163,203 @@ public class ReportService {
     }
 
     public boolean sendMail(Report report) {
-       return emailService.sendMessage(SecurityContextHolder.getContext().getAuthentication().getName(), "test", generateHtmlMessage(report, new Locale("pl", "PL")));
+        return emailService.sendMessage(SecurityContextHolder.getContext().getAuthentication().getName(), messageSource.getMessage("email.report.subject", null, LocaleContextHolder.getLocale()), generateHtmlMessage(report, LocaleContextHolder.getLocale()), null);
     }
+
+    public boolean sendMail(Report report, String filename) {
+        return emailService.sendMessage(SecurityContextHolder.getContext().getAuthentication().getName(), messageSource.getMessage("email.report.subject", null, LocaleContextHolder.getLocale()), messageSource.getMessage("email.report.attachment.body", null, LocaleContextHolder.getLocale()) + " " + report.getCreatedString(), filename);
+    }
+
+    public void getPdf(Report report, Locale locale) {
+
+        generate(report);
+        String fileName = "NoxHoursReport" + report.getId() + ".pdf";
+        try (PdfWriter writer = new PdfWriter(fileName)) {
+
+            String pathToFont = "/static/fonts/times.ttf";
+            String fontName = ReportService.class.getResource(pathToFont).toString();
+            FontProgram fontProgram = FontProgramFactory.createFont(fontName, true);
+            PdfFont font = PdfFontFactory.createFont(fontProgram, PdfEncodings.IDENTITY_H);
+
+            PdfDocument pdfDocument = new PdfDocument(writer);
+            pdfDocument.addFont(font);
+            Document document = new Document(pdfDocument);
+            Paragraph par = new Paragraph().setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(24).setBold();
+            par.add(messageSource.getMessage("pdf.title", new String[]{report.getDateFromString(), report.getDateToString()}, locale));
+            document.add(par);
+            par = new Paragraph().setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(16);
+            par.add(messageSource.getMessage("pdf.subtitle", new String[]{report.getCreatorDTO().getFullName(), report.getCreatedString()}, locale));
+            document.add(par);
+            par = new Paragraph().setMinHeight(100);
+            document.add(par);
+
+            Table table = new Table(new float[]{150, 50}, true).setHorizontalAlignment(HorizontalAlignment.CENTER);
+            Cell cell = new Cell(1, 2).setBackgroundColor(new DeviceRgb(0, 128, 128));
+            par = new Paragraph().add(messageSource.getMessage("report.show.aggregate", null, locale)).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(14).setBold();
+            cell.add(par);
+            table.addCell(cell);
+
+            par = new Paragraph().add(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.student", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
+            table.addCell(par);
+
+            par = new Paragraph().add(report.getHoursByRank().get(0) + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+            table.addCell(par);
+
+            par = new Paragraph().add(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.applicant", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
+            table.addCell(par);
+
+            par = new Paragraph().add(report.getHoursByRank().get(1) + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+            table.addCell(par);
+
+            par = new Paragraph().add(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.attorney", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
+            table.addCell(par);
+
+            par = new Paragraph().add(report.getHoursByRank().get(2) + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+            table.addCell(par);
+
+            par = new Paragraph().add(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.partner", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
+            table.addCell(par);
+
+            par = new Paragraph().add(report.getHoursByRank().get(3) + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+            table.addCell(par);
+
+            par = new Paragraph().add(messageSource.getMessage("report.show.total.hours", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14).setBold();
+            table.addCell(par);
+
+            par = new Paragraph().add(report.getTotalHours() + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14).setBold();
+            table.addCell(par);
+
+            if (report.getShowRates() && SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
+                if (report.getTotalValue() == null) {
+
+                    par = new Paragraph().add(messageSource.getMessage("report.show.rates.error", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14).setFontColor(ColorConstants.RED);
+                    table.addCell(new Cell(1, 2).setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+                } else {
+
+                    par = new Paragraph().add(messageSource.getMessage("report.show.values.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.student", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(report.getValueByRank().get(0) + " " + messageSource.getMessage("app.currency", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(messageSource.getMessage("report.show.values.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.applicant", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(report.getValueByRank().get(1) + " " + messageSource.getMessage("app.currency", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(messageSource.getMessage("report.show.values.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.attorney", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(report.getValueByRank().get(2) + " " + messageSource.getMessage("app.currency", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(messageSource.getMessage("report.show.values.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.partner", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(report.getValueByRank().get(3) + " " + messageSource.getMessage("app.currency", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(messageSource.getMessage("report.show.total.value", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14).setBold();
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(report.getTotalValue() + " " + messageSource.getMessage("app.currency", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14).setBold();
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+                }
+            }
+            document.add(table);
+            table.complete();
+
+            if (report.getShowDetails()) {
+
+                pdfDocument.setDefaultPageSize(PageSize.A4.rotate());
+
+                document.add(new AreaBreak());
+
+
+                table = new Table(report.getShowNames() ? 6 : 5, true).setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+                par = new Paragraph().add(messageSource.getMessage("report.show.details", null, locale)).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(12).setBold();
+                table.addCell(new Cell(1, (report.getShowNames() ? 6 : 5)).setBackgroundColor(new DeviceRgb(0, 128, 128)).add(par));
+
+                par = new Paragraph().add(messageSource.getMessage("timesheet.date.executed", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10).setBold();
+                table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                if (report.getShowNames()) {
+                    par = new Paragraph().add(messageSource.getMessage("timesheet.user", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10).setBold();
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+                }
+
+                par = new Paragraph().add(messageSource.getMessage("timesheet.rank.when.created", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10).setBold();
+                table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                par = new Paragraph().add(messageSource.getMessage("timesheet.client", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10).setBold();
+                table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                par = new Paragraph().add(messageSource.getMessage("timesheet.hours", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10).setBold();
+                table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                par = new Paragraph().add(messageSource.getMessage("timesheet.description", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10).setBold();
+                table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                if (report.getTimesheets().size() == 0) {
+                    par = new Paragraph().add(messageSource.getMessage("report.show.no.timesheets.message", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(12).setFontColor(ColorConstants.RED);
+                    table.addCell(new Cell(1, (report.getShowNames() ? 6 : 5)).add(par));
+                }
+
+                for (Timesheet timesheet : report.getTimesheets()) {
+
+                    par = new Paragraph().add(timesheet.getDateExecutedString()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    if (report.getShowNames()) {
+                        par = new Paragraph().add(timesheet.getUserNameDTO().getFullName()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
+                        table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+                    }
+
+                    String rankString = new String();
+                    switch (timesheet.getRankWhenCreated()) {
+                        case 1:
+                            rankString = messageSource.getMessage("user.rank.student", null, locale);
+                            break;
+                        case 2:
+                            rankString = messageSource.getMessage("user.rank.applicant", null, locale);
+                            break;
+                        case 3:
+                            rankString = messageSource.getMessage("user.rank.attorney", null, locale);
+                            break;
+                        case 4:
+                            rankString = messageSource.getMessage("user.rank.partner", null, locale);
+                            break;
+                    }
+
+                    par = new Paragraph().add(rankString).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(timesheet.getClient().getName()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(timesheet.getHours() + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                    par = new Paragraph().add(timesheet.getDescription()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+                }
+
+                document.add(table);
+                table.complete();
+
+            }
+
+            document.close();
+            pdfDocument.close();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+//        https://www.vogella.com/tutorials/JavaPDF/article.html
+
+    }
+
 
     public String generateHtmlMessage(Report report, Locale locale) {
         generate(report);

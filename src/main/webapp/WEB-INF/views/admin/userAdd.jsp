@@ -77,8 +77,8 @@
                             <spring:message code="user.rank"/>:
                         </div>
                         <div>
-                            <form:select path="rank" cssClass="form-control"
-                                         cssErrorClass="form-control text-danger border-danger"
+                            <form:select path="rank" cssClass="form-select"
+                                         cssErrorClass="form-select text-danger border-danger"
                                          cssStyle="width: 50%">
                                 <form:option value="1"><spring:message code="user.rank.student"/></form:option>
                                 <form:option value="2"><spring:message code="user.rank.applicant"/></form:option>

@@ -130,9 +130,23 @@
                         <span id="emailSent" class="d-none text-success"><spring:message code="report.show.email.sent.msg"/></span>
                     </div>
 
-                    <div class="m-3">
-                        <button type="button" class="button" onclick="location.href='/reports/list'"><spring:message code="app.back"/></button>
-                        <button id="sendMail" type="button" class="button"><spring:message code="report.show.send.email"/></button>
+                    <div class="m-3" style="min-width:100%">
+                        <button type="button" class="button" onclick="location.href='/reports/list'" style="min-width: 15vw; max-width: 50%;"><spring:message code="app.back"/><i class="fs-5">&nbsp</i></button>
+                        <button id="sendMail" type="button" class="button" style="min-width: 15vw; max-width: 50%"><spring:message code="report.show.send.email"/><i class="fs-5">&nbsp</i></button>
+                    </div>
+                    <div class="d-flex justify-content-center m-3" style="min-width:100%">
+                        <button id="getPdf" type="button" class="button" style="min-width: 15vw; max-width: 50%;"><i class="fs-5 fa fa-file-pdf-o" aria-hidden="true"></i> <spring:message code="report.show.pdf"/></button>
+                        <select id="getPdfType" class="form-select" style="min-width: 15vw; max-width: 15vw;">
+                            <option id="pdfDownload"><spring:message code="report.show.download"/></option>
+                            <option id="pdfSend"><spring:message code="report.show.send"/></option>
+                        </select>
+                    </div>
+                    <div class="d-flex justify-content-center m-3" style="min-width:100%">
+                        <button id="getXls" type="button" class="button" style="min-width: 15vw; max-width: 50%;"><i class="fs-5 fa fa-table" aria-hidden="true"></i></i> <spring:message code="report.show.xls"/></button>
+                        <select id="getXlsType" class="form-select" style="min-width: 15vw; max-width: 15vw;">
+                            <option id="xlsDownload"><spring:message code="report.show.download"/></option>
+                            <option id="xlsSend"><spring:message code="report.show.send"/></option>
+                        </select>
                     </div>
 
                 <!--            REPORT DETAILS START-->

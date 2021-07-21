@@ -86,8 +86,8 @@
                         </div>
 
                         <div>
-                            <form:select path="client" cssClass="form-control"
-                                         cssErrorClass="form-control text-danger border-danger"
+                            <form:select path="client" cssClass="form-select"
+                                         cssErrorClass="form-select text-danger border-danger"
                                          cssStyle="min-width:50%; max-width: 50%" disabled="true">
                                 <form:options items="${clients}" itemValue="id" itemLabel="name"/>
                             </form:select>

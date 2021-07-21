@@ -6,6 +6,7 @@ target/
 /logs
 templates/
 application-dev.properties
+*.pdf
 
 ### STS ###
 .apt_generated
