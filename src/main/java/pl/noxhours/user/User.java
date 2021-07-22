@@ -54,7 +54,7 @@ public class User extends AbstractUserEmail {
     @Column(name = "password_reset", nullable = false /**columnDefinition = "BYTE"*/)
     private Boolean passwordReset;
 
-    @Column(name = "password_reset_key", length = 10)
+    @Column(name = "password_reset_key", length = 20)
     private String passwordResetKey;
 
     @Column(name = "user_rank", nullable = false)

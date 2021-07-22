@@ -2,7 +2,10 @@ package pl.noxhours.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,11 +13,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Validator;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.noxhours.configuration.EmailService;
 import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.*;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Random;
 
 @Log4j2
 @Service
@@ -22,6 +30,8 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final EmailService emailService;
+    private final MessageSource messageSource;
 
     private TimesheetService timesheetService;
     private ReportService reportService;
@@ -54,6 +64,13 @@ public class UserService {
         log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " updated user with id of " + user.getId());
     }
 
+    public void update(User user, boolean logFlag) {
+        userRepository.save(user);
+        if (logFlag) {
+            log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " updated user with id of " + user.getId());
+        }
+    }
+
     public void delete(User user) {
         timesheetService.findAll(user).forEach(timesheetService::delete);
         reportService.findAll(user).forEach(reportService::delete);
@@ -81,9 +98,28 @@ public class UserService {
         return all ? userRepository.findAll(pageable, search) : userRepository.findAllByIsLocked(pageable, false, search);
     }
 
+    public boolean checkResetKey(String resetKey) {
+        return userRepository.getFirstByPasswordResetKey(resetKey) != null;
+    }
+
     public boolean checkEditPermissionForAdmin(User user) {
 
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN")) || (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")) && !user.getPrivileges().contains("S"));
+    }
+
+    public void setPasswordResetKey(User user) {
+
+        String resetKey = generateRandomKey();
+        user.setPasswordResetKey(resetKey);
+        update(user, false);
+        emailService.sendMessage(user.getEmail(), messageSource.getMessage("email.password.reset.subject", null, LocaleContextHolder.getLocale()), messageSource.getMessage("email.password.reset.body", new String[]{(ServletUriComponentsBuilder.fromCurrentContextPath().replacePath(null).build().toUriString() + "/reset/" + URLEncoder.encode(resetKey))}, LocaleContextHolder.getLocale()), null);
+    }
+
+    public void setPasswordResetKeyForNewUser(User user) {
+
+        String resetKey = generateRandomKey();
+        user.setPasswordResetKey(resetKey);
+        emailService.sendMessage(user.getEmail(), messageSource.getMessage("email.password.new.subject", null, LocaleContextHolder.getLocale()), messageSource.getMessage("email.password.new.body", new String[]{(ServletUriComponentsBuilder.fromCurrentContextPath().replacePath(null).build().toUriString() + "/reset/" + URLEncoder.encode(resetKey))}, LocaleContextHolder.getLocale()), null);
     }
 
     public UserNameDTO userToUserNameDto(User user) {
@@ -133,6 +169,16 @@ public class UserService {
         user.setPrivileges(privilegesArrayToString(userAdminListDTO.getPrivileges()));
         user.setIsLocked(userAdminListDTO.getIsLocked() != null && userAdminListDTO.getIsLocked());
         return user;
+    }
+
+    private String generateRandomKey() {
+
+        Random rand = new Random();
+        String result = new String();
+        for (int i = 1; i < 21; i++) {
+            result += (char) (48 + rand.nextInt(75));
+        }
+        return result;
     }
 
     private String[] privilegesStringToArray(String privileges) {

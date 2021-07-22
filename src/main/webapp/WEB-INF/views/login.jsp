@@ -37,6 +37,12 @@
                            placeholder="<spring:message code="login.password"/>"
                            required>
                 </p>
+                <c:if test="${!empty param.passwordResetSuccess}">
+                    <p><spring:message code="login.reset.success.msg"/></p>
+                </c:if>
+                <c:if test="${!empty param.resetRequest}">
+                    <p><spring:message code="login.reset.request.msg"/></p>
+                </c:if>
                 <c:if test="${!empty param.error}">
                     <p><spring:message code="login.error.msg"/></p>
                 </c:if>
@@ -44,8 +50,10 @@
                     <p><spring:message code="login.logout.msg"/></p>
                 </c:if>
                 <%--                <input name="_csrf" type="hidden" value="8bcd1181-ad6f-4d11-b3fb-058ab4ceb2f8"/>--%>
-                <button class="btn btn-lg btn-primary btn-block" type="submit"><spring:message
+                <button class="btn btn-lg btn-primary btn-block mb-3" type="submit"><spring:message
                         code="login.login.msg"/></button>
+                <button class="btn btn btn-block border-primary" type="button" onclick="location.href='/reset'"><spring:message
+                        code="login.password.forgotten"/></button>
             </form>
 
         </div>

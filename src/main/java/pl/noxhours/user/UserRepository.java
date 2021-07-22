@@ -30,5 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT user FROM User user WHERE user.firstName LIKE CONCAT('%', :search, '%') OR user.lastName LIKE CONCAT('%', :search, '%') OR user.email LIKE CONCAT('%', :search, '%')")
     Page<User> findAll(Pageable pageable, String search);
 
+    User getFirstByPasswordResetKey(String key);
+
 
 }

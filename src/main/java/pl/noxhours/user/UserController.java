@@ -2,6 +2,7 @@ package pl.noxhours.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.UserAdminListDTO;
 import pl.noxhours.user.DTO.UserPasswordChangeDTO;
+import pl.noxhours.user.DTO.UserPasswordResetMailDTO;
 import pl.noxhours.user.DTO.UserSettingsDTO;
 
 import javax.validation.Valid;
@@ -49,7 +51,6 @@ public class UserController {
     }
 
     //TODO Wprowadzić opcję checkboxa z zapamiętaniem użytkownika - pola logged_key i persistence_logging (ciacho z key czyszczone przy wylogowaniu) w bazie - czy trzeba wtedy POSTa Spring Security nadpisać?
-    //TODO Wprowadzić reset hasła przez użytkownika
 //    @GetMapping("/login")
 //    public String login() {
 //        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("USER")) {
@@ -83,6 +84,42 @@ public class UserController {
         model.addAttribute("loggedUserAdminStatus", SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")));
         model.addAttribute("loggedUserSuperAdminStatus", SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN")));
         return "redirect:/dashboard";
+    }
+
+    @GetMapping("/reset")
+    public String sendToResetForm() {
+        return "user/requestPasswordReset";
+    }
+
+    @PostMapping("/reset")
+    public String resetRequestForm(@RequestParam(required = false) String email) {
+        if (email != null) {
+            if (userService.read(email) != null) {
+                userService.setPasswordResetKey(userService.read(email));
+            }
+        }
+        return "redirect:/login?resetRequest=true";
+    }
+
+    @GetMapping("/reset/{resetKey}")
+    public String resetPasswordSentToForm(@PathVariable String resetKey, Model model) {
+        if (!userService.checkResetKey(resetKey)) {
+            return "redirect:/login";
+        }
+        model.addAttribute("user", new UserPasswordResetMailDTO(resetKey));
+        return "user/passwordResetForm";
+    }
+
+    @PostMapping("/reset/{resetKey}")
+    public String resetPassword(@ModelAttribute("user") @Valid UserPasswordResetMailDTO user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "user/passwordResetForm";
+        }
+        user.setId(userService.read(user.getEmail()).getId());
+        User completeUser = userService.userPasswordDtoToUser(user);
+        completeUser.setPasswordReset(false);
+        userService.update(completeUser);
+        return "redirect:/login?passwordResetSuccess=true";
     }
 
     @RequestMapping("/dashboard")
@@ -142,7 +179,9 @@ public class UserController {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to modify password of user with id of " + user.getId());
             return "redirect:/dashboard";
         }
-        userService.update(userService.userPasswordDtoToUser(user));
+        User completeUser = userService.userPasswordDtoToUser(user);
+        completeUser.setPasswordReset(false);
+        userService.update(completeUser);
         return "redirect:/settings/show";
     }
 
@@ -261,8 +300,9 @@ public class UserController {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to add user with SuperAdmin privileges without proper privileges");
         }
         User completeUser = userService.userAdminListDtoToUser(user);
-        completeUser.setPassword(new BCryptPasswordEncoder(10).encode(GlobalConstants.DEFAULT_PASSWORD));
-        completeUser.setPasswordReset(false);
+        completeUser.setPassword(new BCryptPasswordEncoder(10).encode(RandomString.make(20)));
+        completeUser.setPasswordReset(true);
+        userService.setPasswordResetKeyForNewUser(completeUser);
         userService.create(completeUser);
         return "redirect:/admin/list?addSuccess=true";
     }

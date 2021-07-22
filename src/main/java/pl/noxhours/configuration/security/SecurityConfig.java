@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -45,11 +47,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //TODO - dodać jakąś stronę tytułową?? jeśli nie to wywalić anta na "/"
                 .antMatchers("/admin/**", "/clients/delete/**").hasAuthority("ADMIN")
                 .antMatchers("/clients/*/rate/**").hasAuthority("RATES")
-                .antMatchers("/", "/login").permitAll()
+                .antMatchers("/", "/login", "/reset/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/login").permitAll().failureUrl("/login?error=true").successHandler((a, b, c) -> b.sendRedirect("/logging"))
                 .and()
                 .logout().logoutUrl("/logout").invalidateHttpSession(true).clearAuthentication(true).permitAll().logoutSuccessUrl("/login?logout=true");
+    }
+
+    @Bean
+    public HttpFirewall allowUrlEncodedSlashHttpFirewall() {
+        StrictHttpFirewall firewall = new StrictHttpFirewall();
+        firewall.setAllowUrlEncodedSlash(true);
+        return firewall;
     }
 }

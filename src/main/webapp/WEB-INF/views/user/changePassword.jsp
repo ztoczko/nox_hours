@@ -31,6 +31,10 @@
 
             <div class="mainContentDiv">
 
+                <c:if test="${!empty param.forced}">
+                    <p><spring:message code="settings.password.forced"/></p>
+                </c:if>
+
                 <!--            USER DETAILS START-->
                 <form:form modelAttribute="user" action="/settings/changePassword" method="post"
                            cssClass="editForm mb-0">

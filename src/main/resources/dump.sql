@@ -3,7 +3,7 @@
 USE nox_hours;
 
 
-INSERT INTO users VALUES(null, "zbigniew.toczko@gmail.com", "sample", false, "superAdmin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "ARS", 1);
+INSERT INTO users VALUES(null, "zbigniew.toczko@gmail.com", "sample", false, "superAdmin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", true, "aaa", "ARS", 1);
 INSERT INTO users VALUES(null, "user@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
 INSERT INTO users VALUES(null, "admin@wp.pl", "sample", false, "admin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "A", 1);
 INSERT INTO users VALUES(null, "rates@wp.pl", "sample", false, "rateRole", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "R", 1);

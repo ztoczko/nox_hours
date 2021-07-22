@@ -24,7 +24,6 @@ public class GlobalConstants {
             "          integrity=\"sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x\" crossorigin=\"anonymous\">\n" +
             "</head>";
 
-//    TODO ustawić losowe hasło wysyłane na maila przy tworzeniu usera
     public static final String DEFAULT_PASSWORD = "Nox7Hours";
 
     public static final Level LOG_LEVEL = Level.ALL;
