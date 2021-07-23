@@ -21,10 +21,7 @@ import pl.noxhours.configuration.GlobalConstants;
 import pl.noxhours.report.Report;
 import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
-import pl.noxhours.user.DTO.UserAdminListDTO;
-import pl.noxhours.user.DTO.UserPasswordChangeDTO;
-import pl.noxhours.user.DTO.UserPasswordResetMailDTO;
-import pl.noxhours.user.DTO.UserSettingsDTO;
+import pl.noxhours.user.DTO.*;
 
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -265,6 +262,40 @@ public class UserController {
             model.addAttribute("forceLogout", true);
         }
         return "redirect:/admin/show/" + user.getId() + "?editSuccess=true";
+    }
+
+    @GetMapping("/admin/resetPassword/{user}")
+    public String adminPasswordChangeSendToForm(@PathVariable(required = false) User user, Model model) {
+        if (user == null) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to edit password of invalid user");
+            return "redirect:/dashboard";
+        }
+        if (!userService.checkEditPermissionForAdmin(user)) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to edit password of user with id of " + user.getId() + " without proper privileges");
+            return "redirect:/dashboard";
+        }
+        model.addAttribute("user", userService.userToUserPasswordResetDto(user));
+        return "admin/resetPassword";
+    }
+
+    @GetMapping("/admin/resetPassword")
+    public String redirectFromPasswordReset() {
+        return "redirect:/dashboard";
+    }
+
+    @PostMapping("/admin/resetPassword")
+    public String adminPasswordChangeSendToForm(@ModelAttribute("user") @Valid UserPasswordResetDTO user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "admin/resetPassword";
+        }
+        if (!userService.checkEditPermissionForAdmin(userService.userPasswordDtoToUser(user))) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to edit password of user with id of " + user.getId() + " without proper privileges");
+            return "redirect:/dashboard";
+        }
+        User completeUser = userService.userPasswordDtoToUser(user);
+        completeUser.setPasswordReset(true);
+        userService.update(completeUser);
+        return "redirect:/admin/show/" + completeUser.getId();
     }
 
     @RequestMapping("admin/delete/{user}")

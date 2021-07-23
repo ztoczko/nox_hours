@@ -52,6 +52,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -369,6 +371,15 @@ public class ReportService {
         }
 //        https://www.vogella.com/tutorials/JavaPDF/article.html
 
+    }
+
+    public void deleteFile(String filename) {
+
+        try {
+            Files.deleteIfExists(Paths.get(filename));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
     }
 
     public void getXls(Report report, Locale locale) {

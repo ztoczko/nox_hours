@@ -152,6 +152,7 @@ public class ReportController {
 
         reportService.getPdf(report, LocaleContextHolder.getLocale());
         byte[] bytes = Files.readAllBytes(Paths.get("NoxHoursReport" + report.getId() + ".pdf"));
+        reportService.deleteFile("NoxHoursReport" + report.getId() + ".pdf");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
         headers.setContentDispositionFormData("NoxHoursReport" + report.getId() + ".pdf", "NoxHoursReport" + report.getId() + ".pdf");
@@ -175,6 +176,7 @@ public class ReportController {
         }
         reportService.getPdf(report, LocaleContextHolder.getLocale());
         response.setStatus(reportService.sendMail(report, "NoxHoursReport" + report.getId() + ".pdf") ? 200 : 500);
+        reportService.deleteFile("NoxHoursReport" + report.getId() + ".pdf");
     }
 
     @RequestMapping("xls/{report}")
@@ -183,6 +185,7 @@ public class ReportController {
 
         reportService.getXls(report, LocaleContextHolder.getLocale());
         byte[] bytes = Files.readAllBytes(Paths.get("NoxHoursReport" + report.getId() + ".xlsx"));
+        reportService.deleteFile("NoxHoursReport" + report.getId() + ".xlsx");
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
         headers.setContentDispositionFormData("NoxHoursReport" + report.getId() + ".xlsx", "NoxHoursReport" + report.getId() + ".xlsx");
@@ -206,6 +209,7 @@ public class ReportController {
         }
         reportService.getXls(report, LocaleContextHolder.getLocale());
         response.setStatus(reportService.sendMail(report, "NoxHoursReport" + report.getId() + ".xlsx") ? 200 : 500);
+        reportService.deleteFile("NoxHoursReport" + report.getId() + ".xlsx");
     }
 
 }
