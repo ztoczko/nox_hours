@@ -23,6 +23,7 @@ import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Locale;
@@ -47,7 +48,6 @@ public class UserController {
         this.timesheetService = timesheetService;
     }
 
-    //TODO Wprowadzić opcję checkboxa z zapamiętaniem użytkownika - pola logged_key i persistence_logging (ciacho z key czyszczone przy wylogowaniu) w bazie - czy trzeba wtedy POSTa Spring Security nadpisać?
 //    @GetMapping("/login")
 //    public String login() {
 //        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("USER")) {
@@ -67,20 +67,17 @@ public class UserController {
     //TODO dodanie strony startowej?
     @RequestMapping("/")
     public String mainPage() {
-        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("USER")) {
-            return "redirect:/dashboard";
-        }
-        return "redirect:/login";
+
+        return "redirect:/dashboard";
     }
 
-    //    TODO - Dodać to do success handlera w configu?
-    @RequestMapping("/logging")
-    public String logging(Model model) {
-        model.addAttribute("loggedUserName", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getFullName());
-        model.addAttribute("loggedUserId", userService.read(SecurityContextHolder.getContext().getAuthentication().getName()).getId());
-        model.addAttribute("loggedUserAdminStatus", SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ADMIN")));
-        model.addAttribute("loggedUserSuperAdminStatus", SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("SUPERADMIN")));
-        return "redirect:/dashboard";
+    @GetMapping("/login")
+    public String loginPage() {
+
+        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("USER"))) {
+            return "redirect:/dashboard";
+        }
+        return "login";
     }
 
     @GetMapping("/reset")

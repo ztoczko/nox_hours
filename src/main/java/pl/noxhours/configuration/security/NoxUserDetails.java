@@ -36,6 +36,10 @@ public class NoxUserDetails implements UserDetails {
         return user.getId();
     }
 
+    public String getFullName() {
+        return user.getFullName();
+    }
+
     @Override
     public String getPassword() {
         return user.getPassword();

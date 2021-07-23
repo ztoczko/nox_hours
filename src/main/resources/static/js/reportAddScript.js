@@ -4,6 +4,12 @@ $(function () {
         todayHighlight: true
     });
 });
+
+$(document).ready(function() {
+    $('.js-example-basic-single').select2({language: "pl"});
+    document.querySelectorAll(".select2-container").forEach(item => item.style.width = "50%");
+});
+
 //show User and Client select fields if proper fields are already checked on page load
 if (document.getElementById("basedOnUser1").hasAttribute("checked")) {
     document.getElementById("baseUserDiv").classList.remove("d-none");

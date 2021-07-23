@@ -14,19 +14,6 @@ import java.util.Locale;
 @Configuration
 public class WebConfig {
 
-        @Bean
-        public WebMvcConfigurer forwardToLogin() {
-            return new WebMvcConfigurer() {
-                @Override
-                public void addViewControllers(ViewControllerRegistry registry) {
-
-                    registry.addViewController("/login").setViewName(
-                            "login");
-
-                }
-            };
-        }
-
         @Bean(name="localeResolver")
         public LocaleContextResolver getLocaleContextResolver() {
             SessionLocaleResolver localeResolver = new SessionLocaleResolver();

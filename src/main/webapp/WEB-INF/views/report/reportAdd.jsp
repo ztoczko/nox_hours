@@ -11,6 +11,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
+
 <jsp:include page="/WEB-INF/views/includes/headContent.jsp"/>
 <body class="p-0 m-0" style="width: 100vw; overflow-x: hidden;">
 <div class="containter-fluid">
@@ -80,10 +81,10 @@
                             <spring:message code="report.baseUser"/>
                         </div>
                         <div>
-                            <form:select path="baseUser" cssClass="form-select"
-                                         cssErrorClass="form-control text-danger border-danger"
+                            <form:select path="baseUser" cssClass="form-select js-example-basic-single"
+                                         cssErrorClass="form-control text-danger border-danger js-example-basic-single"
                                          cssStyle="max-width: 50%">
-                                <form:option value="-1">...</form:option>
+                                <form:option value="-1"><spring:message code="app.choose"/></form:option>
                                 <form:options itemValue="id" itemLabel="fullName" items="${users}"/>
                             </form:select>
                             <form:errors path="baseUser" cssClass="text-danger mx-2"/>
@@ -105,10 +106,10 @@
                             <spring:message code="report.baseClient"/>
                         </div>
                         <div>
-                            <form:select path="baseClient" cssClass="form-select"
-                                         cssErrorClass="form-control text-danger border-danger"
+                            <form:select path="baseClient" cssClass="form-select js-example-basic-single"
+                                         cssErrorClass="form-control text-danger border-danger js-example-basic-single"
                                          cssStyle="max-width: 50%">
-                                <form:option value="-1">...</form:option>
+                                <form:option value="-1"><spring:message code="app.choose"/></form:option>
                                 <form:options itemValue="id" itemLabel="name" items="${clients}"/>
                             </form:select>
                             <form:errors path="baseClient" cssClass="text-danger mx-2"/>
@@ -167,6 +168,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
         crossorigin="anonymous"></script>
+
 
 
 <%--<script src="/popper.min.js+bootstrap.min.js.pagespeed.jc.7FgZl6cJhb.js"></script>--%>

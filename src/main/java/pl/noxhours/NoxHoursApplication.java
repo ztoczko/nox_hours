@@ -38,6 +38,6 @@ public class NoxHoursApplication {
 //        messageSource.setBasename("");
 //    }
 
-//    TODO - searchable inputs, docker, dodanie cases i minut
+//    TODO - searchable inputs dla każdego widoku, docker, dodanie cases i minut
 
 }

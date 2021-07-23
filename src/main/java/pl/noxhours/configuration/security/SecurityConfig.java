@@ -12,12 +12,16 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
+import pl.noxhours.user.UserService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +34,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Bean
+    public NoxAuthenticationSuccessHandler getSuccessHandler() {
+        return new NoxAuthenticationSuccessHandler();
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -47,12 +56,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //TODO - dodać jakąś stronę tytułową?? jeśli nie to wywalić anta na "/"
                 .antMatchers("/admin/**", "/clients/delete/**").hasAuthority("ADMIN")
                 .antMatchers("/clients/*/rate/**").hasAuthority("RATES")
-                .antMatchers("/", "/login", "/reset/**").permitAll()
+                .antMatchers("/", "/login", "/reset/**", "/error").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll().failureUrl("/login?error=true").successHandler((a, b, c) -> b.sendRedirect("/logging"))
+                .formLogin().loginPage("/login").permitAll().failureUrl("/login?error=true").successHandler(getSuccessHandler())
                 .and()
-                .logout().logoutUrl("/logout").invalidateHttpSession(true).clearAuthentication(true).permitAll().logoutSuccessUrl("/login?logout=true");
+                .logout().logoutUrl("/logout").deleteCookies("nox_hours_persistence_login").invalidateHttpSession(true).clearAuthentication(true).permitAll().logoutSuccessUrl("/login?logout=true")
+                .and()
+                .rememberMe().key("nox_hours_persistence_login").tokenValiditySeconds(60 * 60 * 24 * 14).userDetailsService(userDetailsService).authenticationSuccessHandler(getSuccessHandler());
     }
 
     @Bean

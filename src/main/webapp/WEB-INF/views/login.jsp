@@ -37,6 +37,10 @@
                            placeholder="<spring:message code="login.password"/>"
                            required>
                 </p>
+                <div class="form-check mb-3">
+                    <label for="rememberMe" class="form-check-label"><spring:message code="login.remember.me"/></label>
+                    <input type="checkbox" id="rememberMe" name="remember-me" class="form-check-input">
+                </div>
                 <c:if test="${!empty param.passwordResetSuccess}">
                     <p><spring:message code="login.reset.success.msg"/></p>
                 </c:if>
