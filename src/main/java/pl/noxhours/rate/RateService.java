@@ -11,6 +11,7 @@ import pl.noxhours.report.Report;
 import pl.noxhours.timesheet.Timesheet;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,18 +75,21 @@ public class RateService {
             tempRate = getRateForDate(timesheet.getClient(), timesheet.getDateExecuted());
             switch (timesheet.getRankWhenCreated()) {
                 case 1:
-                    result.set(0, result.get(0).add(tempRate.getStudentRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
+                    result.set(0, result.get(0).add(tempRate.getStudentRate().multiply(BigDecimal.valueOf(timesheet.getHours()).add(BigDecimal.valueOf(timesheet.getMinutes()).divide(BigDecimal.valueOf(60))))));
                     break;
                 case 2:
-                    result.set(1, result.get(1).add(tempRate.getApplicantRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
+                    result.set(1, result.get(1).add(tempRate.getApplicantRate().multiply(BigDecimal.valueOf(timesheet.getHours()).add(BigDecimal.valueOf(timesheet.getMinutes()).divide(BigDecimal.valueOf(60))))));
                     break;
                 case 3:
-                    result.set(2, result.get(2).add(tempRate.getAttorneyRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
+                    result.set(2, result.get(2).add(tempRate.getAttorneyRate().multiply(BigDecimal.valueOf(timesheet.getHours()).add(BigDecimal.valueOf(timesheet.getMinutes()).divide(BigDecimal.valueOf(60))))));
                     break;
                 case 4:
-                    result.set(3, result.get(3).add(tempRate.getPartnerRate().multiply(BigDecimal.valueOf(timesheet.getHours()))));
+                    result.set(3, result.get(3).add(tempRate.getPartnerRate().multiply(BigDecimal.valueOf(timesheet.getHours()).add(BigDecimal.valueOf(timesheet.getMinutes()).divide(BigDecimal.valueOf(60))))));
                     break;
             }
+        }
+        for (int i = 0; i < 4; i++) {
+            result.set(i, result.get(i).setScale(2, RoundingMode.HALF_UP));
         }
         report.setValueByRank(result);
 

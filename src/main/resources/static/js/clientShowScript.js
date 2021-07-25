@@ -15,18 +15,52 @@ function activateInputs() {
 }
 
 //toggling tables
-if (document.querySelector(".toggleTableButtonGroup") !== null) {
-    document.querySelector(".toggleTableButtonGroup").querySelectorAll("div").forEach(el => el.addEventListener("click", function() {
 
-        if (!this.classList.contains("buttonSelected")) {
-            this.parentElement.querySelectorAll("div").forEach(el => el.classList.toggle("buttonSelected"));
-            document.getElementById("ratesTable").classList.toggle("d-none");
-            document.getElementById("ratesPagination").classList.toggle("d-none");
-            document.getElementById("timesheetsTable").classList.toggle("d-none");
-            document.getElementById("timesheetsPagination").classList.toggle("d-none");
+document.querySelector(".toggleTableButtonGroup").querySelectorAll("div").forEach(el => el.addEventListener("click", function () {
+
+    console.log("TEST");
+    if (!this.classList.contains("buttonSelected")) {
+        this.parentElement.querySelectorAll("div").forEach(el => el.classList.remove("buttonSelected"));
+        this.classList.add("buttonSelected");
+
+        if (this.id !== "toggleButton1") {
+            document.getElementById("casesTable").classList.add("d-none");
+            document.getElementById("casesPagination").classList.add("d-none");
         }
-    }));
-}
+
+        if (this.id !== "toggleButton2" && document.getElementById("ratesTable") !== null) {
+            document.getElementById("ratesTable").classList.add("d-none");
+            document.getElementById("ratesPagination").classList.add("d-none");
+        }
+
+        if (this.id !== "toggleButton3") {
+            document.getElementById("timesheetsTable").classList.add("d-none");
+            document.getElementById("timesheetsPagination").classList.add("d-none");
+        }
+
+        if (this.id === "toggleButton1") {
+            document.getElementById("casesTable").classList.remove("d-none");
+            document.getElementById("casesPagination").classList.remove("d-none");
+        }
+
+        if (this.id === "toggleButton2") {
+            document.getElementById("ratesTable").classList.remove("d-none");
+            document.getElementById("ratesPagination").classList.remove("d-none");
+        }
+
+        if (this.id === "toggleButton3") {
+            document.getElementById("timesheetsTable").classList.remove("d-none");
+            document.getElementById("timesheetsPagination").classList.remove("d-none");
+        }
+    }
+}));
+
+//show all toggle for cases
+
+document.getElementById("allCasesToggle").addEventListener("click", function () {
+    this.parentElement.submit();
+});
+
 
 // rate delete modal fire up event:
 document.querySelectorAll("button[data-rate-delete-button]").forEach(el => el.addEventListener("click", function () {

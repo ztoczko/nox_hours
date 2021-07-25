@@ -71,15 +71,22 @@
                     <%--                    <div class="radio-group">--%>
                     <%--                        <input type="radio" id="option-one" name="selector"><label for="option-one">Stawki</label><input type="radio" id="option-two" name="selector"><label for="option-two">Rozliczenia</label>--%>
                     <%--                    </div>--%>
-                    <sec:authorize access="hasAuthority('RATES')">
-                        <div class="toggleTableButtonGroup m-2 p-0">
-                            <div class="toggleTableButtonLeft m-0 p-0 ${!empty param.showRates ? "buttonSelected" : ""}">
+
+                    <div class="toggleTableButtonGroup m-2 p-0">
+                        <div id="toggleButton1"
+                             class="toggleTableButtonLeft m-0 p-0 ${!empty param.showCases ? "buttonSelected" : ""}">
+                            <spring:message code="clients.show.cases"/></div>
+                        <sec:authorize access="hasAuthority('RATES')">
+                            <div id="toggleButton2"
+                                 class="toggleTableButtonMiddle m-0 p-0 ${!empty param.showRates ? "buttonSelected" : ""}">
                                 <spring:message code="clients.show.rates"/></div>
-                            <div class="toggleTableButtonRight m-0 p-0 ${!empty param.showRates ? "" : "buttonSelected"}">
-                                <spring:message
-                                        code="clients.show.timesheets"/></div>
-                        </div>
-                    </sec:authorize>
+                        </sec:authorize>
+                        <div id="toggleButton3"
+                             class="toggleTableButtonRight m-0 p-0 ${!empty param.showRates || !empty param.showCases ? "" : "buttonSelected"}">
+                            <spring:message
+                                    code="clients.show.timesheets"/></div>
+                    </div>
+
                 </form:form>
                 <!-- CLIENT DETAILS END-->
 
@@ -107,7 +114,7 @@
                         <thead>
                         <tr>
                             <td class="fs-4 p-3" colspan="6"><spring:message code="clients.show.rates"/></td>
-                            <td class="text-center" valign="middle">
+                            <td class="text-center pe-5" valign="middle" style="text-align: end !important;">
                                 <c:if test="${!client.closed}">
                                     <button type="button" class="button m-auto"
                                             onclick="location.href='/clients/${client.id}/rate/add'"><spring:message
@@ -181,11 +188,12 @@
                 <%--                LAST RATES END--%>
 
                 <%--                TIMESHEETS START--%>
-                <table class="table ${!empty param.showRates ? "d-none" : ""}" id="timesheetsTable">
+                <table class="table ${!empty param.showRates || !empty param.showCases ? "d-none" : ""}"
+                       id="timesheetsTable">
                     <thead>
                     <tr>
-                        <td class="fs-4 p-3" colspan="4"><spring:message code="clients.show.timesheets"/></td>
-                        <td class="text-center" valign="middle">
+                        <td class="fs-4 p-3" colspan="5"><spring:message code="clients.show.timesheets"/></td>
+                        <td class="text-center pe-5" valign="middle" style="text-align: end !important;">
                             <c:if test="${!client.closed}">
                                 <button type="button" class="button m-auto"
                                         onclick="${"location.href='/timesheet/add?client=".concat(client.id).concat("'")}">
@@ -199,6 +207,9 @@
                             <spring:message code="timesheet.date.executed"/>
                         </th>
                         <th>
+                            <spring:message code="timesheet.case"/>
+                        </th>
+                        <th>
                             <spring:message code="timesheet.user"/>
                         </th>
                         <th><spring:message code="timesheet.hours"/></th>
@@ -210,7 +221,7 @@
 
                     <c:if test="${timesheets.size() == 0}">
                         <tr>
-                            <td colspan="7">
+                            <td colspan="6">
                                 <spring:message code="clients.show.no.timesheets.msg"/>
                             </td>
                         </tr>
@@ -222,10 +233,20 @@
                                     ${timesheet.dateExecutedString}
                             </td>
                             <td>
+                                <c:choose>
+                                    <c:when test="${empty timesheet.clientCase}">
+                                        <spring:message code="case.no.case"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${timesheet.clientCase.shortName}
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
                                     ${timesheet.userNameDTO.fullName}
                             </td>
                             <td data-${timesheet.id}-hours>
-                                    ${timesheet.hours}
+                                    ${timesheet.hoursString}
                             </td>
                             <td>
                                     ${timesheet.shortDescription}
@@ -239,13 +260,6 @@
                                         <spring:message code="app.go.to.details"/>
                                     </button>
 
-                                    <%--                                    <c:if test="${timesheet.userNameDTO.id == loggedUserId}">--%>
-                                    <%--                                        <button type="button" class="button" data-timesheet-delete-button--%>
-                                    <%--                                                data-id="${timesheet.id}" data-client-id="${client.id}">--%>
-                                    <%--                                            <spring:message code="app.delete"/>--%>
-                                    <%--                                        </button>--%>
-                                    <%--                                    </c:if>--%>
-
                                 </c:if>
                             </td>
                         </tr>
@@ -253,7 +267,8 @@
                     </tbody>
                 </table>
 
-                <div class="pagination ${!empty param.showRates ? "d-none" : ""}" id="timesheetsPagination">
+                <div class="pagination ${!empty param.showRates || !empty param.showCases ? "d-none" : ""}"
+                     id="timesheetsPagination">
                     <div ${timesheetPage > 1 ? "class=\"pageLeft\"" : ""}><i
                             class="fa fa-angle-double-left" ${timesheetPage > 1 ? "onclick=\"location.href='/clients/show/".concat(client.id).concat("?timesheetPage=1'\"") : ""}></i>
                     </div>
@@ -270,6 +285,97 @@
                     </div>
                 </div>
                 <%--                TIMESHEETS END--%>
+
+
+                <%--                CASES START--%>
+                <table class="table ${!empty param.showCases ? "" : "d-none"}" id="casesTable">
+                    <thead>
+                    <tr>
+                        <td class="fs-4 p-3" colspan="1"><spring:message code="clients.show.cases"/></td>
+                        <td>
+
+                            <div class="form-check form-switch p-0 m-0 d-flex" style="min-height: 2rem">
+                                <div class="me-2"><spring:message code="client.show.all.cases"/>:</div>
+                                <div>
+                                    <form method="get">
+                                        <input type="hidden" name="showCases" value="true"/>
+                                        <input id="allCasesToggle" type="checkbox" name="allCases"
+                                               class="form-check-input p-0 m-0" ${allCases ? "checked" : ""}/>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td class="text-center pe-5" valign="middle" style="text-align: end !important;">
+                            <c:if test="${!client.closed}">
+                                <button type="button" class="button m-auto"
+                                        onclick="${"location.href='/clients/".concat(client.id).concat("/case/add'")}">
+                                    <spring:message code="clients.show.case.add.new"/>
+                                </button>
+                            </c:if>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <spring:message code="case.created"/>
+                        </th>
+                        <th>
+                            <spring:message code="case.name"/>
+                        </th>
+                        <th><spring:message code="app.actions"/></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <c:if test="${cases.size() == 0}">
+                        <tr>
+                            <td colspan="3">
+                                <spring:message code="clients.show.no.cases.msg"/>
+                            </td>
+                        </tr>
+                        <span class="d-none">${totalCasePages = 1}</span>
+                    </c:if>
+                    <c:forEach var="aCase" items="${cases}">
+                        <tr ${aCase.closed ? "style='opacity: 0.5'" : ""}>
+                            <td>
+                                    ${aCase.createdString}
+                            </td>
+                            <td>
+                                    ${aCase.name}
+                            </td>
+
+                            <td>
+                                <c:if test="${!client.closed}">
+
+                                    <button type="button" class="button"
+                                            onclick="${"location.href='/clients/".concat(client.id).concat("/case/show/").concat(aCase.id).concat("'")}">
+                                        <spring:message code="app.go.to.details"/>
+                                    </button>
+
+                                </c:if>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
+
+                <div class="pagination ${!empty param.showCases ? "" : "d-none"}" id="casesPagination">
+                    <div ${casePage > 1 ? "class=\"pageLeft\"" : ""}><i
+                            class="fa fa-angle-double-left" ${casePage > 1 ? "onclick=\"location.href='/clients/show/".concat(client.id).concat("?showCases=true&casePage=1&allCases=").concat(allCases).concat("'\"") : ""}></i>
+                    </div>
+                    <div ${casePage > 1 ? "class=\"pageLeft\"" : ""}><i
+                            class="fa fa-angle-left" ${casePage > 1 ? "onclick=\"location.href='/clients/show/".concat(client.id).concat("?showCases=true&casePage=").concat(casePage - 1).concat("&allCases=").concat(allCases).concat("'\"") : ""}></i>
+                    </div>
+                    <div class="currentPage">${casePage} <spring:message
+                            code="app.pagination"/> ${totalCasePages}</div>
+                    <div ${casePage < totalCasePages ? "class=\"pageRight\"" : ""}><i
+                            class="fa fa-angle-right" ${casePage < totalCasePages ? "onclick=\"location.href='/clients/show/".concat(client.id).concat("?showCases=true&casePage=").concat(casePage + 1).concat("&allCases=").concat(allCases).concat("'\"") : ""}></i>
+                    </div>
+                    <div ${casePage < totalCasePages ? "class=\"pageRight\"" : ""}><i
+                            class="fa fa-angle-double-right" ${casePage < totalCasePages ? "onclick=\"location.href='/clients/show/".concat(client.id).concat("?showCases=true&casePage=").concat(totalCasePages).concat("&allCases=").concat(allCases).concat("'\"") : ""}></i>
+                    </div>
+                </div>
+                <%--                CASES END--%>
 
             </div>
 

@@ -45,7 +45,7 @@
 
             </div>
 
-            <div class="mainContentDiv">
+            <div class="mainContentDiv" style="min-height: 77vh">
                 <!-- bg-white table-striped table-hover -->
                 <table class="table ">
                     <thead>

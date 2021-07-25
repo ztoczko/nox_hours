@@ -209,7 +209,7 @@
     flex-direction: column;
     justify-content: safe start;
     align-items: safe center;
-    min-height: 77vh;
+    min-height: 84vh;
     max-height: 87vh;
 }
 
@@ -302,6 +302,10 @@
 }
 .toggleTableButtonLeft {
     border-radius: 1rem 0 0 1rem;
+}
+
+. toggleTableButtonMiddle {
+    border-radius: 0 0 0 0;
 }
 
 .toggleTableButtonRight {

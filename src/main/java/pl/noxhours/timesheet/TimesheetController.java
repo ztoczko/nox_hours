@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.noxhours.case_.Case;
+import pl.noxhours.case_.CaseService;
 import pl.noxhours.client.Client;
 import pl.noxhours.client.ClientService;
 import pl.noxhours.configuration.GlobalConstants;
@@ -27,6 +29,12 @@ public class TimesheetController {
     private final TimesheetService timesheetService;
     private final UserService userService;
     private final ClientService clientService;
+    private final CaseService caseService;
+
+    @ModelAttribute("cases")
+    public List<Case> getActiveCases() {
+        return caseService.findAllActive();
+    }
 
     @ModelAttribute("clients")
     public List<Client> getActiveClients() {
@@ -76,6 +84,10 @@ public class TimesheetController {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to create timesheet while impersonating user with id " + timesheet.getUser().getId());
             return "redirect:/dashboard";
         }
+        if (timesheet.getClientCase() != null && !timesheet.getClientCase().getClient().getId().equals(timesheet.getClient().getId())) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to create timesheet for case belonging to other client than timesheet itself");
+            return "redirect:/dashboard";
+        }
         timesheetService.create(timesheet);
         return "redirect:/clients/show/" + timesheet.getClient().getId() + "?timesheetAddSuccess=true";
     }
@@ -122,6 +134,10 @@ public class TimesheetController {
         }
         if (!timesheetService.checkPermissionForTimesheet(timesheet)) {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to update timesheet with id of " + timesheet.getId() + " while impersonating user with id " + timesheet.getUser().getId());
+            return "redirect:/dashboard";
+        }
+        if (timesheet.getClientCase() != null && !timesheet.getClientCase().getClient().getId().equals(timesheet.getClient().getId())) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to edit timesheet and setting case belonging to other client than timesheet itself");
             return "redirect:/dashboard";
         }
         timesheetService.update(timesheet);

@@ -11,7 +11,7 @@ import pl.noxhours.customValidation.NewPassword;
 @AllArgsConstructor
 @NewPassword
 @CheckPassword
-public class UserPasswordChangeDTO extends UserPasswordResetDTO{
+public class UserPasswordChangeDTO extends UserPasswordResetDTO {
 
     private String oldPassword;
 

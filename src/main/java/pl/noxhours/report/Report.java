@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import pl.noxhours.case_.Case;
 import pl.noxhours.client.Client;
 import pl.noxhours.configuration.GlobalConstants;
+import pl.noxhours.customValidation.ReportCheckCase;
 import pl.noxhours.customValidation.ReportCheckClient;
 import pl.noxhours.customValidation.ReportCheckUser;
 import pl.noxhours.customValidation.ReportDateOrder;
@@ -19,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,6 +32,7 @@ import java.util.List;
 @ReportDateOrder
 @ReportCheckClient
 @ReportCheckUser
+@ReportCheckCase
 public class Report {
 
     public static final String TABLE_NAME = "reports";
@@ -61,6 +65,9 @@ public class Report {
     @Column(name = "based_on_user")
     private Boolean basedOnUser;
 
+    @Column(name = "based_on_case")
+    private Boolean basedOnCase;
+
     @ManyToOne
     @JoinColumn(name = "client_id")
     private Client baseClient;
@@ -68,6 +75,10 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User baseUser;
+
+    @ManyToOne
+    @JoinColumn(name = "case_id")
+    private Case baseCase;
 
     @Column(name = "show_details")
     private Boolean showDetails;
@@ -85,7 +96,13 @@ public class Report {
     private List<Integer> hoursByRank;
 
     @Transient
+    private List<Integer> minutesByRank;
+
+    @Transient
     private Integer totalHours;
+
+    @Transient
+    private Integer totalMinutes;
 
     @Transient
     private List<BigDecimal> valueByRank;
@@ -109,6 +126,18 @@ public class Report {
 
     public String getDateToString() {
         return DateTimeFormatter.ofPattern(GlobalConstants.DATE_FORMAT).format(dateTo);
+    }
+
+    public List<String> getHoursByRankString() {
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            result.add(hoursByRank.get(i) + "h" + (minutesByRank.get(i) < 10 ? "0" : "") + minutesByRank.get(i) + "min");
+        }
+        return result;
+    }
+
+    public String getTotalHoursString() {
+        return totalHours + "h" + (totalMinutes < 10 ? "0" : "") + totalMinutes + "min";
     }
 
 }

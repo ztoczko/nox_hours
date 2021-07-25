@@ -77,6 +77,9 @@ public class ReportService {
         if (report.getBasedOnClient() == null) {
             report.setBasedOnClient(false);
         }
+        if (report.getBasedOnCase() == null || !report.getBasedOnClient()) {
+            report.setBasedOnCase(false);
+        }
         if (report.getBasedOnUser() == null) {
             report.setBasedOnUser(false);
         }
@@ -94,6 +97,9 @@ public class ReportService {
         }
         if (!report.getBasedOnClient()) {
             report.setBaseClient(null);
+        }
+        if (!report.getBasedOnCase()) {
+            report.setBaseCase(null);
         }
         if (!report.getShowDetails() && report.getShowNames()) {
             report.setShowNames(false);
@@ -140,20 +146,30 @@ public class ReportService {
     public void generate(Report report) {
 
         report.setHoursByRank(new ArrayList<>());
+        report.setMinutesByRank(new ArrayList<>());
 
         List<Timesheet> result = new ArrayList<>();
 
-        if (report.getBasedOnClient() && report.getBasedOnUser()) {
-            result = timesheetService.findAll(report.getBaseUser(), report.getBaseClient(), report.getDateFrom(), report.getDateTo());
+        if (report.getBasedOnClient() && report.getBasedOnUser() && report.getBasedOnCase()) {
+            result = timesheetService.findAll(report.getBaseUser(), report.getBaseClient(), report.getBaseCase(), report.getDateFrom(), report.getDateTo());
         } else {
-            if (report.getBasedOnClient()) {
-                result = timesheetService.findAll(report.getBaseClient(), report.getDateFrom(), report.getDateTo());
-            }
-            if (report.getBasedOnUser()) {
-                result = timesheetService.findAll(report.getBaseUser(), report.getDateFrom(), report.getDateTo());
-            }
-            if (!report.getBasedOnClient() && !report.getBasedOnUser()) {
-                result = timesheetService.findAll(report.getDateFrom(), report.getDateTo());
+
+            if (report.getBasedOnClient() && report.getBasedOnCase()) {
+                result = timesheetService.findAll(report.getBaseClient(), report.getBaseCase(), report.getDateFrom(), report.getDateTo());
+            } else {
+                if (report.getBasedOnUser() && report.getBasedOnClient()) {
+                    result = timesheetService.findAll(report.getBaseUser(), report.getBaseClient(), report.getDateFrom(), report.getDateTo());
+                } else {
+                    if (report.getBasedOnClient()) {
+                        result = timesheetService.findAll(report.getBaseClient(), report.getDateFrom(), report.getDateTo());
+                    }
+                    if (report.getBasedOnUser()) {
+                        result = timesheetService.findAll(report.getBaseUser(), report.getDateFrom(), report.getDateTo());
+                    }
+                    if (!report.getBasedOnClient() && !report.getBasedOnUser()) {
+                        result = timesheetService.findAll(report.getDateFrom(), report.getDateTo());
+                    }
+                }
             }
         }
         if (result == null) {
@@ -162,9 +178,11 @@ public class ReportService {
         report.setTimesheets(result);
         for (int i = 1; i < 5; i++) {
             int tempRank = i;
-            report.getHoursByRank().add(result.stream().filter(item -> item.getRankWhenCreated() == tempRank).map(Timesheet::getHours).reduce(0, Integer::sum));
+            report.getHoursByRank().add(result.stream().filter(item -> item.getRankWhenCreated() == tempRank).map(Timesheet::getHours).reduce(0, Integer::sum) + result.stream().filter(item -> item.getRankWhenCreated() == tempRank).map(Timesheet::getMinutes).reduce(0, Integer::sum) / 60);
+            report.getMinutesByRank().add(result.stream().filter(item -> item.getRankWhenCreated() == tempRank).map(Timesheet::getMinutes).reduce(0, Integer::sum) % 60);
         }
-        report.setTotalHours(report.getHoursByRank().stream().reduce(0, Integer::sum));
+        report.setTotalHours(report.getHoursByRank().stream().reduce(0, Integer::sum) + report.getMinutesByRank().stream().reduce(0, Integer::sum) / 60);
+        report.setTotalMinutes(report.getMinutesByRank().stream().reduce(0, Integer::sum) % 60);
 
         if (report.getShowRates() && rateService.validateRateAvailablity(result)) {
             rateService.getTimesheetValueForRank(report);
@@ -215,31 +233,31 @@ public class ReportService {
             par = new Paragraph().add(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.student", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
             table.addCell(par);
 
-            par = new Paragraph().add(report.getHoursByRank().get(0) + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+            par = new Paragraph().add(report.getHoursByRankString().get(0)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
             table.addCell(par);
 
             par = new Paragraph().add(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.applicant", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
             table.addCell(par);
 
-            par = new Paragraph().add(report.getHoursByRank().get(1) + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+            par = new Paragraph().add(report.getHoursByRankString().get(1)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
             table.addCell(par);
 
             par = new Paragraph().add(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.attorney", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
             table.addCell(par);
 
-            par = new Paragraph().add(report.getHoursByRank().get(2) + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+            par = new Paragraph().add(report.getHoursByRankString().get(2)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
             table.addCell(par);
 
             par = new Paragraph().add(messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.partner", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14);
             table.addCell(par);
 
-            par = new Paragraph().add(report.getHoursByRank().get(3) + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
+            par = new Paragraph().add(report.getHoursByRankString().get(3)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14);
             table.addCell(par);
 
             par = new Paragraph().add(messageSource.getMessage("report.show.total.hours", null, locale)).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(14).setBold();
             table.addCell(par);
 
-            par = new Paragraph().add(report.getTotalHours() + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14).setBold();
+            par = new Paragraph().add(report.getTotalHoursString()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(14).setBold();
             table.addCell(par);
 
             if (report.getShowRates() && SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
@@ -290,12 +308,15 @@ public class ReportService {
                 document.add(new AreaBreak());
 
 
-                table = new Table(report.getShowNames() ? 6 : 5, true).setHorizontalAlignment(HorizontalAlignment.CENTER);
+                table = new Table(report.getShowNames() ? 7 : 6, true).setHorizontalAlignment(HorizontalAlignment.CENTER);
 
                 par = new Paragraph().add(messageSource.getMessage("report.show.details", null, locale)).setTextAlignment(TextAlignment.LEFT).setFont(font).setFontSize(12).setBold();
-                table.addCell(new Cell(1, (report.getShowNames() ? 6 : 5)).setBackgroundColor(new DeviceRgb(0, 128, 128)).add(par));
+                table.addCell(new Cell(1, (report.getShowNames() ? 7 : 6)).setBackgroundColor(new DeviceRgb(0, 128, 128)).add(par));
 
                 par = new Paragraph().add(messageSource.getMessage("timesheet.date.executed", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10).setBold();
+                table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
+                par = new Paragraph().add(messageSource.getMessage("timesheet.case", null, locale)).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10).setBold();
                 table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
 
                 if (report.getShowNames()) {
@@ -325,6 +346,9 @@ public class ReportService {
                     par = new Paragraph().add(timesheet.getDateExecutedString()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
                     table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
 
+                    par = new Paragraph().add(timesheet.getClientCase() == null ? messageSource.getMessage("case.no.case", null, locale) : timesheet.getClientCase().getName()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
+                    table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
+
                     if (report.getShowNames()) {
                         par = new Paragraph().add(timesheet.getUserNameDTO().getFullName()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
                         table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
@@ -352,7 +376,7 @@ public class ReportService {
                     par = new Paragraph().add(timesheet.getClient().getName()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
                     table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
 
-                    par = new Paragraph().add(timesheet.getHours() + "h").setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
+                    par = new Paragraph().add(timesheet.getHoursString()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
                     table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
 
                     par = new Paragraph().add(timesheet.getDescription()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
@@ -471,7 +495,7 @@ public class ReportService {
         cell.setCellStyle(headerSummary);
 
         cell = row.createCell(2);
-        cell.setCellValue(report.getHoursByRank().get(0) + "h");
+        cell.setCellValue(report.getHoursByRankString().get(0));
         cell.setCellStyle(cellStyle);
 
         row = sheet.createRow(4);
@@ -481,7 +505,7 @@ public class ReportService {
         cell.setCellStyle(headerSummary);
 
         cell = row.createCell(2);
-        cell.setCellValue(report.getHoursByRank().get(1) + "h");
+        cell.setCellValue(report.getHoursByRankString().get(1));
         cell.setCellStyle(cellStyle);
 
         row = sheet.createRow(5);
@@ -491,7 +515,7 @@ public class ReportService {
         cell.setCellStyle(headerSummary);
 
         cell = row.createCell(2);
-        cell.setCellValue(report.getHoursByRank().get(2) + "h");
+        cell.setCellValue(report.getHoursByRankString().get(2));
         cell.setCellStyle(cellStyle);
 
         row = sheet.createRow(6);
@@ -501,7 +525,7 @@ public class ReportService {
         cell.setCellStyle(headerSummary);
 
         cell = row.createCell(2);
-        cell.setCellValue(report.getHoursByRank().get(3) + "h");
+        cell.setCellValue(report.getHoursByRankString().get(3));
         cell.setCellStyle(cellStyle);
 
         row = sheet.createRow(7);
@@ -511,7 +535,7 @@ public class ReportService {
         cell.setCellStyle(headerSummaryBolded);
 
         cell = row.createCell(2);
-        cell.setCellValue(report.getTotalHours() + "h");
+        cell.setCellValue(report.getTotalHoursString());
         cell.setCellStyle(headerDetails);
 
         if (report.getShowRates() && SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
@@ -583,10 +607,11 @@ public class ReportService {
 
             sheet = workbook.createSheet(messageSource.getMessage("report.show.details", null, locale));
             sheet.setColumnWidth(1, 5000);
-            int columnCount = 2;
+            sheet.setColumnWidth(2, 10000);
+            int columnCount = 3;
             if (report.getShowNames()) {
-                sheet.setColumnWidth(2, 10000);
-                columnCount = 3;
+                sheet.setColumnWidth(3, 10000);
+                columnCount = 4;
             }
             sheet.setColumnWidth(columnCount, 7000);
             sheet.setColumnWidth(columnCount + 1, 10000);
@@ -613,8 +638,12 @@ public class ReportService {
             cell.setCellValue(messageSource.getMessage("timesheet.date.executed", null, locale));
             cell.setCellStyle(headerDetails);
 
+            cell = row.createCell(2);
+            cell.setCellValue(messageSource.getMessage("timesheet.case", null, locale));
+            cell.setCellStyle(headerDetails);
+
             if (report.getShowNames()) {
-                cell = row.createCell(2);
+                cell = row.createCell(3);
                 cell.setCellValue(messageSource.getMessage("timesheet.user", null, locale));
                 cell.setCellStyle(headerDetails);
             }
@@ -658,8 +687,12 @@ public class ReportService {
                 cell.setCellValue(timesheet.getDateExecutedString());
                 cell.setCellStyle(cellStyle);
 
+                cell = row.createCell(2);
+                cell.setCellValue(timesheet.getClientCase() == null ? messageSource.getMessage("case.no.case", null, locale) : timesheet.getClientCase().getName());
+                cell.setCellStyle(cellStyle);
+
                 if (report.getShowNames()) {
-                    cell = row.createCell(2);
+                    cell = row.createCell(3);
                     cell.setCellValue(timesheet.getUserNameDTO().getFullName());
                     cell.setCellStyle(cellStyle);
                 }
@@ -687,7 +720,7 @@ public class ReportService {
                 cell.setCellStyle(cellStyle);
 
                 cell = row.createCell(columnCount + 2);
-                cell.setCellValue(timesheet.getHours());
+                cell.setCellValue(timesheet.getHoursString());
                 cell.setCellStyle(cellStyle);
 
                 cell = row.createCell(columnCount + 3);
@@ -719,11 +752,11 @@ public class ReportService {
         message += "\n<p>" + messageSource.getMessage("email.report.head", null, locale) + " " + report.getCreatedString() + "</p>\n";
         message += "<table style=\"border: thin solid black; border-collapse: collapse;\">\n<thead>\n<tr>\n<th colspan=\"4\">\n" + messageSource.getMessage("report.show.aggregate", null, locale) + "\n<br>\n" + messageSource.getMessage("report.show.aggregate.msg", new String[]{report.getDateFromString(), report.getDateToString()}, locale) + "\n</th>\n</tr>\n</thead>\n";
         message += "<tbody>\n";
-        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right;\">\n" + messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.student", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + report.getHoursByRank().get(0) + "h\n</td>\n</tr>\n";
-        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right;\">\n" + messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.applicant", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + report.getHoursByRank().get(1) + "h\n</td>\n</tr>\n";
-        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right;\">\n" + messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.attorney", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + report.getHoursByRank().get(2) + "h\n</td>\n</tr>\n";
-        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right;\">\n" + messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.partner", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + report.getHoursByRank().get(3) + "h\n</td>\n</tr>\n";
-        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right; font-weight: bold;\">\n" + messageSource.getMessage("report.show.total.hours", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center; font-weight: bold;\">\n" + report.getTotalHours() + "h\n</td>\n</tr>\n";
+        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right;\">\n" + messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.student", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + report.getHoursByRankString().get(0) + "\n</td>\n</tr>\n";
+        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right;\">\n" + messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.applicant", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + report.getHoursByRankString().get(1) + "\n</td>\n</tr>\n";
+        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right;\">\n" + messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.attorney", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + report.getHoursByRankString().get(2) + "\n</td>\n</tr>\n";
+        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right;\">\n" + messageSource.getMessage("report.show.hours.for.rank", null, locale) + " " + messageSource.getMessage("user.rank.partner", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + report.getHoursByRankString().get(3) + "\n</td>\n</tr>\n";
+        message += "<tr>\n<td colspan=\"3\" style=\"border: thin solid black; border-collapse: collapse; text-align: right; font-weight: bold;\">\n" + messageSource.getMessage("report.show.total.hours", null, locale) + "\n</td>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center; font-weight: bold;\">\n" + report.getTotalHoursString() + "\n</td>\n</tr>\n";
         if (report.getShowRates() && SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
             if (report.getTotalValue() == null) {
                 message += "<tr>\n<td colspan=\"4\">\n" + messageSource.getMessage("report.show.rates.error", null, locale) + "\n</td>\n</tr>\n";
@@ -740,9 +773,10 @@ public class ReportService {
 
         if (report.getShowDetails()) {
             message += "\n<br><br>\n";
-            message += "<table style=\"border: thin solid black; border-collapse: collapse;\">\n<thead>\n<tr>\n<th colspan=\"" + (report.getShowNames() ? "6" : "5") + "\">\n" + messageSource.getMessage("report.show.details", null, locale) + "\n</th>\n</tr>\n</thead>\n";
+            message += "<table style=\"border: thin solid black; border-collapse: collapse;\">\n<thead>\n<tr>\n<th colspan=\"" + (report.getShowNames() ? "7" : "6") + "\">\n" + messageSource.getMessage("report.show.details", null, locale) + "\n</th>\n</tr>\n</thead>\n";
             message += "<tbody>\n<tr>\n";
             message += "<th style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + messageSource.getMessage("timesheet.date.executed", null, locale) + "\n</th>\n";
+            message += "<th style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + messageSource.getMessage("timesheet.case", null, locale) + "\n</th>\n";
             if (report.getShowNames()) {
                 message += "<th style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + messageSource.getMessage("timesheet.user", null, locale) + "\n</th>\n";
             }
@@ -752,10 +786,11 @@ public class ReportService {
             message += "<th style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + messageSource.getMessage("timesheet.description", null, locale) + "\n</th>\n";
             message += "</tr>\n";
             if (report.getTimesheets().size() == 0) {
-                message += "<tr>\n<td colspan=\"" + (report.getShowNames() ? "6" : "5") + "\" style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + messageSource.getMessage("report.show.no.timesheets.message", null, locale) + "\n</td>\n</tr>\n";
+                message += "<tr>\n<td colspan=\"" + (report.getShowNames() ? "7" : "6") + "\" style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + messageSource.getMessage("report.show.no.timesheets.message", null, locale) + "\n</td>\n</tr>\n";
             }
             for (Timesheet timesheet : report.getTimesheets()) {
                 message += "<tr>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + timesheet.getDateExecutedString() + "\n</td>\n";
+                message += "<tr>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + (timesheet.getClientCase() == null ? messageSource.getMessage("case.no.case", null, locale) : timesheet.getClientCase().getName()) + "\n</td>\n";
                 if (report.getShowNames()) {
                     message += "<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + timesheet.getUserNameDTO().getFullName() + "\n</td>\n";
                 }
@@ -776,7 +811,7 @@ public class ReportService {
                 }
                 message += "\n</td>\n";
                 message += "<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + timesheet.getClient().getName() + "\n</td>\n";
-                message += "<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + timesheet.getHours() + "\n</td>\n";
+                message += "<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + timesheet.getHoursString() + "\n</td>\n";
                 message += "<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + timesheet.getDescription() + "\n</td>\n</tr>\n";
             }
             message += "</tbody></table>\n";

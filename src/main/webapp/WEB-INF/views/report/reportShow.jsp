@@ -59,26 +59,26 @@
                         <th colspan="3" style="width: 75%"><spring:message code="report.show.hours.for.rank"/>
                             <spring:message
                                     code="user.rank.student"/></th>
-                        <td style="width: 25%">${report.hoursByRank[0]}h</td>
+                        <td style="width: 25%">${report.hoursByRankString[0]}</td>
                     </tr>
                     <tr>
                         <th colspan="3"><spring:message code="report.show.hours.for.rank"/> <spring:message
                                 code="user.rank.applicant"/></th>
-                        <td>${report.hoursByRank[1]}h</td>
+                        <td>${report.hoursByRankString[1]}</td>
                     </tr>
                     <tr>
                         <th colspan="3"><spring:message code="report.show.hours.for.rank"/> <spring:message
                                 code="user.rank.attorney"/></th>
-                        <td>${report.hoursByRank[2]}h</td>
+                        <td>${report.hoursByRankString[2]}</td>
                     </tr>
                     <tr>
                         <th colspan="3"><spring:message code="report.show.hours.for.rank"/> <spring:message
                                 code="user.rank.partner"/></th>
-                        <td>${report.hoursByRank[3]}h</td>
+                        <td>${report.hoursByRankString[3]}</td>
                     </tr>
                     <tr>
                         <th colspan="3"><spring:message code="report.show.total.hours"/></th>
-                        <td>${report.totalHours}h</td>
+                        <td>${report.totalHoursString}</td>
                     </tr>
                     <c:if test="${report.showRates && empty unauthorizedRateAccess}">
 
@@ -126,92 +126,115 @@
                 </table>
                 <!--            REPORT AGGREGATE END-->
 
-                    <div>
-                        <span id="emailSent" class="d-none text-success"><spring:message code="report.show.email.sent.msg"/></span>
-                    </div>
+                <div>
+                    <span id="emailSent" class="d-none text-success"><spring:message
+                            code="report.show.email.sent.msg"/></span>
+                </div>
 
-                    <div class="m-3" style="min-width:100%">
-                        <button type="button" class="button" onclick="location.href='/reports/list'" style="min-width: 15vw; max-width: 50%;"><spring:message code="app.back"/><i class="fs-5">&nbsp</i></button>
-                        <button id="sendMail" type="button" class="button" style="min-width: 15vw; max-width: 50%"><spring:message code="report.show.send.email"/><i class="fs-5">&nbsp</i></button>
-                    </div>
-                    <div class="d-flex justify-content-center m-3" style="min-width:100%">
-                        <button id="getPdf" type="button" class="button" style="min-width: 15vw; max-width: 50%;"><i class="fs-5 fa fa-file-pdf-o" aria-hidden="true"></i> <spring:message code="report.show.pdf"/></button>
-                        <select id="getPdfType" class="form-select" style="min-width: 15vw; max-width: 15vw;">
-                            <option id="pdfDownload"><spring:message code="report.show.download"/></option>
-                            <option id="pdfSend"><spring:message code="report.show.send"/></option>
-                        </select>
-                    </div>
-                    <div class="d-flex justify-content-center m-3" style="min-width:100%">
-                        <button id="getXls" type="button" class="button" style="min-width: 15vw; max-width: 50%;"><i class="fs-5 fa fa-table" aria-hidden="true"></i></i> <spring:message code="report.show.xls"/></button>
-                        <select id="getXlsType" class="form-select" style="min-width: 15vw; max-width: 15vw;">
-                            <option id="xlsDownload"><spring:message code="report.show.download"/></option>
-                            <option id="xlsSend"><spring:message code="report.show.send"/></option>
-                        </select>
-                    </div>
+                <div class="m-3" style="min-width:100%">
+                    <button type="button" class="button" onclick="location.href='/reports/list'"
+                            style="min-width: 15vw; max-width: 50%;"><spring:message code="app.back"/><i class="fs-5">&nbsp</i>
+                    </button>
+                    <button id="sendMail" type="button" class="button" style="min-width: 15vw; max-width: 50%">
+                        <spring:message code="report.show.send.email"/><i class="fs-5">&nbsp</i></button>
+                </div>
+                <div class="d-flex justify-content-center m-3" style="min-width:100%">
+                    <button id="getPdf" type="button" class="button" style="min-width: 15vw; max-width: 50%;"><i
+                            class="fs-5 fa fa-file-pdf-o" aria-hidden="true"></i> <spring:message
+                            code="report.show.pdf"/></button>
+                    <select id="getPdfType" class="form-select" style="min-width: 15vw; max-width: 15vw;">
+                        <option id="pdfDownload"><spring:message code="report.show.download"/></option>
+                        <option id="pdfSend"><spring:message code="report.show.send"/></option>
+                    </select>
+                </div>
+                <div class="d-flex justify-content-center m-3" style="min-width:100%">
+                    <button id="getXls" type="button" class="button" style="min-width: 15vw; max-width: 50%;"><i
+                            class="fs-5 fa fa-table" aria-hidden="true"></i></i> <spring:message
+                            code="report.show.xls"/></button>
+                    <select id="getXlsType" class="form-select" style="min-width: 15vw; max-width: 15vw;">
+                        <option id="xlsDownload"><spring:message code="report.show.download"/></option>
+                        <option id="xlsSend"><spring:message code="report.show.send"/></option>
+                    </select>
+                </div>
 
                 <!--            REPORT DETAILS START-->
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <td class="fs-4 p-3" colspan="${report.showNames ? "6" : "5"}"><spring:message
-                                code="report.show.details"/></td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <spring:message code="timesheet.date.executed"/>
-                        </th>
-                        <c:if test="${report.showNames}">
-                            <th>
-                                <spring:message code="timesheet.user"/>
-                            </th>
-                        </c:if>
-                        <th>
-                            <spring:message code="timesheet.rank.when.created"/>
-                        </th>
-                        <th>
-                            <spring:message code="timesheet.client"/>
-                        </th>
-                        <th>
-                            <spring:message code="timesheet.hours"/>
-                        </th>
-                        <th>
-                            <spring:message code="timesheet.description"/>
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <c:if test="${report.timesheets.size() == 0}">
+                <c:if test="${report.showDetails}">
+                    <table class="table">
+                        <thead>
                         <tr>
-                            <td colspan="${report.showNames ? "6" : "5"}">
-                                <spring:message code="report.show.no.timesheets.message"/>
-                            </td>
+                            <td class="fs-4 p-3" colspan="${report.showNames ? "7" : "6"}"><spring:message
+                                    code="report.show.details"/></td>
                         </tr>
-                    </c:if>
-                    <c:forEach var="timesheet" items="${report.timesheets}">
                         <tr>
-                            <td>${timesheet.dateExecutedString}</td>
+                            <th>
+                                <spring:message code="timesheet.date.executed"/>
+                            </th>
                             <c:if test="${report.showNames}">
-                                <td>${timesheet.userNameDTO.fullName}</td>
+                                <th>
+                                    <spring:message code="timesheet.user"/>
+                                </th>
                             </c:if>
-                            <td>
+                            <th>
+                                <spring:message code="timesheet.case"/>
+                            </th>
+                            <th>
+                                <spring:message code="timesheet.rank.when.created"/>
+                            </th>
+                            <th>
+                                <spring:message code="timesheet.client"/>
+                            </th>
+                            <th>
+                                <spring:message code="timesheet.hours"/>
+                            </th>
+                            <th>
+                                <spring:message code="timesheet.description"/>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <c:if test="${report.timesheets.size() == 0}">
+                            <tr>
+                                <td colspan="${report.showNames ? "7" : "6"}">
+                                    <spring:message code="report.show.no.timesheets.message"/>
+                                </td>
+                            </tr>
+                        </c:if>
+                        <c:forEach var="timesheet" items="${report.timesheets}">
+                            <tr>
+                                <td>${timesheet.dateExecutedString}</td>
+                                <c:if test="${report.showNames}">
+                                    <td>${timesheet.userNameDTO.fullName}</td>
+                                </c:if>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${empty timesheet.clientCase}">
+                                            <spring:message code="case.no.case"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            ${timesheet.clientCase.shortName}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
                                 <span class="${timesheet.rankWhenCreated == 1 ? "" : "d-none"}"><spring:message
                                         code="user.rank.student"/></span>
-                                <span class="${timesheet.rankWhenCreated == 2 ? "" : "d-none"}"><spring:message
-                                        code="user.rank.applicant"/></span>
-                                <span class="${timesheet.rankWhenCreated == 3 ? "" : "d-none"}"><spring:message
-                                        code="user.rank.attorney"/></span>
-                                <span class="${timesheet.rankWhenCreated == 4 ? "" : "d-none"}"><spring:message
-                                        code="user.rank.partner"/></span>
-                            </td>
-                            <td>${timesheet.client.name}</td>
-                            <td>${timesheet.hours}</td>
-                            <td>${timesheet.description}</td>
-                        </tr>
-                    </c:forEach>
+                                    <span class="${timesheet.rankWhenCreated == 2 ? "" : "d-none"}"><spring:message
+                                            code="user.rank.applicant"/></span>
+                                    <span class="${timesheet.rankWhenCreated == 3 ? "" : "d-none"}"><spring:message
+                                            code="user.rank.attorney"/></span>
+                                    <span class="${timesheet.rankWhenCreated == 4 ? "" : "d-none"}"><spring:message
+                                            code="user.rank.partner"/></span>
+                                </td>
+                                <td>${timesheet.client.name}</td>
+                                <td>${timesheet.hoursString}</td>
+                                <td>${timesheet.description}</td>
+                            </tr>
+                        </c:forEach>
 
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </c:if>
                 <!--            REPORT DETAILS END-->
             </div>
 

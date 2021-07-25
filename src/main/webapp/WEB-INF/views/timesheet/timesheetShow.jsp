@@ -85,7 +85,7 @@
                             <spring:message code="timesheet.client"/>:
                         </div>
 
-                        <div>
+                        <div id="clientDiv">
                             <form:select path="client" cssClass="form-select"
                                          cssErrorClass="form-select text-danger border-danger"
                                          cssStyle="min-width:50%; max-width: 50%" disabled="true">
@@ -95,6 +95,20 @@
                         </div>
                     </div>
 
+                    <div>
+                        <div>
+                            <spring:message code="timesheet.case"/>:
+                        </div>
+
+                        <div id="caseDiv" data-case-id="${empty timesheet.clientCase ? "-1" : timesheet.clientCase.id}">
+                            <form:select path="clientCase" cssClass="form-select"
+                                         cssErrorClass="form-select text-danger border-danger"
+                                         cssStyle="min-width:50%; max-width: 50%" disabled="true">
+                                <form:option value="-1"><spring:message code="case.no.case"/></form:option>
+                            </form:select>
+                            <form:errors path="clientCase" cssClass="text-danger mx-2"/>
+                        </div>
+                    </div>
 
                     <div>
                         <div>
@@ -119,6 +133,18 @@
                                         cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"
                                         disabled="true"/>
                             <form:errors path="hours" cssClass="text-danger mx-2"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div>
+                            <spring:message code="timesheet.minutes"/>
+                        </div>
+                        <div>
+                            <form:input path="minutes" cssClass="form-control"
+                                        cssErrorClass="form-control text-danger border-danger" cssStyle="width: 50%"
+                                        disabled="true"/>
+                            <form:errors path="minutes" cssClass="text-danger mx-2"/>
                         </div>
                     </div>
 
@@ -165,6 +191,14 @@
             </div>
 
         </div>
+
+    </div>
+
+    <div id="casesList" class="d-none">
+
+        <c:forEach var="aCase" items="${cases}">
+            <div data-client-id="${aCase.client.id}" data-case-id="${aCase.id}" data-case-name="${aCase.name}"></div>
+        </c:forEach>
 
     </div>
 

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.noxhours.case_.CaseService;
 import pl.noxhours.client.ClientService;
 import pl.noxhours.configuration.GlobalConstants;
 import pl.noxhours.configuration.security.NoxUserDetails;
@@ -39,6 +40,7 @@ public class ReportController {
     private final ReportService reportService;
     private final UserService userService;
     private final ClientService clientService;
+    private final CaseService caseService;
 
     @RequestMapping("/list")
     public String showList(Model model, @RequestParam(required = false) Integer page) {
@@ -65,6 +67,7 @@ public class ReportController {
 
         model.addAttribute("report", new Report());
         model.addAttribute("clients", clientService.findAllActive());
+        model.addAttribute("cases", caseService.findAllActive());
         model.addAttribute("users", userService.findAllActive().stream().map(userService::userToUserNameDto).collect(Collectors.toList()));
         model.addAttribute("dateFormat", GlobalConstants.DATE_FORMAT.replace("M", "m"));
         return "report/reportAdd";
@@ -76,6 +79,7 @@ public class ReportController {
         if (bindingResult.hasErrors()) {
             reportService.replaceUserWithDto(report);
             model.addAttribute("clients", clientService.findAllActive());
+            model.addAttribute("cases", caseService.findAllActive());
             model.addAttribute("users", userService.findAllActive().stream().map(userService::userToUserNameDto).collect(Collectors.toList()));
             model.addAttribute("dateFormat", GlobalConstants.DATE_FORMAT.replace("M", "m"));
             return "report/reportAdd";
@@ -87,6 +91,10 @@ public class ReportController {
         if (report.getShowRates() != null && report.getShowRates() && !SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
             report.setShowRates(false);
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to create Report with rates without proper privileges");
+        }
+        if (report.getBaseCase() != null && report.getBaseClient() != null && !report.getBaseCase().getClient().getId().equals(report.getBaseClient().getId())) {
+            log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to create report with case belonging to other client than client on whom report is based");
+            return "redirect:/dashboard";
         }
         reportService.create(report);
         return "redirect:/reports/show/" + report.getId();

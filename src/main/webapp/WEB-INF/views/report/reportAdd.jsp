@@ -116,6 +116,30 @@
                         </div>
                     </div>
 
+                    <div id="basedOnCaseDiv" class="form-check form-switch p-0 m-0 d-none"
+                         style="min-height: 2rem">
+                        <div>
+                            <spring:message code="report.basedOnCase"/>:
+                        </div>
+                        <div>
+                            <form:checkbox path="basedOnCase" cssClass="form-check-input p-0 m-0"/>
+                        </div>
+                    </div>
+
+                    <div id="baseCaseDiv" class="d-none" data-case-id="${empty report.baseCase ? "-1" : report.baseCase.id}">
+                        <div>
+                            <spring:message code="report.baseCase"/>
+                        </div>
+                        <div>
+                            <form:select path="baseCase" cssClass="form-select js-example-basic-single"
+                                         cssErrorClass="form-control text-danger border-danger js-example-basic-single"
+                                         cssStyle="max-width: 50%">
+                                <form:option value="-1"><spring:message code="app.choose"/></form:option>
+                            </form:select>
+                            <form:errors path="baseCase" cssClass="text-danger mx-2"/>
+                        </div>
+                    </div>
+
                     <div class="form-check form-switch p-0 m-0" style="min-height: 2rem">
                         <div>
                             <spring:message code="report.showDetails"/>:
@@ -154,6 +178,14 @@
                     </div>
 
                 </form:form>
+
+            </div>
+
+            <div id="casesList" class="d-none">
+
+                <c:forEach var="aCase" items="${cases}">
+                    <div data-client-id="${aCase.client.id}" data-case-id="${aCase.id}" data-case-name="${aCase.name}"></div>
+                </c:forEach>
 
             </div>
             <!--            REPORT DETAILS END-->

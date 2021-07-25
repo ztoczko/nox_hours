@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.noxhours.activity.Activity;
 import pl.noxhours.activity.ActivityService;
+import pl.noxhours.case_.Case;
 import pl.noxhours.client.Client;
 import pl.noxhours.configuration.GlobalConstants;
 import pl.noxhours.user.User;
@@ -80,8 +81,16 @@ public class TimesheetService {
         return timesheetRepository.findAllByClientAndDateExecutedBetween(client, dateFrom, dateTo);
     }
 
+    public List<Timesheet> findAll(Client client, Case aCase, LocalDate dateFrom, LocalDate dateTo) {
+        return timesheetRepository.findAllByClientAndClientCaseAndDateExecutedBetween(client, aCase, dateFrom, dateTo);
+    }
+
     public List<Timesheet> findAll(User user, Client client, LocalDate dateFrom, LocalDate dateTo) {
         return timesheetRepository.findAllByUserAndClientAndDateExecutedBetween(user, client, dateFrom, dateTo);
+    }
+
+    public List<Timesheet> findAll(User user, Client client, Case aCase, LocalDate dateFrom, LocalDate dateTo) {
+        return timesheetRepository.findAllByUserAndClientAndClientCaseAndDateExecutedBetween(user, client, aCase, dateFrom, dateTo);
     }
 
     public Integer getRecentTimesheetSum() {

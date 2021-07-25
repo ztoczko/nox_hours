@@ -16,6 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.noxhours.NoxHoursApplication;
+import pl.noxhours.case_.Case;
+import pl.noxhours.case_.CaseService;
 import pl.noxhours.rate.Rate;
 import pl.noxhours.rate.RateService;
 import pl.noxhours.timesheet.Timesheet;
@@ -33,6 +35,7 @@ public class ClientController {
     private final ClientService clientService;
     private final RateService rateService;
     private final TimesheetService timesheetService;
+    private final CaseService caseService;
 
     @RequestMapping("/list")
     public String listClients(Model model, @RequestParam(required = false) Integer page, @RequestParam(required = false) Boolean all, @RequestParam(required = false) String sortName, @RequestParam(required = false) String sortType, @RequestParam(required = false) String search) {
@@ -72,7 +75,7 @@ public class ClientController {
     }
 
     @RequestMapping("/show/{client}")
-    public String showClient(Model model, @PathVariable(required = false) Client client, @RequestParam(required = false) Integer ratePage, @RequestParam(required = false) Integer timesheetPage) {
+    public String showClient(Model model, @PathVariable(required = false) Client client, @RequestParam(required = false) Integer ratePage, @RequestParam(required = false) Integer timesheetPage, @RequestParam(required = false) Integer casePage, @RequestParam(required = false) Boolean allCases) {
 
         if (client == null) {
             log.warn("user " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to access invalid Client entity");
@@ -107,6 +110,23 @@ public class ClientController {
         model.addAttribute("timesheetPage", timesheetPage);
         model.addAttribute("totalTimesheetPages", timesheets.getTotalPages());
         model.addAttribute("timesheets", timesheets.getContent());
+
+        if (casePage == null || casePage < 1) {
+            casePage = 1;
+        }
+        if (allCases == null) {
+            allCases = false;
+        }
+        Page<Case> cases = allCases ? caseService.findAll(PageRequest.of(casePage - 1, 10, Sort.by(Sort.Direction.DESC, "created")), client) : caseService.findAllActive(PageRequest.of(casePage - 1, 10, Sort.by(Sort.Direction.DESC, "id")), client);
+
+        if (cases.getTotalPages() < casePage && casePage != 1) {
+            casePage = cases.getTotalPages();
+            cases = allCases ? caseService.findAll(PageRequest.of(casePage - 1, 10, Sort.by(Sort.Direction.DESC, "created")), client) : caseService.findAllActive(PageRequest.of(casePage - 1, 10, Sort.by(Sort.Direction.DESC, "id")), client);
+        }
+        model.addAttribute("allCases", allCases);
+        model.addAttribute("casePage", casePage);
+        model.addAttribute("totalCasePages", cases.getTotalPages());
+        model.addAttribute("cases", cases.getContent());
         return "/client/clientShow";
     }
 
@@ -134,6 +154,12 @@ public class ClientController {
             model.addAttribute("timesheetPage", 1);
             model.addAttribute("totalTimesheetPages", timesheets.getTotalPages());
             model.addAttribute("timesheets", timesheets.getContent());
+
+            Page<Case> cases = caseService.findAllActive(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "created")), client);
+            model.addAttribute("casePage", 1);
+            model.addAttribute("totalCasePages", timesheets.getTotalPages());
+            model.addAttribute("cases", timesheets.getContent());
+
             return "/client/clientShow";
         }
         clientService.update(client);

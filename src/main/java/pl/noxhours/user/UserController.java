@@ -121,7 +121,7 @@ public class UserController {
 //        Report report = reportService.read(1L);
 //        reportService.getXls(report, new Locale("pl", "PL"));
         model.addAttribute("activities", activityService.findRecent());
-        model.addAttribute("recentCount", timesheetService.getRecentTimesheetCount());
+        model.addAttribute("recentCount", timesheetService.getRecentTimesheetCount() == null ? 0 : timesheetService.getRecentTimesheetCount());
         model.addAttribute("recentSum", timesheetService.getRecentTimesheetSum());
 //        emailService.sendMessage("zbigniew.toczko@gmail.com", "test", reportService.generateHtmlMessage(reportService.read(1L), new Locale("pl", "PL")));
         return "dashboard";
