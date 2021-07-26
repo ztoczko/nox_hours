@@ -37,6 +37,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.itextpdf.layout.Document;
+import pl.noxhours.case_.Case;
 import pl.noxhours.client.Client;
 import pl.noxhours.configuration.EmailService;
 import pl.noxhours.configuration.GlobalConstants;
@@ -46,9 +47,7 @@ import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.User;
 import pl.noxhours.user.UserService;
 
-import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -58,7 +57,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -131,6 +129,10 @@ public class ReportService {
         return reportRepository.findAllByBaseClient(client);
     }
 
+    public List<Report> findAll(Case aCase) {
+        return reportRepository.findAllByBaseCase(aCase);
+    }
+
     public void replaceUserWithDto(Report report) {
 
         report.setCreatorDTO(userService.userToUserNameDto(report.getCreator()));
@@ -188,7 +190,6 @@ public class ReportService {
             rateService.getTimesheetValueForRank(report);
             report.setTotalValue(report.getValueByRank().stream().reduce(new BigDecimal(0), BigDecimal::add));
         }
-//        report.setTimesheets(report.getTimesheets().stream().peek(timesheetService::replaceUserWithDto).collect(Collectors.toList()));
         report.getTimesheets().forEach(timesheetService::replaceUserWithDto);
         replaceUserWithDto(report);
     }
@@ -382,19 +383,15 @@ public class ReportService {
                     par = new Paragraph().add(timesheet.getDescription()).setTextAlignment(TextAlignment.CENTER).setFont(font).setFontSize(10);
                     table.addCell(new Cell().setVerticalAlignment(VerticalAlignment.MIDDLE).add(par));
                 }
-
                 document.add(table);
                 table.complete();
 
             }
-
             document.close();
             pdfDocument.close();
         } catch (IOException e) {
             log.error(e.getMessage());
         }
-//        https://www.vogella.com/tutorials/JavaPDF/article.html
-
     }
 
     public void deleteFile(String filename) {
@@ -602,7 +599,6 @@ public class ReportService {
                 cell.setCellStyle(headerDetails);
             }
         }
-
         if (report.getShowDetails()) {
 
             sheet = workbook.createSheet(messageSource.getMessage("report.show.details", null, locale));
@@ -617,7 +613,6 @@ public class ReportService {
             sheet.setColumnWidth(columnCount + 1, 10000);
             sheet.setColumnWidth(columnCount + 2, 5000);
             sheet.setColumnWidth(columnCount + 3, 10000);
-
 
             row = sheet.createRow(2);
             row.setHeight((short) 1200);
@@ -728,7 +723,6 @@ public class ReportService {
                 cell.setCellStyle(cellStyle);
             }
         }
-
         File currDir = new File(".");
         String path = currDir.getAbsolutePath();
         String fileLocation = path.substring(0, path.length() - 1) + "NoxHoursReport" + report.getId() + ".xlsx";
@@ -769,7 +763,6 @@ public class ReportService {
             }
         }
         message += "</tbody></table>";
-
 
         if (report.getShowDetails()) {
             message += "\n<br><br>\n";
@@ -816,7 +809,6 @@ public class ReportService {
             }
             message += "</tbody></table>\n";
         }
-
         message += "<br><br><p>" + messageSource.getMessage("email.footer", null, locale) + "</p>";
 
         return message;

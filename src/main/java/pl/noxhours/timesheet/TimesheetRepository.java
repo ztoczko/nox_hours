@@ -24,6 +24,8 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
 
     List<Timesheet> findAllByClient(Client client);
 
+    List<Timesheet> findAllByClientCase(Case clientCase);
+
     List<Timesheet> findAllByClientAndDateExecutedBetween(Client client, LocalDate dateFrom, LocalDate dateTo);
 
     List<Timesheet> findAllByClientAndClientCaseAndDateExecutedBetween(Client client, Case aCase, LocalDate dateFrom, LocalDate dateTo);

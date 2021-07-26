@@ -15,7 +15,6 @@ public class RateDateOrderValidator implements ConstraintValidator<RateDateOrder
         if (!isValid) {
             context.buildConstraintViolationWithTemplate("{pl.noxhours.customValidation.RateDateOrder.message}").addPropertyNode("dateTo").addConstraintViolation();
         }
-
         return isValid;
     }
 }

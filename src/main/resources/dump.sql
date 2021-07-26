@@ -7,7 +7,7 @@ INSERT INTO users VALUES(null, "zbigniew.toczko@gmail.com", "sample", false, "su
 INSERT INTO users VALUES(null, "user@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
 INSERT INTO users VALUES(null, "admin@wp.pl", "sample", false, "admin", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "A", 1);
 INSERT INTO users VALUES(null, "rates@wp.pl", "sample", false, "rateRole", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "R", 1);
-INSERT INTO users VALUES(null, "user@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
+INSERT INTO users VALUES(null, "user0@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
 INSERT INTO users VALUES(null, "user1@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 3);
 INSERT INTO users VALUES(null, "user2@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 4);
 INSERT INTO users VALUES(null, "user3@wp.pl", "sample", false, "userX", "$2y$10$Z8qBFhEayCt4PKqMTvezuezIgn0Zufw74QvIUXTCEEdIxJ.Q9qwcS", false, "aaa", "", 2);
@@ -52,6 +52,13 @@ INSERT INTO cases VALUES(null, true, "2020-11-01 12:00:00", "some case3", 1);
 INSERT INTO cases VALUES(null, false, "2020-10-01 12:00:00", "some case4", 1);
 INSERT INTO cases VALUES(null, true, "2020-09-01 12:00:00", "some case5", 1);
 INSERT INTO cases VALUES(null, false, "2020-08-01 12:00:00", "some case6", 1);
+INSERT INTO cases VALUES(null, false, "2020-07-01 12:00:00", "some case7", 1);
+INSERT INTO cases VALUES(null, false, "2020-06-01 12:00:00", "some case8", 1);
+INSERT INTO cases VALUES(null, false, "2020-05-01 12:00:00", "some case9", 1);
+INSERT INTO cases VALUES(null, false, "2020-04-01 12:00:00", "some case10", 1);
+INSERT INTO cases VALUES(null, false, "2020-03-01 12:00:00", "some case11", 1);
+INSERT INTO cases VALUES(null, false, "2020-02-01 12:00:00", "some case12", 1);
+INSERT INTO cases VALUES(null, false, "2020-01-01 12:00:00", "some case13", 1);
 
 INSERT INTO rates VALUES(null, 250.05, 360.60, "2020-01-01", "2020-12-31", 500, 100.1, 1);
 INSERT INTO rates VALUES(null, 250.05, 360.60, "2019-01-01", "2019-12-31", 500, 100.1, 1);

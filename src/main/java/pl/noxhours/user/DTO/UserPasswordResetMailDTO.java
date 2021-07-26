@@ -3,7 +3,6 @@ package pl.noxhours.user.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.noxhours.customValidation.CheckPassword;
 import pl.noxhours.customValidation.CheckResetKey;
 import pl.noxhours.customValidation.NewPassword;
 
@@ -12,7 +11,7 @@ import pl.noxhours.customValidation.NewPassword;
 @AllArgsConstructor
 @NewPassword
 @CheckResetKey
-public class UserPasswordResetMailDTO extends UserPasswordResetDTO{
+public class UserPasswordResetMailDTO extends UserPasswordResetDTO {
 
     private String email;
 

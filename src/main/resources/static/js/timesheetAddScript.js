@@ -15,7 +15,8 @@ function insertCases(clientId) {
     listElement.querySelectorAll("option").forEach(item => {
         if (item.value != "-1") {
             item.remove()
-        };
+        }
+        ;
     })
     cases.filter(item => item.clientId == clientId).forEach(item => {
         const optionEl = document.createElement("OPTION");
@@ -26,7 +27,7 @@ function insertCases(clientId) {
 }
 
 //listener for changing case list in case of client change
-document.getElementById("client").addEventListener("change", function() {
+document.getElementById("client").addEventListener("change", function () {
     if (this.value == -1) {
         document.getElementById("caseDiv").classList.add("d-none");
     } else {
@@ -34,6 +35,15 @@ document.getElementById("client").addEventListener("change", function() {
         insertCases(this.value);
     }
 })
+
+//setting client if client is send in URL parameter
+const clientId = document.getElementById("clientDiv").dataset.clientId;
+
+if (clientId > 0) {
+    document.querySelector("option[value='" + clientId + "']").setAttribute("selected", "true");
+    document.getElementById("caseDiv").classList.remove("d-none");
+    insertCases(clientId);
+}
 
 //filling case list if client is chosen at page load
 if (document.getElementById("clientDiv").querySelector("option[selected]") != null && document.getElementById("clientDiv").querySelector("option[selected]").value != "-1") {
@@ -57,11 +67,6 @@ $(function () {
     });
 });
 
-const clientId = document.getElementById("clientDiv").dataset.clientId;
-
-if (clientId > 0) {
-    document.querySelector("option[value='" + clientId + "']").setAttribute("selected", "true");
-}
 
 if (document.querySelector("select#user") !== null) {
     const userId = document.getElementById("user").dataset.userId;

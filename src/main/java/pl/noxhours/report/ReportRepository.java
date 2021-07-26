@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import pl.noxhours.case_.Case;
 import pl.noxhours.client.Client;
 import pl.noxhours.user.User;
 
@@ -19,4 +20,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     List<Report> findAllByCreatorOrBaseUser(User user, User user1);
 
     List<Report> findAllByBaseClient(Client client);
+
+    List<Report> findAllByBaseCase(Case aCase);
 }

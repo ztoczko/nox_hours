@@ -1,5 +1,6 @@
 //toggling edit mode:
 if (document.getElementById("toggleEdit").classList.contains("d-none")) {
+    console.log("TEST");
     activateInputs();
 } else {
     document.getElementById("toggleEdit").addEventListener("click", () => {
@@ -15,10 +16,8 @@ function activateInputs() {
 }
 
 //toggling tables
-
 document.querySelector(".toggleTableButtonGroup").querySelectorAll("div").forEach(el => el.addEventListener("click", function () {
 
-    console.log("TEST");
     if (!this.classList.contains("buttonSelected")) {
         this.parentElement.querySelectorAll("div").forEach(el => el.classList.remove("buttonSelected"));
         this.classList.add("buttonSelected");
@@ -56,7 +55,6 @@ document.querySelector(".toggleTableButtonGroup").querySelectorAll("div").forEac
 }));
 
 //show all toggle for cases
-
 document.getElementById("allCasesToggle").addEventListener("click", function () {
     this.parentElement.submit();
 });

@@ -8,7 +8,6 @@ import pl.noxhours.user.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
@@ -32,6 +31,7 @@ public class NoxUserDetails implements UserDetails {
         }
         return authorities;
     }
+
     public Long getId() {
         return user.getId();
     }

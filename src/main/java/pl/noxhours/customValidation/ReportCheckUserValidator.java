@@ -13,12 +13,10 @@ public class ReportCheckUserValidator implements ConstraintValidator<ReportCheck
         if (report.getBasedOnUser() == null || !report.getBasedOnUser()) {
             return true;
         }
-
         if (report.getBaseUser() == null && report.getBaseUserDTO() == null) {
             context.buildConstraintViolationWithTemplate("{pl.noxhours.customValidation.ReportCheckUser.message}").addPropertyNode("baseUser").addConstraintViolation();
             return false;
         }
-
         return true;
     }
 }

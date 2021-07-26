@@ -13,12 +13,10 @@ public class ReportCheckCaseValidator implements ConstraintValidator<ReportCheck
         if (report.getBasedOnCase() == null || !report.getBasedOnCase() || !report.getBasedOnClient()) {
             return true;
         }
-
         if (report.getBaseCase() == null) {
             context.buildConstraintViolationWithTemplate("{pl.noxhours.customValidation.ReportCheckCase.message}").addPropertyNode("baseCase").addConstraintViolation();
             return false;
         }
-
         return true;
     }
 }

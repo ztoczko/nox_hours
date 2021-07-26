@@ -2,11 +2,14 @@ package pl.noxhours.case_;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.noxhours.client.Client;
+import pl.noxhours.report.ReportService;
+import pl.noxhours.timesheet.TimesheetService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,6 +20,14 @@ import java.util.List;
 public class CaseService {
 
     private final CaseRepository caseRepository;
+    private final ReportService reportService;
+
+    private TimesheetService timesheetService;
+
+    @Autowired
+    public void setTimesheetService(TimesheetService timesheetService) {
+        this.timesheetService = timesheetService;
+    }
 
     public void create(Case aCase) {
         if (aCase.getClosed() == null) {
@@ -40,6 +51,8 @@ public class CaseService {
     }
 
     public void delete(Case aCase) {
+        timesheetService.findAll(aCase).forEach(timesheetService::delete);
+        reportService.findAll(aCase).forEach(reportService::delete);
         caseRepository.delete(aCase);
         log.info("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " deleted case with id of " + aCase.getId());
     }
@@ -53,7 +66,7 @@ public class CaseService {
     }
 
     public List<Case> findAllActive(Client client) {
-        return caseRepository.findAllByClientAndClosedOrderByCreatedDesc(client,false);
+        return caseRepository.findAllByClientAndClosedOrderByCreatedDesc(client, false);
     }
 
     public Page<Case> findAllActive(Pageable pageable, Client client) {

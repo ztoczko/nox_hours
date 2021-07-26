@@ -61,6 +61,10 @@ public class TimesheetService {
         return timesheetRepository.findAllByClient(client);
     }
 
+    public List<Timesheet> findAll(Case clientCase) {
+        return timesheetRepository.findAllByClientCase(clientCase);
+    }
+
     public Page<Timesheet> findAll(Pageable pageable, Client client) {
         return timesheetRepository.findAllByClient(pageable, client);
     }

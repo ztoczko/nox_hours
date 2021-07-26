@@ -3,18 +3,14 @@ package pl.noxhours.rate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Cascade;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.datetime.DateFormatter;
 import pl.noxhours.client.Client;
 import pl.noxhours.configuration.GlobalConstants;
 import pl.noxhours.customValidation.CashValue;
 import pl.noxhours.customValidation.RateDateOrder;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

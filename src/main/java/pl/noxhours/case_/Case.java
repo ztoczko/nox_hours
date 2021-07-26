@@ -31,7 +31,7 @@ public class Case {
     private LocalDateTime created;
 
     @NotNull
-    @Size(min=3, max = 255)
+    @Size(min = 3, max = 255)
     private String name;
 
     @NotNull

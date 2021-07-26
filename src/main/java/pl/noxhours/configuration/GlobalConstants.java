@@ -1,7 +1,5 @@
 package pl.noxhours.configuration;
 
-import ch.qos.logback.classic.Level;
-
 public class GlobalConstants {
 
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -23,9 +21,4 @@ public class GlobalConstants {
             "    <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css\" rel=\"stylesheet\"\n" +
             "          integrity=\"sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x\" crossorigin=\"anonymous\">\n" +
             "</head>";
-
-    public static final String DEFAULT_PASSWORD = "Nox7Hours";
-
-    public static final Level LOG_LEVEL = Level.ALL;
-
 }

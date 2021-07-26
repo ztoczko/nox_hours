@@ -17,16 +17,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.noxhours.activity.ActivityService;
 import pl.noxhours.configuration.EmailService;
-import pl.noxhours.configuration.GlobalConstants;
-import pl.noxhours.report.Report;
 import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -47,22 +43,6 @@ public class UserController {
     public void setTimesheetService(TimesheetService timesheetService) {
         this.timesheetService = timesheetService;
     }
-
-//    @GetMapping("/login")
-//    public String login() {
-//        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("USER")) {
-//            return "redirect:/dashboard";
-//        }
-//        return "login";
-//    }
-//
-//    @PostMapping("/login")
-//    public String loginVerification() {
-//        if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("USER")) {
-//            return "redirect:/dashboard";
-//        }
-//        return "login";
-//    }
 
     //TODO dodanie strony startowej?
     @RequestMapping("/")
@@ -118,12 +98,9 @@ public class UserController {
 
     @RequestMapping("/dashboard")
     public String dashboard(Model model) {
-//        Report report = reportService.read(1L);
-//        reportService.getXls(report, new Locale("pl", "PL"));
         model.addAttribute("activities", activityService.findRecent());
         model.addAttribute("recentCount", timesheetService.getRecentTimesheetCount() == null ? 0 : timesheetService.getRecentTimesheetCount());
-        model.addAttribute("recentSum", timesheetService.getRecentTimesheetSum());
-//        emailService.sendMessage("zbigniew.toczko@gmail.com", "test", reportService.generateHtmlMessage(reportService.read(1L), new Locale("pl", "PL")));
+        model.addAttribute("recentSum", timesheetService.getRecentTimesheetSum() == null ? 0 : timesheetService.getRecentTimesheetSum());
         return "dashboard";
     }
 
@@ -136,11 +113,7 @@ public class UserController {
     @PostMapping("/settings/show")
     public String changeUserSettings(@ModelAttribute("user") @Valid UserSettingsDTO user, BindingResult result, Model model) {
 
-//        BindingResult result = new BeanPropertyBindingResult(userSettingsDTO, "user");
-//        validator.validate(userSettingsDTO, result);
-//        System.out.println("PATH: " + result.getObjectName());
         if (result.hasErrors()) {
-//            model.addAttribute("org.springframework.validation.BindingResult.user", result);
             model.addAttribute("edit", true);
             model.addAttribute("user", user);
             return "user/settings";

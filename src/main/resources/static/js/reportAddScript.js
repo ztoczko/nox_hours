@@ -59,7 +59,6 @@ if (document.getElementById("baseCaseDiv").dataset.caseId != "-1") {
     })
 }
 
-
 //show User and Client select fields if proper fields are already checked on page load
 if (document.getElementById("basedOnUser1").hasAttribute("checked")) {
     document.getElementById("baseUserDiv").classList.remove("d-none");

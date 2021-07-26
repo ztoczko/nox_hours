@@ -1,4 +1,3 @@
-
 document.getElementById("sendMail").addEventListener("click", () => {
     fetch("/reports/mail/".concat(document.getElementById("reportInfo").dataset.id)).then(response => {
         if (response.status === 200) {

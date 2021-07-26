@@ -24,11 +24,9 @@ import pl.noxhours.user.UserService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -132,7 +130,7 @@ public class ReportController {
             model.addAttribute("unauthorizedRateAccess", true);
         }
         if (report.getShowRates() && SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
-            model.addAttribute("rateError",report.getTotalValue() == null);
+            model.addAttribute("rateError", report.getTotalValue() == null);
         }
         model.addAttribute("report", report);
         return "report/reportShow";

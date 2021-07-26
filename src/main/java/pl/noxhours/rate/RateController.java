@@ -8,11 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.noxhours.client.Client;
-import pl.noxhours.client.ClientService;
 import pl.noxhours.configuration.GlobalConstants;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 
 @Log4j2
 @Controller

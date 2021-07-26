@@ -11,7 +11,7 @@
 
     <groupId>pl.noxhours</groupId>
     <artifactId>NOX_Hours</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-FINAL</version>
     <packaging>jar</packaging>
     <name>NOX_Hours</name>
 
@@ -192,6 +192,7 @@
 
             <resource>
                 <directory>src/main/webapp</directory>
+<!--                <targetPath>META-INF/resources</targetPath>-->
             </resource>
         </resources>
     </build>

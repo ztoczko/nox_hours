@@ -3,11 +3,8 @@ package pl.noxhours.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.validator.constraints.Range;
-import org.hibernate.validator.constraints.UniqueElements;
 import pl.noxhours.configuration.GlobalConstants;
-import pl.noxhours.customValidation.UniqueEmail;
 import pl.noxhours.user.DTO.AbstractUserEmail;
 
 import javax.persistence.*;
@@ -15,7 +12,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = User.TABLE_NAME)
@@ -33,7 +29,6 @@ public class User extends AbstractUserEmail {
 
     @Column(name = "first_name", nullable = false)
     @Pattern(regexp = GlobalConstants.FIRST_NAME_REGEXP, message = "{javax.validation.constraints.Pattern.firstName.message}")
-//    @Size(min = 10)
     private String firstName;
 
     @Column(name = "last_name", nullable = false)
@@ -63,17 +58,10 @@ public class User extends AbstractUserEmail {
 
     @Column(length = 4)
     @Size(max = 4)
-//    Basic/Rates/Admin/Superadmin
     private String privileges;
 
     @Column(name = "locked", nullable = false)
     private Boolean isLocked;
-
-//    @Column(name = "deleted")
-//    private Boolean isDeleted;
-
-//    @Column(name = "deleted_date")
-//    private LocalDateTime deleteDate;
 
     public User(Long id) {
         this.id = id;

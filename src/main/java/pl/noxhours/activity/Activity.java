@@ -8,7 +8,6 @@ import pl.noxhours.client.Client;
 import pl.noxhours.configuration.GlobalConstants;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

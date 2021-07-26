@@ -2,12 +2,14 @@ package pl.noxhours.case_;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.noxhours.client.Client;
+import pl.noxhours.timesheet.TimesheetService;
 
 import javax.validation.Valid;
 
@@ -74,6 +76,16 @@ public class CaseController {
             return "redirect:/dashboard";
         }
         caseService.create(aCase);
-        return "redirect:/clients/show/" + client.getId();
+        return "redirect:/clients/show/" + client.getId() + "?caseAddSuccess=true&showCases=true";
+    }
+
+    @RequestMapping("/delete/{acase}")
+    public String caseDelete(@PathVariable(required = false) Client client, @PathVariable(required = false) Case acase) {
+        if (client == null || acase == null || !acase.getClient().getId().equals(client.getId())) {
+            log.warn("user" + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to delete invalid Case entity");
+            return "redirect:/dashboard";
+        }
+        caseService.delete(acase);
+        return "redirect:/clients/show/" + client.getId() + "?caseDeleteSuccess=true&showCases=true";
     }
 }

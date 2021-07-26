@@ -1,7 +1,5 @@
 package pl.noxhours.customValidation;
 
-import pl.noxhours.user.DTO.UserAdminListDTO;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

@@ -24,9 +24,6 @@ public class RateService {
     private final RateRepository rateRepository;
 
     public void create(Rate rate) {
-//        Rate oldRate = rateRepository.findFirstByClientOrderByDateToDesc(rate.getClient());
-//        oldRate.setDateTo(rate.getDateFrom().minusDays(1));
-//        update(oldRate);
         if (rate.getRateNotExpires() != null && rate.getRateNotExpires()) {
             rate.setDateTo(LocalDate.now().plusYears(200));
         }
@@ -60,6 +57,7 @@ public class RateService {
     public Page<Rate> findAllByClient(Pageable pageable, Client client) {
         return rateRepository.findAllByClient(pageable, client);
     }
+
     public List<Rate> findAllByClient(Client client) {
         return rateRepository.findAllByClientOrderByDateToDesc(client);
     }

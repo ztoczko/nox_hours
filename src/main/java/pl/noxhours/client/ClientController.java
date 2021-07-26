@@ -1,21 +1,17 @@
 package pl.noxhours.client;
 
-import ch.qos.logback.classic.Logger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import pl.noxhours.NoxHoursApplication;
 import pl.noxhours.case_.Case;
 import pl.noxhours.case_.CaseService;
 import pl.noxhours.rate.Rate;
@@ -24,7 +20,6 @@ import pl.noxhours.timesheet.Timesheet;
 import pl.noxhours.timesheet.TimesheetService;
 
 import javax.validation.Valid;
-import java.util.Locale;
 
 @Log4j2
 @Controller
@@ -43,7 +38,7 @@ public class ClientController {
             page = 1;
         }
         if (all == null) {
-           all = false;
+            all = false;
         }
         if (sortName == null || !(sortName.equalsIgnoreCase("created") || sortName.equalsIgnoreCase("name"))) {
             sortName = "created";
@@ -74,17 +69,15 @@ public class ClientController {
         return "/client/clientsList";
     }
 
-    @RequestMapping("/show/{client}")
+    @GetMapping("/show/{client}")
     public String showClient(Model model, @PathVariable(required = false) Client client, @RequestParam(required = false) Integer ratePage, @RequestParam(required = false) Integer timesheetPage, @RequestParam(required = false) Integer casePage, @RequestParam(required = false) Boolean allCases) {
 
         if (client == null) {
             log.warn("user " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to access invalid Client entity");
             return "redirect:/clients/list";
-//            return "/client/clientShow";
         }
 
         model.addAttribute("client", client);
-//        System.out.println(client.getRates());
         if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("RATES"))) {
             if (ratePage == null || ratePage < 1) {
                 ratePage = 1;
@@ -130,12 +123,7 @@ public class ClientController {
         return "/client/clientShow";
     }
 
-    @GetMapping("/edit")
-    public String editGet() {
-        return "redirect:/clients/list";
-    }
-
-    @PostMapping("/edit")
+    @PostMapping("/show/{clientNotUsed}")
     public String editClient(Model model, @Valid Client client, BindingResult bindingResult) {
 
         clientService.fillMissingFields(client);
@@ -157,8 +145,8 @@ public class ClientController {
 
             Page<Case> cases = caseService.findAllActive(PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "created")), client);
             model.addAttribute("casePage", 1);
-            model.addAttribute("totalCasePages", timesheets.getTotalPages());
-            model.addAttribute("cases", timesheets.getContent());
+            model.addAttribute("totalCasePages", cases.getTotalPages());
+            model.addAttribute("cases", cases.getContent());
 
             return "/client/clientShow";
         }

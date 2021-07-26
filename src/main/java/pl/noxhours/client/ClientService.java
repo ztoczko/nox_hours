@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import pl.noxhours.activity.ActivityService;
+import pl.noxhours.case_.CaseService;
 import pl.noxhours.rate.RateService;
 import pl.noxhours.report.ReportService;
 import pl.noxhours.timesheet.TimesheetService;
@@ -24,6 +25,7 @@ public class ClientService {
     private final TimesheetService timesheetService;
     private final ReportService reportService;
     private final ActivityService activityService;
+    private final CaseService caseService;
 
     public void create(Client client) {
         client.setCreated(LocalDateTime.now());
@@ -52,6 +54,7 @@ public class ClientService {
         timesheetService.findAll(client).forEach(timesheetService::delete);
         reportService.findAll(client).forEach(reportService::delete);
         activityService.findAll(client).forEach(activityService::delete);
+        caseService.findAll(client).forEach(caseService::delete);
         clientRepository.delete(client);
     }
 
@@ -74,9 +77,6 @@ public class ClientService {
     public void fillMissingFields(Client client) {
         Client originalClient = read(client.getId());
         client.setCreated(originalClient.getCreated());
-//        if (client.getRatesSet() == null) {
-//            client.setRatesSet(originalClient.getRatesSet());
-//        }
         if (client.getClosed() == null) {
             client.setClosed(false);
         }

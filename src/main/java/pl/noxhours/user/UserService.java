@@ -2,7 +2,6 @@ package pl.noxhours.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -12,7 +11,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.Validator;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.noxhours.configuration.EmailService;
 import pl.noxhours.report.ReportService;
@@ -20,7 +18,6 @@ import pl.noxhours.timesheet.TimesheetService;
 import pl.noxhours.user.DTO.*;
 
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
 

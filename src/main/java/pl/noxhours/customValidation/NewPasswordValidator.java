@@ -27,7 +27,6 @@ public class NewPasswordValidator implements ConstraintValidator<NewPassword, Us
                 }
             }
         }
-
         return isValid;
     }
 }

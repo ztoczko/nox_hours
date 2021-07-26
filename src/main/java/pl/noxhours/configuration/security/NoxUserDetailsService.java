@@ -22,6 +22,4 @@ public class NoxUserDetailsService implements UserDetailsService {
         }
         return new NoxUserDetails(user);
     }
-
-
 }

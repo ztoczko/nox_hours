@@ -1,8 +1,6 @@
 package pl.noxhours.customValidation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import pl.noxhours.user.DTO.UserPasswordChangeDTO;
 import pl.noxhours.user.DTO.UserPasswordResetMailDTO;
 import pl.noxhours.user.UserService;
 

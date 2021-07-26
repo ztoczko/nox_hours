@@ -3,17 +3,13 @@ package pl.noxhours.user.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import pl.noxhours.configuration.GlobalConstants;
 import pl.noxhours.customValidation.UniqueEmail;
 
-import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
 
 @Data
 @NoArgsConstructor
