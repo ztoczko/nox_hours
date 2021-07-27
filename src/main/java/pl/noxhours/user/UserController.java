@@ -92,6 +92,7 @@ public class UserController {
         user.setId(userService.read(user.getEmail()).getId());
         User completeUser = userService.userPasswordDtoToUser(user);
         completeUser.setPasswordReset(false);
+        completeUser.setPasswordResetKey(userService.generateRandomKey());
         userService.update(completeUser);
         return "redirect:/login?passwordResetSuccess=true";
     }

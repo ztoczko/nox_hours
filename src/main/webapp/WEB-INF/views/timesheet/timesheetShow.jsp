@@ -26,7 +26,7 @@
             <div class="mainContentDiv">
 
                 <!--            TIMESHEET DETAILS START-->
-                <form:form modelAttribute="timesheet" action="/timesheet/edit" method="post" cssClass="editForm mb-0">
+                <form:form modelAttribute="timesheet" method="post" cssClass="editForm mb-0">
                     <form:hidden path="id" value="${timesheet.id}"/>
                     <form:hidden path="user" value="${timesheet.userNameDTO.id}"/>
                     <form:hidden path="created" value="${timesheet.createdString}"/>

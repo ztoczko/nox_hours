@@ -21,7 +21,4 @@ public class NoxHoursApplication {
         SpringApplication.run(NoxHoursApplication.class, args);
     }
 
-
-
-//    TODO - searchable inputs dla każdego widoku, docker
 }

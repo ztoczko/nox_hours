@@ -92,7 +92,7 @@ public class TimesheetController {
         return "redirect:/clients/show/" + timesheet.getClient().getId() + "?timesheetAddSuccess=true";
     }
 
-    @RequestMapping("/client/{client}/show/{timesheet}")
+    @GetMapping("/client/{client}/show/{timesheet}")
     public String showTimesheetDetails(Model model, @PathVariable(required = false) Client client, @PathVariable(required = false) Timesheet timesheet) {
         if (client == null || client.getClosed() || timesheet == null) {
             log.warn("User " + SecurityContextHolder.getContext().getAuthentication().getName() + " attempted to display invalid timesheet");
@@ -118,12 +118,7 @@ public class TimesheetController {
         return "redirect:/clients/show/" + timesheet.getClient().getId() + "?timesheetDeleteSuccess=true";
     }
 
-    @GetMapping("/edit")
-    public String editGetRedirect() {
-        return "redirect:/dashboard";
-    }
-
-    @PostMapping("/edit")
+    @PostMapping("/client/{clientX}/show/{timesheetX}")
     public String timesheetEdit(@Valid Timesheet timesheet, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("timesheetPermission", timesheetService.checkPermissionForTimesheet(timesheet));

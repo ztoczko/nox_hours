@@ -168,7 +168,7 @@ public class UserService {
         return user;
     }
 
-    private String generateRandomKey() {
+    public String generateRandomKey() {
 
         Random rand = new Random();
         String result = new String();

@@ -25,7 +25,7 @@ public class EmailService {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
             helper.setText(text, true);
-            helper.setFrom("noreply@nox-hours.com");
+            helper.setFrom("NOX-Hours <nox.hours@gmail.com>");
             helper.setTo(email);
             helper.setSubject(subject);
             if (filename != null) {

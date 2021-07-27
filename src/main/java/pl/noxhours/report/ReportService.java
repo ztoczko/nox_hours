@@ -783,7 +783,7 @@ public class ReportService {
             }
             for (Timesheet timesheet : report.getTimesheets()) {
                 message += "<tr>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + timesheet.getDateExecutedString() + "\n</td>\n";
-                message += "<tr>\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + (timesheet.getClientCase() == null ? messageSource.getMessage("case.no.case", null, locale) : timesheet.getClientCase().getName()) + "\n</td>\n";
+                message += "\n<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + (timesheet.getClientCase() == null ? messageSource.getMessage("case.no.case", null, locale) : timesheet.getClientCase().getName()) + "\n</td>\n";
                 if (report.getShowNames()) {
                     message += "<td style=\"border: thin solid black; border-collapse: collapse; text-align: center;\">\n" + timesheet.getUserNameDTO().getFullName() + "\n</td>\n";
                 }
