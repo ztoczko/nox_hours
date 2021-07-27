@@ -71,7 +71,7 @@
 <ul>
 <li>Any operation on timesheet is logged as activity which is shown for all users in last activities table in dashboard view.</li>
 <li>Activities are automatically deleted after 30days.</li>
-<li>Apart od the above application keeps server logs for all regular and abnormal user activities.</li>
+<li>Apart from the above application keeps server logs for all regular and abnormal user activities.</li>
 </ul>
 <br>
 
